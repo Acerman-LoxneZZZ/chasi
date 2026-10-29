@@ -13,6 +13,22 @@ const base: WatchPart = {
 const parts = () => Array.from({ length: 24 }, (_, index) => ({ ...structuredClone(base), id: `part_${index}`, nodeName: `part_${index}` }))
 
 describe('absolute exploded-view transforms', () => {
+  it('uses a separate mobile spacing without scaling geometry or changing rest poses', () => {
+    const part = { ...base, mobileOffset: [.2, .3, .7] as WatchPart['mobileOffset'] }
+    expect(evaluatePartTransform(part, 0, createPose(), true)).toEqual(evaluatePartTransform(part, 0))
+    evaluatePartTransform(part, 1, createPose(), true).position.forEach((value, index) => expect(value).toBeCloseTo([.45, 0, .8][index], 12))
+    expect(evaluatePartTransform(part, .6, createPose(), true).scale).toEqual(base.restScale)
+  })
+  it('evaluates multi-turn wheel rotations absolutely and reverses them without drift', () => {
+    const part = { ...base, spinTurns: 3, explodedQuaternion: base.restQuaternion }
+    const quarter = .2 + .6 * .25
+    const pose = evaluatePartTransform(part, quarter)
+    expect(Math.abs(pose.quaternion[2])).toBeGreaterThan(.1)
+    const expected = structuredClone(pose)
+    for (const p of [1, 0, .8, .32, 1, .21, quarter]) evaluatePartTransform(part, p, pose)
+    expect(pose).toEqual(expected)
+    expect(evaluatePartTransform(part, 0).quaternion).toEqual(base.restQuaternion)
+  })
   it('restores the exact exported position, quaternion and scale at zero and before the range', () => {
     for (const progress of [-100, 0, 0.1, 0.2]) {
       const pose = evaluatePartTransform(base, progress)

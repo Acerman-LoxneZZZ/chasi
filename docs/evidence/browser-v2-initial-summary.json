@@ -1,0 +1,13 @@
+{
+  "verifiedAt": "2026-10-29T15:32:41.081Z",
+  "build": "index-BsQXFDHN.js",
+  "note": "Fresh 15-scenario full run of the scroll redesign before the final keyboard and material-isolation fixes; superseded by final report",
+  "stats": {
+    "startTime": "2026-10-29T15:23:30.907Z",
+    "duration": 471389.05100000004,
+    "expected": 15,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

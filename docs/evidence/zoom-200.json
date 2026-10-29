@@ -1,21 +1,46 @@
 {
-  "method": "720x500 CSS viewport at DPR 2, equivalent layout density to 1440x1000 at 200%; not native browser zoom",
+  "method": "720x500 CSS viewport / DPR 2 emulates layout density of 1440x1000 at 200%; not native browser zoom",
   "viewport": [
     720,
     500
   ],
-  "devicePixelRatio": 2,
+  "dpr": 2,
   "scrollWidth": 720,
   "slider": {
-    "x": 48,
-    "y": 241.5,
-    "width": 300,
+    "x": 55,
+    "y": 389,
+    "width": 258,
     "height": 44,
-    "top": 241.5,
-    "right": 348,
-    "bottom": 285.5,
-    "left": 48
+    "top": 389,
+    "right": 313,
+    "bottom": 433,
+    "left": 55
   },
-  "value": "100",
-  "enabled": true
+  "focusOutline": "solid",
+  "targets": [
+    {
+      "text": "Продолжить историю",
+      "height": 44
+    },
+    {
+      "text": null,
+      "height": 44
+    },
+    {
+      "text": "Собрать",
+      "height": 44
+    },
+    {
+      "text": "Разобрать",
+      "height": 44
+    },
+    {
+      "text": "Сбросить вид",
+      "height": 44
+    },
+    {
+      "text": "Подписи деталей",
+      "height": 44
+    }
+  ]
 }

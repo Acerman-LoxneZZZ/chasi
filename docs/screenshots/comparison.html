@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ход времени — сравнение геометрии</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#0e1620;color:#f1eee7;font:15px/1.7 system-ui,sans-serif}main{max-width:1440px;margin:auto;padding:30px 32px}h1,h2{font:normal 36px/1.2 Georgia,serif}h1{margin:0 0 12px}h2{font-size:27px;margin:36px 0 10px}p{max-width:90ch;color:#b4bdca}a{color:#ddb578}section{border-top:1px solid #334456;margin-top:28px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}figure{margin:0}img{display:block;width:100%;height:auto}figcaption{padding:6px 0 14px;color:#b4bdca}strong{color:#f1eee7;font-weight:500}.note{font-size:13px;color:#a3aebb}a:focus-visible{outline:2px solid #ddb578;outline-offset:4px}@media(max-width:700px){main{padding:24px 18px}.pair{grid-template-columns:1fr}h1{font-size:30px}}
+</style>
+<main>
+  <h1>Ход времени. До и после</h1>
+  <p>Обе модели сняты в Three.js с одинаковым освещением, viewport 1440×1000 и одним сценарием. Для сравнения геометрии интерфейс скрыт; кадрирование рассчитывается по границам каждой модели, поэтому масштаб может немного отличаться. Изображения открываются в полном размере.</p>
+  <section><h2>Циферблат и корпус</h2><div class="pair">
+    <figure><a href="before/model-0.png"><img src="before/model-0.png" alt="Исходная модель: корпус, циферблат и стрелки"></a><figcaption><strong>До.</strong> 120 704 треугольника. Исходные стрелки и накладной секундный диск.</figcaption></figure>
+    <figure><a href="after/model-0.png"><img src="after/model-0.png" alt="Улучшенная модель: плавный ободок, прорези стрелок и углублённые малые секунды"></a><figcaption><strong>После.</strong> Плавнее профиль ободка, крупнее цифры, видны сквозные прорези стрелок и настоящее углубление малых секунд.</figcaption></figure>
+  </div></section>
+  <section><h2>Механизм при раскрытии</h2><div class="pair">
+    <figure><a href="before/model-75.png"><img src="before/model-75.png" alt="Исходная геометрия механизма на 75 процентах раскрытия"></a><figcaption><strong>До.</strong> Круглая проволока пружины и простые кромки зубьев.</figcaption></figure>
+    <figure><a href="after/model-75.png"><img src="after/model-75.png" alt="Улучшенная геометрия механизма на 75 процентах раскрытия"></a><figcaption><strong>После.</strong> Фаски колёс, втулки осей, расточенные рубины и ленточная пружина.</figcaption></figure>
+  </div></section>
+  <section><h2>Все слои</h2><div class="pair">
+    <figure><a href="before/model-100.png"><img src="before/model-100.png" alt="Исходная геометрия в полной разборке"></a><figcaption><strong>До.</strong> 47 независимых групп.</figcaption></figure>
+    <figure><a href="after/model-100.png"><img src="after/model-100.png" alt="Улучшенная геометрия в полной разборке"></a><figcaption><strong>После.</strong> Сохранены те же 47 групп. Добавлена геометрическая детализация внутри узлов.</figcaption></figure>
+  </div></section>
+  <p class="note">Chrome headless, WebGL 2 / ANGLE SwiftShader. Это настоящий браузерный рендер моделей, не измерение аппаратного GPU. Исходная композиция сайта сохранена отдельно: <a href="before/original-desktop-0.png">первый экран до редизайна</a>. Финальные четыре viewport со всеми стадиями находятся в папке <a href="scroll/metrics.json">scroll</a>. Снимки служат отчётом; сайт использует интерактивный GLB.</p>
+</main>
+</html>

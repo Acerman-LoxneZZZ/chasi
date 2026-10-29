@@ -1,0 +1,92 @@
+{
+  "environment": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "devicePixelRatio": 1,
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "method": "Chrome headless with ANGLE SwiftShader; viewport/touch emulation, not a physical phone or hardware GPU benchmark"
+  },
+  "results": [
+    {
+      "percent": 0,
+      "viewport": [
+        1440,
+        1000
+      ],
+      "comparison": true,
+      "camera": {
+        "position": [
+          2.2830180652005283,
+          1.23358477575388,
+          7.587560223891605
+        ],
+        "quaternion": [
+          -0.051906620487564115,
+          0.1450131693548438,
+          0.007618274285408066,
+          0.9880378764805201
+        ],
+        "target": [
+          0.001621649508175053,
+          0.397072756666683,
+          -0.017094495082905618
+        ]
+      }
+    },
+    {
+      "percent": 75,
+      "viewport": [
+        1440,
+        1000
+      ],
+      "comparison": true,
+      "camera": {
+        "position": [
+          6.491198804117859,
+          3.087244936628032,
+          7.434731662172457
+        ],
+        "quaternion": [
+          -0.13483216921880614,
+          0.3625483006538106,
+          0.05309752207177688,
+          0.9206300391507016
+        ],
+        "target": [
+          0.057815818535665094,
+          0.2630372707334818,
+          0.53323587573371
+        ]
+      }
+    },
+    {
+      "percent": 100,
+      "viewport": [
+        1440,
+        1000
+      ],
+      "comparison": true,
+      "camera": {
+        "position": [
+          6.528946051985324,
+          2.9171639901569124,
+          7.418308427728134
+        ],
+        "quaternion": [
+          -0.125178068032393,
+          0.36500170924904574,
+          0.04959755834989683,
+          0.9212189130357026
+        ],
+        "target": [
+          0.054743467288474644,
+          0.29993315804542087,
+          0.5308588695399962
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "consoleProblems": [],
+  "externalRequests": []
+}

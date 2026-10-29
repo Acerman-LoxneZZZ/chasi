@@ -1,18 +1,18 @@
-import { Color, DoubleSide, MeshPhysicalMaterial, MeshStandardMaterial } from 'three'
+import { Color, FrontSide, MeshPhysicalMaterial, MeshStandardMaterial } from 'three'
 
 export const makeGlass = () => new MeshPhysicalMaterial({
   name: 'watch_glass_browser',
-  color: '#dce9ef',
+  color: '#edf5fa',
   metalness: 0,
-  roughness: 0.08,
+  roughness: 0.035,
   transmission: 0,
   thickness: 0.018,
   ior: 1.46,
   transparent: true,
-  opacity: 0.12,
+  opacity: 0.055,
   depthWrite: false,
-  side: DoubleSide,
-  envMapIntensity: 0.55,
+  side: FrontSide,
+  envMapIntensity: 0.5,
 })
 
 export function highlightMaterial(material: MeshStandardMaterial, selected: boolean) {

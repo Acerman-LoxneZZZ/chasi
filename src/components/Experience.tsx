@@ -1,5 +1,6 @@
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ProgressController } from '../animation/progressController'
+import type { ViewMode } from '../animation/scrollCoordinator'
 import { WatchScene } from '../scene/WatchScene'
 import type { SceneStatus, WatchPart } from '../types'
 import { Icon } from './Icon'
@@ -7,6 +8,8 @@ import { Icon } from './Icon'
 interface ExperienceProps {
   parts: WatchPart[]
   controller: ProgressController
+  mode: ViewMode
+  reducedMotion: boolean
   labels: boolean
   selected: string | null
   resetKey: number
@@ -42,11 +45,12 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
         loading: value => { if (active) setLoadingPercent(value) },
         lost: () => { contextLost = true; report('context-lost') },
         restored: () => { if (active) setGeneration(value => value + 1) },
-      })
+      }, callbacks.current.mode, callbacks.current.reducedMotion)
       engine.current = scene
       scene.load().then(() => {
         if (!active || contextLost) return
         scene!.setLabels(callbacks.current.labels)
+        scene!.setMode(callbacks.current.mode, callbacks.current.reducedMotion)
         scene!.select(callbacks.current.selected)
         report('ready')
       }).catch((error: unknown) => {
@@ -65,17 +69,16 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
   }, [generation, props.parts, props.controller])
 
   useEffect(() => { engine.current?.setLabels(props.labels) }, [props.labels])
+  useLayoutEffect(() => { engine.current?.setMode(props.mode, props.reducedMotion) }, [props.mode, props.reducedMotion])
   useEffect(() => { engine.current?.select(props.selected) }, [props.selected])
   useEffect(() => { engine.current?.resetCamera() }, [props.resetKey])
 
   const failed = status === 'error' || status === 'unsupported' || status === 'context-lost'
   return <div className={`experience ${failed ? 'experience--fallback' : ''}`} data-status={status} aria-busy={status === 'loading'}>
-    <div className="stage-orbit stage-orbit--outer" aria-hidden="true" />
-    <div className="stage-orbit stage-orbit--inner" aria-hidden="true" />
     <div className="canvas-wrap">
-      <canvas key={generation} ref={canvas} className="watch-canvas" role="img" aria-label="Объёмная модель карманных часов. Двигайте ползунок ниже, чтобы отделить корпус, циферблат и узлы механизма. Перетаскивайте модель для вращения." aria-describedby="scene-instructions" />
-      <div ref={labelRoot} className="scene-labels" aria-hidden="true" />
+      <canvas key={generation} ref={canvas} className={`watch-canvas watch-canvas--${props.mode}`} role="img" aria-label={`Объёмная модель карманных часов. ${props.mode === 'story' ? 'Прокрутка страницы раскрывает механизм.' : 'Перетаскивайте модель для вращения. Ползунок меняет степень разборки.'}`} aria-describedby="scene-instructions" />
     </div>
+    <div ref={labelRoot} className="scene-labels" aria-hidden="true" />
     {status === 'loading' && <div className="loading-state" role="status">
       <div className="loading-dial" aria-hidden="true"><span /></div>
       <p>Готовим экспозицию<span className="loading-percent">{loadingPercent === null ? '…' : ` ${loadingPercent}%`}</span></p>
@@ -89,6 +92,5 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
         <button className="button button--outline" onClick={() => setGeneration(value => value + 1)}><Icon name="reset" size={17} />{status === 'context-lost' ? 'Восстановить сцену' : 'Повторить загрузку'}</button>
       </div>
     </div>}
-    <div className="stage-caption" aria-hidden="true"><span className="status-dot" />{status === 'ready' ? 'Вращайте. Приближайте. Исследуйте.' : failed ? 'Карманные механические часы' : 'Каждая деталь на своём месте'}</div>
   </div>
 })

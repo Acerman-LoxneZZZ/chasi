@@ -1,0 +1,83 @@
+{
+  "verifiedAt": "2026-10-29T15:39:22.289Z",
+  "method": "WCAG relative luminance; current opaque text tokens against background and conservative opaque surface",
+  "tokens": {
+    "background": "#0e1620",
+    "surface": "#16212e",
+    "text": "#f1eee7",
+    "muted": "#b4bdca",
+    "quiet": "#a3aebb",
+    "brass": "#c49b5c"
+  },
+  "checks": [
+    {
+      "foreground": "text",
+      "background": "background",
+      "ratio": 15.7,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "muted",
+      "background": "background",
+      "ratio": 9.59,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "quiet",
+      "background": "background",
+      "ratio": 8.08,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "brass",
+      "background": "background",
+      "ratio": 7.1,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 14.04,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 8.58,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "quiet",
+      "background": "surface",
+      "ratio": 7.23,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "brass",
+      "background": "surface",
+      "ratio": 6.34,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#101923",
+      "background": "brass",
+      "ratio": 6.91,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "text at chapter-boundary opacity 0.78",
+      "background": "background",
+      "effectiveColor": "#bfbebb",
+      "ratio": 9.79,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "muted at chapter-boundary opacity 0.78",
+      "background": "background",
+      "effectiveColor": "#8f98a5",
+      "ratio": 6.24,
+      "normalTextAA": true
+    }
+  ],
+  "allNormalTextChecksPass": true
+}

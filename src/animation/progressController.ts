@@ -2,11 +2,18 @@ import { clampProgress } from './evaluatePartTransform'
 
 type Snapshot = { progress: number; target: 0 | 1 | null }
 
+export interface ProgressOwner {
+  seek: (progress: number) => void
+  animate: (target: 0 | 1, reducedMotion: boolean) => void
+  pause: () => void
+}
+
 /** One progress source for DOM and the renderer; owns at most one animation frame. */
 export class ProgressController {
   private snapshot: Snapshot = { progress: 0, target: null }
   private listeners = new Set<() => void>()
   private frame = 0
+  private owner: ProgressOwner | null = null
 
   getSnapshot = () => this.snapshot
   subscribe = (listener: () => void) => {
@@ -15,21 +22,30 @@ export class ProgressController {
   }
 
   private emit(progress: number, target: 0 | 1 | null) {
-    this.snapshot = { progress: clampProgress(progress), target }
+    progress = clampProgress(progress)
+    if (progress === this.snapshot.progress && target === this.snapshot.target) return
+    this.snapshot = { progress, target }
     this.listeners.forEach(listener => listener())
   }
 
+  /** The scroll coordinator owns input in story mode; no second progress animation. */
+  attachOwner(owner: ProgressOwner | null) { this.stopFrame(); this.owner = owner }
+  commit = (progress: number, target: 0 | 1 | null = null) => this.emit(progress, target)
+
   set = (progress: number) => {
+    if (this.owner) { this.owner.seek(clampProgress(progress)); return }
     this.stopFrame()
     this.emit(progress, null)
   }
 
   pause = () => {
+    if (this.owner) { this.owner.pause(); return }
     this.stopFrame()
     if (this.snapshot.target !== null) this.emit(this.snapshot.progress, null)
   }
 
   animateTo = (target: 0 | 1, reducedMotion = false) => {
+    if (this.owner) { this.owner.animate(target, reducedMotion); return }
     this.stopFrame()
     if (reducedMotion || target === this.snapshot.progress) {
       this.emit(target, null)
@@ -65,6 +81,7 @@ export class ProgressController {
 
   dispose = () => {
     this.stopFrame()
+    this.owner = null
     this.listeners.clear()
   }
 }

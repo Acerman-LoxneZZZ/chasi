@@ -1,0 +1,689 @@
+{
+  "passed": true,
+  "method": "Local Blender CLI / bpy, not native MCP",
+  "blenderVersion": "4.5.9 LTS",
+  "foreignMaterialSentinel": [
+    {
+      "name": "HodVremeni::Satin brass",
+      "useNodes": true,
+      "diffuseColor": [
+        0.1599999964237213,
+        0.4300000071525574,
+        0.7200000286102295,
+        1.0
+      ],
+      "properties": {
+        "watch_qa_foreign_marker": "must remain unchanged"
+      },
+      "nodes": [
+        {
+          "name": "Principled BSDF",
+          "type": "BSDF_PRINCIPLED",
+          "inputs": [
+            [
+              "Base Color",
+              [
+                0.12999999523162842,
+                0.28999999165534973,
+                0.5099999904632568,
+                1.0
+              ]
+            ],
+            [
+              "Metallic",
+              0.3700000047683716
+            ],
+            [
+              "Roughness",
+              0.8199999928474426
+            ],
+            [
+              "IOR",
+              1.7100000381469727
+            ],
+            [
+              "Alpha",
+              1.0
+            ],
+            [
+              "Normal",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Weight",
+              0.0
+            ],
+            [
+              "Diffuse Roughness",
+              0.0
+            ],
+            [
+              "Subsurface Weight",
+              0.0
+            ],
+            [
+              "Subsurface Radius",
+              [
+                1.0,
+                0.20000000298023224,
+                0.10000000149011612
+              ]
+            ],
+            [
+              "Subsurface Scale",
+              0.05000000074505806
+            ],
+            [
+              "Subsurface IOR",
+              1.399999976158142
+            ],
+            [
+              "Subsurface Anisotropy",
+              0.0
+            ],
+            [
+              "Specular IOR Level",
+              0.5
+            ],
+            [
+              "Specular Tint",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Anisotropic",
+              0.0
+            ],
+            [
+              "Anisotropic Rotation",
+              0.0
+            ],
+            [
+              "Tangent",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Transmission Weight",
+              0.0
+            ],
+            [
+              "Coat Weight",
+              0.0
+            ],
+            [
+              "Coat Roughness",
+              0.029999999329447746
+            ],
+            [
+              "Coat IOR",
+              1.5
+            ],
+            [
+              "Coat Tint",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Coat Normal",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Sheen Weight",
+              0.0
+            ],
+            [
+              "Sheen Roughness",
+              0.5
+            ],
+            [
+              "Sheen Tint",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Emission Color",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Emission Strength",
+              0.0
+            ],
+            [
+              "Thin Film Thickness",
+              0.0
+            ],
+            [
+              "Thin Film IOR",
+              1.3300000429153442
+            ]
+          ],
+          "outputs": []
+        },
+        {
+          "name": "Material Output",
+          "type": "OUTPUT_MATERIAL",
+          "inputs": [
+            [
+              "Displacement",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Thickness",
+              0.0
+            ]
+          ],
+          "outputs": []
+        },
+        {
+          "name": "RGB",
+          "type": "RGB",
+          "inputs": [],
+          "outputs": [
+            [
+              "Color",
+              [
+                0.1899999976158142,
+                0.6100000143051147,
+                0.33000001311302185,
+                1.0
+              ]
+            ]
+          ]
+        }
+      ],
+      "links": [
+        [
+          "Principled BSDF",
+          "BSDF",
+          "Material Output",
+          "Surface"
+        ],
+        [
+          "RGB",
+          "Color",
+          "Principled BSDF",
+          "Base Color"
+        ]
+      ]
+    },
+    {
+      "name": "HodVremeni::Brushed steel",
+      "useNodes": true,
+      "diffuseColor": [
+        0.36000001430511475,
+        0.4300000071525574,
+        0.7200000286102295,
+        1.0
+      ],
+      "properties": {
+        "watch_qa_foreign_marker": "must remain unchanged",
+        "hod_vremeni_owner": "PocketWatch_Exhibit",
+        "hod_vremeni_role": "Brushed steel"
+      },
+      "nodes": [
+        {
+          "name": "Principled BSDF",
+          "type": "BSDF_PRINCIPLED",
+          "inputs": [
+            [
+              "Base Color",
+              [
+                0.12999999523162842,
+                0.38999998569488525,
+                0.5099999904632568,
+                1.0
+              ]
+            ],
+            [
+              "Metallic",
+              0.3700000047683716
+            ],
+            [
+              "Roughness",
+              0.8199999928474426
+            ],
+            [
+              "IOR",
+              1.7100000381469727
+            ],
+            [
+              "Alpha",
+              1.0
+            ],
+            [
+              "Normal",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Weight",
+              0.0
+            ],
+            [
+              "Diffuse Roughness",
+              0.0
+            ],
+            [
+              "Subsurface Weight",
+              0.0
+            ],
+            [
+              "Subsurface Radius",
+              [
+                1.0,
+                0.20000000298023224,
+                0.10000000149011612
+              ]
+            ],
+            [
+              "Subsurface Scale",
+              0.05000000074505806
+            ],
+            [
+              "Subsurface IOR",
+              1.399999976158142
+            ],
+            [
+              "Subsurface Anisotropy",
+              0.0
+            ],
+            [
+              "Specular IOR Level",
+              0.5
+            ],
+            [
+              "Specular Tint",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Anisotropic",
+              0.0
+            ],
+            [
+              "Anisotropic Rotation",
+              0.0
+            ],
+            [
+              "Tangent",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Transmission Weight",
+              0.0
+            ],
+            [
+              "Coat Weight",
+              0.0
+            ],
+            [
+              "Coat Roughness",
+              0.029999999329447746
+            ],
+            [
+              "Coat IOR",
+              1.5
+            ],
+            [
+              "Coat Tint",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Coat Normal",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Sheen Weight",
+              0.0
+            ],
+            [
+              "Sheen Roughness",
+              0.5
+            ],
+            [
+              "Sheen Tint",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Emission Color",
+              [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              "Emission Strength",
+              0.0
+            ],
+            [
+              "Thin Film Thickness",
+              0.0
+            ],
+            [
+              "Thin Film IOR",
+              1.3300000429153442
+            ]
+          ],
+          "outputs": []
+        },
+        {
+          "name": "Material Output",
+          "type": "OUTPUT_MATERIAL",
+          "inputs": [
+            [
+              "Displacement",
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            [
+              "Thickness",
+              0.0
+            ]
+          ],
+          "outputs": []
+        },
+        {
+          "name": "RGB",
+          "type": "RGB",
+          "inputs": [],
+          "outputs": [
+            [
+              "Color",
+              [
+                0.1899999976158142,
+                0.6100000143051147,
+                0.4300000071525574,
+                1.0
+              ]
+            ]
+          ]
+        }
+      ],
+      "links": [
+        [
+          "Principled BSDF",
+          "BSDF",
+          "Material Output",
+          "Surface"
+        ],
+        [
+          "RGB",
+          "Color",
+          "Principled BSDF",
+          "Base Color"
+        ]
+      ]
+    }
+  ],
+  "records": [
+    {
+      "iteration": 1,
+      "glbSHA256": "e7a922c003ce0215e01d37544be733e4a905e002be46456ef90e5d228ebe87ef",
+      "manifestSHA256": "51dbbff90f9162d4dd115d08ffbdeb57737dbf7c03e6b124777cfdf9c989d658",
+      "partNames": [
+        "back_cover",
+        "balance_assembly",
+        "barrel_cover",
+        "bow",
+        "case_body",
+        "crown",
+        "crown_stem",
+        "dial_face",
+        "dial_fastener_01",
+        "dial_fastener_02",
+        "dial_support",
+        "front_bezel",
+        "front_glass",
+        "gear_center",
+        "gear_escape",
+        "gear_fourth",
+        "gear_intermediate",
+        "gear_winding",
+        "hand_hour",
+        "hand_minute",
+        "hand_second",
+        "hour_wheel",
+        "jewel_setting_1",
+        "jewel_setting_2",
+        "jewel_setting_3",
+        "mainspring",
+        "mainspring_barrel",
+        "motion_works",
+        "movement_bridge_balance",
+        "movement_bridge_center",
+        "movement_bridge_pallet",
+        "movement_bridge_train",
+        "movement_bridge_upper",
+        "movement_mainplate",
+        "pallet_fork",
+        "ratchet_wheel",
+        "screw_bridge_01",
+        "screw_bridge_02",
+        "screw_bridge_03",
+        "screw_bridge_04",
+        "screw_bridge_05",
+        "screw_bridge_06",
+        "screw_bridge_07",
+        "screw_bridge_08",
+        "screw_bridge_09",
+        "screw_bridge_10",
+        "winding_click"
+      ],
+      "unrelatedObjectPreserved": true,
+      "foreignMeshGeometryTransformAndSlotsPreserved": true,
+      "foreignMaterialShadersAndColorsPreserved": true,
+      "foreignShaderSHA256": [
+        "fa886879767dd903a82b332341a9ad23d9b339b176a5feed5cd2e822d1f94f77",
+        "df7607af306c5f029a0feba1aca8ba4e0a6343335b4282ae544e14f618b46002"
+      ],
+      "watchMaterialRoles": [
+        "Blued steel hands",
+        "Brushed steel",
+        "Charcoal dial printing",
+        "Dark spring steel",
+        "Ivory vitreous enamel",
+        "Optical crystal",
+        "Polished brass edges",
+        "Polished steel",
+        "Recessed seconds enamel",
+        "Satin brass",
+        "Synthetic ruby bearings",
+        "Warm aged case"
+      ],
+      "validation": {
+        "status": "passed",
+        "blenderVersion": "4.5.9 LTS",
+        "model": "public/models/pocket-watch.glb",
+        "manifest": "src/data/watch-parts.json",
+        "bytes": 5345484,
+        "independentParts": 47,
+        "nodes": 95,
+        "meshes": 47,
+        "materials": 12,
+        "primitives": 136,
+        "triangles": 188570,
+        "externalImages": 0,
+        "checks": [
+          "glTF2 header and byte length",
+          "unique names",
+          "all carriers are direct watch_root children",
+          "manifest matches exported nodes",
+          "rest TRS read from exported GLB",
+          "positive scales",
+          "finite values",
+          "normalized quaternions",
+          "Y-up / Z-forward landmarks",
+          "no cameras",
+          "no external textures"
+        ],
+        "coordinateSystem": "X right, Y up to crown, +Z front"
+      }
+    },
+    {
+      "iteration": 2,
+      "glbSHA256": "e7a922c003ce0215e01d37544be733e4a905e002be46456ef90e5d228ebe87ef",
+      "manifestSHA256": "51dbbff90f9162d4dd115d08ffbdeb57737dbf7c03e6b124777cfdf9c989d658",
+      "partNames": [
+        "back_cover",
+        "balance_assembly",
+        "barrel_cover",
+        "bow",
+        "case_body",
+        "crown",
+        "crown_stem",
+        "dial_face",
+        "dial_fastener_01",
+        "dial_fastener_02",
+        "dial_support",
+        "front_bezel",
+        "front_glass",
+        "gear_center",
+        "gear_escape",
+        "gear_fourth",
+        "gear_intermediate",
+        "gear_winding",
+        "hand_hour",
+        "hand_minute",
+        "hand_second",
+        "hour_wheel",
+        "jewel_setting_1",
+        "jewel_setting_2",
+        "jewel_setting_3",
+        "mainspring",
+        "mainspring_barrel",
+        "motion_works",
+        "movement_bridge_balance",
+        "movement_bridge_center",
+        "movement_bridge_pallet",
+        "movement_bridge_train",
+        "movement_bridge_upper",
+        "movement_mainplate",
+        "pallet_fork",
+        "ratchet_wheel",
+        "screw_bridge_01",
+        "screw_bridge_02",
+        "screw_bridge_03",
+        "screw_bridge_04",
+        "screw_bridge_05",
+        "screw_bridge_06",
+        "screw_bridge_07",
+        "screw_bridge_08",
+        "screw_bridge_09",
+        "screw_bridge_10",
+        "winding_click"
+      ],
+      "unrelatedObjectPreserved": true,
+      "foreignMeshGeometryTransformAndSlotsPreserved": true,
+      "foreignMaterialShadersAndColorsPreserved": true,
+      "foreignShaderSHA256": [
+        "fa886879767dd903a82b332341a9ad23d9b339b176a5feed5cd2e822d1f94f77",
+        "df7607af306c5f029a0feba1aca8ba4e0a6343335b4282ae544e14f618b46002"
+      ],
+      "watchMaterialRoles": [
+        "Blued steel hands",
+        "Brushed steel",
+        "Charcoal dial printing",
+        "Dark spring steel",
+        "Ivory vitreous enamel",
+        "Optical crystal",
+        "Polished brass edges",
+        "Polished steel",
+        "Recessed seconds enamel",
+        "Satin brass",
+        "Synthetic ruby bearings",
+        "Warm aged case"
+      ],
+      "validation": {
+        "status": "passed",
+        "blenderVersion": "4.5.9 LTS",
+        "model": "public/models/pocket-watch.glb",
+        "manifest": "src/data/watch-parts.json",
+        "bytes": 5345484,
+        "independentParts": 47,
+        "nodes": 95,
+        "meshes": 47,
+        "materials": 12,
+        "primitives": 136,
+        "triangles": 188570,
+        "externalImages": 0,
+        "checks": [
+          "glTF2 header and byte length",
+          "unique names",
+          "all carriers are direct watch_root children",
+          "manifest matches exported nodes",
+          "rest TRS read from exported GLB",
+          "positive scales",
+          "finite values",
+          "normalized quaternions",
+          "Y-up / Z-forward landmarks",
+          "no cameras",
+          "no external textures"
+        ],
+        "coordinateSystem": "X right, Y up to crown, +Z front"
+      }
+    }
+  ]
+}

@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { ProgressController } from '../animation/progressController'
+import { ScrollCoordinator } from '../animation/scrollCoordinator'
+import { storyStageIndex, storyStages } from '../data/story'
 import { Experience } from '../components/Experience'
 import { ExplosionControls, stageTitle } from '../components/ExplosionControls'
 import { Icon, WatchMark } from '../components/Icon'
@@ -35,56 +37,73 @@ function MechanismIcon({ kind }: { kind: string }) {
 }
 
 export function App() {
+  const reducedMotion = useReducedMotion()
   const controller = useMemo(() => new ProgressController(), [])
+  const coordinator = useMemo(() => new ScrollCoordinator(controller, window.matchMedia('(prefers-reduced-motion: reduce)').matches), [controller])
   const { progress, target } = useSyncExternalStore(controller.subscribe, controller.getSnapshot)
+  const { mode, compact } = useSyncExternalStore(coordinator.subscribe, coordinator.getSnapshot)
+  const storySection = useRef<HTMLElement>(null)
+  const storyPin = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<SceneStatus>('loading')
   const [labels, setLabels] = useState(true)
   const [selected, setSelected] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)
-  const reducedMotion = useReducedMotion()
   const ready = status === 'ready'
   const currentPart = parts.find(part => part.id === selected) ?? null
   const choosePart = useCallback((id: string | null) => setSelected(id), [])
+  const chapter = storyStageIndex(progress)
+  const stage = storyStages[chapter]
 
   useEffect(() => () => controller.dispose(), [controller])
+  useLayoutEffect(() => {
+    coordinator.connect(storySection.current!, storyPin.current!)
+    return () => coordinator.dispose()
+  }, [coordinator])
   useEffect(() => {
-    if (reducedMotion) controller.pause()
-  }, [reducedMotion, controller])
+    if (reducedMotion) coordinator.reduceMotion()
+  }, [reducedMotion, coordinator])
+  useEffect(() => {
+    if (status === 'error' || status === 'unsupported') coordinator.reduceMotion()
+  }, [status, coordinator])
 
   const selectFromJourney = (nodeName: string) => {
     const part = parts.find(part => part.nodeName === nodeName)
     if (!part || !ready) return
+    coordinator.inspect()
+    controller.set(nodeName === 'dial_face' ? .4 : .85)
     setSelected(part.id)
     document.getElementById('explore')?.scrollIntoView({ behavior: reducedMotion ? 'instant' : 'smooth', block: 'start' })
   }
 
   return <>
     <a className="skip-link" href="#explosion-range">К управлению разборкой</a>
-    <header className="site-header page-width">
+    <header className="site-header">
       <a className="brand" href="#top" aria-label="Ход времени — начало страницы"><WatchMark /><span>Ход времени</span></a>
       <span className="header-caption">Интерактивная экспозиция</span>
       <nav aria-label="Основная навигация"><a href="#anatomy">Устройство</a><a href="#about">О проекте <Icon name="arrow" size={16} /></a></nav>
     </header>
 
     <main id="top">
-      <section id="explore" className="hero page-width" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <div className="object-type"><span />Карманные механические часы</div>
-          <h1 id="hero-title">Время<br />раскрывается.</h1>
-          <p className="hero-description">Разберите часы одним движением.<br className="desktop-break" /> Узнайте, что заставляет время идти.</p>
-          <a className="discover-link" href="#explosion-range">Заглянуть внутрь <span><Icon name="arrow" size={18} /></span></a>
-          <div className="hero-instructions" id="scene-instructions"><span className="instruction-icon"><Icon name="rotate" size={23} /></span><p>Перетаскивайте часы, чтобы повернуть.<br />Двигайте ползунок, чтобы разобрать.</p></div>
-          {currentPart && <aside className="hero-selected-part" aria-hidden="true"><h3>{currentPart.title}</h3><p>{currentPart.description}</p><span>{currentPart.materialLabel}</span></aside>}
-        </div>
-        <div className="hero-stage">
-          <div className="scene-meta"><span>Предмет исследования</span><span>Механические часы</span></div>
-          <Experience parts={parts} controller={controller} labels={labels} selected={selected} resetKey={resetKey} onSelect={choosePart} onStatus={setStatus} />
-          <div className="stage-footnote"><span className="stage-counter">{String(parts.length).padStart(2, '0')} <span>деталей</span></span><span>Один слаженный механизм</span></div>
-        </div>
-        <div className="hero-controls">
-          <ExplosionControls controller={controller} progress={progress} target={target} ready={ready} labels={labels} reducedMotion={reducedMotion} onLabels={() => setLabels(value => !value)} onReset={() => setResetKey(value => value + 1)} />
-          <div className="controls-footer"><span className={`scene-status ${target !== null ? 'scene-status--active' : ''}`}><span />{ready ? stageTitle(progress) : status === 'loading' ? 'Подготавливаем модель' : 'Управление 3D недоступно'}</span><span>Остановитесь в любом положении</span></div>
-          <div className="sr-only" role="status" aria-live="polite">{ready ? stageTitle(progress) : status === 'loading' ? 'Модель загружается' : 'Модель недоступна'}</div>
+      <section ref={storySection} id="explore" className={`watch-story ${compact ? 'watch-story--compact' : ''}`} data-mode={mode} aria-labelledby="hero-title">
+        <div ref={storyPin} className="story-pin">
+          <div className="story-heading">
+            <h1 id="hero-title">{stage.title}</h1>
+            <p id="scene-instructions">{mode === 'story' ? stage.subtitle : 'Вращайте часы. Остановитесь на любой детали.'}</p>
+          </div>
+          <div className="story-stage">
+            <Experience parts={parts} controller={controller} mode={mode} reducedMotion={reducedMotion} labels={labels} selected={selected} resetKey={resetKey} onSelect={choosePart} onStatus={setStatus} />
+            {chapter === 0 && !selected && labels && <p className="mobile-scene-invitation" aria-hidden="true">{mode === 'story' ? 'Листайте страницу — часы раскроются слой за слоем.' : 'Двигайте ползунок, чтобы раскрыть механизм.'}</p>}
+            <div className="scene-meta" aria-hidden="true"><span>Карманные механические часы</span><span>47 деталей</span></div>
+          </div>
+          <div className="story-controls page-width">
+            <div className="mode-bar">
+              <span className="mode-status"><span className="status-dot" />{mode === 'story' ? 'История' : 'Рассмотреть'}<span className="mode-hint">{mode === 'story' ? 'Прокрутка раскрывает механизм' : 'Свободное вращение'}</span></span>
+              <button className="mode-button" disabled={!ready} onClick={mode === 'story' ? coordinator.inspect : coordinator.resume}><Icon name={mode === 'story' ? 'rotate' : 'arrow'} size={17} />{mode === 'story' ? 'Рассмотреть' : 'Продолжить историю'}</button>
+            </div>
+            <ExplosionControls controller={controller} progress={progress} target={target} ready={ready} labels={labels} reducedMotion={reducedMotion} onLabels={() => setLabels(value => !value)} onReset={() => setResetKey(value => value + 1)} />
+            <div className="controls-footer"><span className={`scene-status ${target !== null ? 'scene-status--active' : ''}`}><span />{ready ? stageTitle(progress) : status === 'loading' ? 'Подготавливаем модель' : 'Управление 3D недоступно'}</span><span className="chapter-count">{String(chapter + 1).padStart(2, '0')} / 06</span></div>
+            <div className="sr-only" role="status" aria-live="polite">{ready ? stageTitle(progress) : status === 'loading' ? 'Модель загружается' : 'Модель недоступна'}</div>
+          </div>
         </div>
       </section>
 

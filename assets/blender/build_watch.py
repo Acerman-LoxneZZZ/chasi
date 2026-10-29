@@ -25,17 +25,31 @@ PARTS = []
 # Isolate this exhibit. Never delete unrelated objects or collections.
 if COLLECTION_NAME in bpy.data.collections:
     old = bpy.data.collections[COLLECTION_NAME]
+    owned_meshes={obj.data for obj in old.all_objects if obj.type=='MESH'}
     for obj in list(old.all_objects):
         bpy.data.objects.remove(obj, do_unlink=True)
     bpy.data.collections.remove(old)
+    for data in owned_meshes:
+        if data.users==0: bpy.data.meshes.remove(data)
 scene = bpy.data.scenes.get(COLLECTION_NAME) or bpy.data.scenes.new(COLLECTION_NAME)
 if bpy.context.window:
     bpy.context.window.scene = scene
 collection = bpy.data.collections.new(COLLECTION_NAME)
 scene.collection.children.link(collection)
-scene['pocket_watch_project'] = 'hod-vremeni-procedural-v1'
+scene['pocket_watch_project'] = 'hod-vremeni-scroll-v2'
 root = bpy.data.objects.new('watch_root', None)
 collection.objects.link(root)
+MATERIAL_OWNER_KEY = 'hod_vremeni_owner'
+MATERIAL_ROLE_KEY = 'hod_vremeni_role'
+MATERIAL_PREFIX = 'HodVremeni::'
+# A project material may have been assigned to another exhibit. Treat that
+# datablock as foreign too: rebuilding the watch must not recolor its users.
+project_objects = set(collection.all_objects)
+foreign_materials = {
+    slot.material
+    for obj in bpy.data.objects if obj not in project_objects
+    for slot in obj.material_slots if slot.material is not None
+}
 
 
 def srgb(value):
@@ -43,11 +57,25 @@ def srgb(value):
 
 
 def material(name, hex_color, metallic=0., rough=.4):
-    m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+    candidates = [
+        candidate for candidate in bpy.data.materials
+        if candidate.get(MATERIAL_OWNER_KEY) == COLLECTION_NAME
+        and candidate.get(MATERIAL_ROLE_KEY) == name
+        and candidate not in foreign_materials
+    ]
+    # The role is stable even if Blender must suffix the name because a foreign
+    # material already owns the canonical name. Reuse that same safe copy later.
+    m = sorted(candidates, key=lambda candidate: candidate.name)[0] if candidates else bpy.data.materials.new(MATERIAL_PREFIX + name)
+    m[MATERIAL_OWNER_KEY] = COLLECTION_NAME
+    m[MATERIAL_ROLE_KEY] = name
     m.use_nodes = True
+    nodes = m.node_tree.nodes
+    nodes.clear()
+    bsdf = nodes.new('ShaderNodeBsdfPrincipled')
+    output = nodes.new('ShaderNodeOutputMaterial')
+    m.node_tree.links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
     rgb = [int(hex_color.lstrip('#')[i:i+2], 16) / 255. for i in (0, 2, 4)]
     rgba = tuple(srgb(c) for c in rgb) + (1.,)
-    bsdf = m.node_tree.nodes.get('Principled BSDF')
     bsdf.inputs['Base Color'].default_value = rgba
     bsdf.inputs['Metallic'].default_value = metallic
     bsdf.inputs['Roughness'].default_value = rough
@@ -55,19 +83,19 @@ def material(name, hex_color, metallic=0., rough=.4):
     return m
 
 
-BRASS = material('Satin brass', '#C89B55', 1., .28)
-BRASS_EDGE = material('Polished brass edges', '#EAC27B', 1., .18)
-BRONZE = material('Warm aged case', '#987143', 1., .31)
+BRASS = material('Satin brass', '#C49B5C', 1., .34)
+BRASS_EDGE = material('Polished brass edges', '#DDB578', 1., .19)
+BRONZE = material('Warm aged case', '#987747', 1., .36)
 STEEL = material('Brushed steel', '#9CABB6', 1., .29)
 STEEL_LIGHT = material('Polished steel', '#D0D8DB', 1., .18)
-BLUE = material('Blued steel hands', '#172E4D', .92, .24)
+BLUE = material('Blued steel hands', '#23466E', .94, .23)
 INK = material('Charcoal dial printing', '#27313B', .05, .48)
-ENAMEL = material('Ivory vitreous enamel', '#F1ECE0', .02, .24)
-SUBDIAL = material('Recessed seconds enamel', '#DAD5C9', .04, .34)
-RUBY = material('Synthetic ruby bearings', '#721E39', .25, .18)
+ENAMEL = material('Ivory vitreous enamel', '#EEE8D9', 0., .27)
+SUBDIAL = material('Recessed seconds enamel', '#DDD5C3', 0., .33)
+RUBY = material('Synthetic ruby bearings', '#9B284A', .05, .16)
 DARK = material('Dark spring steel', '#344352', .92, .38)
 GLASS = material('Optical crystal', '#D5E2E9', 0., .08)
-glass_bsdf = GLASS.node_tree.nodes.get('Principled BSDF')
+glass_bsdf = next(n for n in GLASS.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
 glass_bsdf.inputs['Transmission Weight'].default_value = .96
 glass_bsdf.inputs['IOR'].default_value = 1.45
 GLASS.diffuse_color = (.65, .78, .85, .12)
@@ -117,7 +145,7 @@ def pose_verts(verts, center=(0,0,0), axis=(0,0,1)):
 
 def lathe(name, profile, mat=BRASS, segments=96, center=(0,0,0), axis=(0,0,1), closed=True):
     """Revolve a radius/depth profile. Centre points have one vertex, no degenerate faces."""
-    segments=min(segments,112)
+    segments=min(segments,160)
     verts, rings, faces = [], [], []
     for radius, height in profile:
         if abs(radius) < 1.e-7:
@@ -161,8 +189,8 @@ def ring(name,outer,inner,depth,mat=BRASS,center=(0,0,0),axis=(0,0,1),bevel=.004
 
 
 def torus(name,major,minor,mat=BRASS,center=(0,0,0),axis=(0,0,1),segments=96,tube=8):
-    segments=min(segments,80 if minor>.004 else 64)
-    tube=min(tube,6 if minor>.004 else 4)
+    segments=min(segments,128 if minor>.004 else 64)
+    tube=min(tube,8 if minor>.004 else 4)
     verts,faces=[],[]
     for i in range(segments):
         a=i*TAU/segments
@@ -198,8 +226,10 @@ def poly(name, points, depth=.04, mat=BRASS, center=(0,0,0),bevel=.003):
     faces += [(i,(i+1)%n,(i+1)%n+n,i+n) for i in range(n)]
     obj=mesh(name,verts,faces,mat)
     if bevel:
+        if mat == BRASS: obj.data.materials.append(BRASS_EDGE)
         mod=obj.modifiers.new('Small machined edge bevel','BEVEL')
-        mod.width=bevel; mod.segments=2
+        mod.width=bevel; mod.segments=3
+        if mat == BRASS: mod.material=1
         bpy.context.view_layer.objects.active=obj
         obj.select_set(True)
         bpy.ops.object.modifier_apply(modifier=mod.name)
@@ -237,8 +267,8 @@ def tube_path(name,points,radius,mat=STEEL,steps=6):
 
 font_path=str(BASE/'assets/blender/fonts/DejaVuSerif.ttf')
 sans_path=str(BASE/'assets/blender/fonts/DejaVuSans.ttf')
-FONT=bpy.data.fonts.load(font_path) if Path(font_path).exists() else bpy.data.fonts.get('Bfont')
-SANS=bpy.data.fonts.load(sans_path) if Path(sans_path).exists() else FONT
+FONT=next((f for f in bpy.data.fonts if f.filepath==font_path),None) or (bpy.data.fonts.load(font_path) if Path(font_path).exists() else bpy.data.fonts.get('Bfont'))
+SANS=next((f for f in bpy.data.fonts if f.filepath==sans_path),None) or (bpy.data.fonts.load(sans_path) if Path(sans_path).exists() else FONT)
 
 
 def text(name,body,size,center,mat=INK,angle=0,font=None,spacing=1.,extrude=.0004):
@@ -264,6 +294,7 @@ def screw_geometry(name,r=.046,shaft=.09):
     disk(name+'_shaft',r*.36,shaft,STEEL_LIGHT,(0,0,-shaft/2),bevel=.003,segments=24)
     # A real slotted head built with two solid halves and a slot bottom.
     disk(name+'_headbase',r,.016,STEEL_LIGHT,(0,0,.004),bevel=.003,segments=40)
+    ring(name+'_underhead_shoulder',r*.84,r*.37,.009,STEEL,(0,0,-.007),segments=24,bevel=.001)
     gap=.006
     for sign in [-1,1]:
         pts=[]
@@ -277,15 +308,16 @@ def screw_geometry(name,r=.046,shaft=.09):
 
 
 def bearing(name,center,outer=.049):
+    ring(name+'_chaton',outer*1.13,outer*.87,.010,BRASS_EDGE,(center[0],center[1],center[2]-.002),bevel=.002,segments=32)
     ring(name+'_setting',outer,outer*.55,.012,STEEL_LIGHT,center,bevel=.002,segments=36)
-    disk(name+'_ruby',outer*.48,.013,RUBY,(center[0],center[1],center[2]+.002),bevel=.004,segments=32)
+    ring(name+'_bored_ruby',outer*.52,outer*.16,.014,RUBY,(center[0],center[1],center[2]+.002),bevel=.003,segments=24)
     disk(name+'_pivot',outer*.13,.014,STEEL_LIGHT,(center[0],center[1],center[2]+.005),bevel=.001,segments=16)
 
 
 def gear(name,radius,teeth,depth=.035,mat=BRASS):
-    n=teeth*4
-    tooth=[radius*.89,radius*.98,radius,radius*.89]
-    outer=[(tooth[i%4]*math.cos(i*TAU/n),tooth[i%4]*math.sin(i*TAU/n)) for i in range(n)]
+    n=teeth*6
+    tooth=[radius*.89,radius*.92,radius*.99,radius,radius*.97,radius*.89]
+    outer=[(tooth[i%6]*math.cos(i*TAU/n),tooth[i%6]*math.sin(i*TAU/n)) for i in range(n)]
     inner=[(radius*.66*math.cos(i*TAU/n),radius*.66*math.sin(i*TAU/n)) for i in range(n)]
     verts=[]
     for z in [-depth/2,depth/2]:
@@ -295,12 +327,19 @@ def gear(name,radius,teeth,depth=.035,mat=BRASS):
         j=(i+1)%n
         faces.extend([(i,j,j+2*n,i+2*n),(n+j,n+i,n+i+2*n,n+j+2*n),
                       (i+2*n,j+2*n,n+j+2*n,n+i+2*n),(j,i,n+i,n+j)])
-    mesh(name+'_cut_teeth',verts,faces,mat)
+    teeth_obj=mesh(name+'_cut_teeth',verts,faces,mat)
+    # A narrow one-segment edge break is visible on the tooth tops, with modest cost.
+    teeth_obj.data.materials.append(BRASS_EDGE if mat == BRASS else STEEL_LIGHT)
+    mod=teeth_obj.modifiers.new('Hobbed tooth edge break','BEVEL')
+    mod.width=min(.0018,depth*.08); mod.segments=1; mod.material=1
+    bpy.context.view_layer.objects.active=teeth_obj
+    bpy.ops.object.modifier_apply(modifier=mod.name)
     for i in range(5):
         a=TAU*i/5+.1
         bar(name+'_spoke_'+str(i),(math.cos(a)*radius*.12,math.sin(a)*radius*.12),
             (math.cos(a)*radius*.72,math.sin(a)*radius*.72),radius*.09,depth*.8,mat)
-    disk(name+'_hub',radius*.19,depth*1.55,mat,bevel=.004,segments=40)
+    ring(name+'_bored_hub',max(radius*.19,.032),.0215,depth*1.55,mat,bevel=.003,segments=40)
+    ring(name+'_steel_bushing',.028,.019,depth*1.8,STEEL_LIGHT,segments=24,bevel=.002)
     torus(name+'_rim',radius*.77,.004,mat,(0,0,depth*.51),segments=80,tube=6)
     disk(name+'_axle',.021,.13,STEEL,(0,0,.025),bevel=.003,segments=24)
     # Distinct steel pinion on each wheel.
@@ -313,11 +352,25 @@ def gear(name,radius,teeth,depth=.035,mat=BRASS):
     poly(name+'_solid_ten_tooth_pinion',pinion_points,.035,STEEL,(0,0,.045),bevel=0)
 
 
+def ribbon_spiral(name,turns,inner,outer,height,thickness,z=0,steps=420,mat=DARK):
+    """A rectangular steel ribbon, rather than a round wire masquerading as a mainspring."""
+    verts=[]; faces=[]
+    for i in range(steps):
+        t=i/(steps-1); a=t*TAU*turns; r=inner+(outer-inner)*t
+        for dr,dz in [(-thickness/2,-height/2),(thickness/2,-height/2),(thickness/2,height/2),(-thickness/2,height/2)]:
+            verts.append(((r+dr)*math.cos(a),(r+dr)*math.sin(a),z+dz))
+    for i in range(steps-1):
+        for j in range(4): faces.append((i*4+j,(i+1)*4+j,(i+1)*4+(j+1)%4,i*4+(j+1)%4))
+    faces.extend([(3,2,1,0),tuple((steps-1)*4+j for j in range(4))])
+    return mesh(name,verts,faces,mat)
+
+
 # 1. A turned case: rounded waist, bright lips, fine concentric grooves.
 part('case_body','Корпус','Несущий обод удерживает циферблат и механизм, защищая их по окружности.',
      'Сатинированная латунь','case',anchor=(1.3,.18,0))
-lathe('turned_case',[(1.22,-.29),(1.31,-.28),(1.375,-.235),(1.408,-.15),(1.413,-.055),
-                    (1.405,.06),(1.37,.17),(1.30,.235),(1.235,.245),(1.19,.22),
+lathe('turned_case',[(1.22,-.29),(1.275,-.288),(1.31,-.28),(1.35,-.258),(1.375,-.235),
+                    (1.398,-.19),(1.408,-.15),(1.413,-.055),(1.411,.008),
+                    (1.405,.06),(1.393,.115),(1.37,.17),(1.34,.207),(1.30,.235),(1.265,.244),(1.235,.245),(1.19,.22),
                     (1.17,.17),(1.17,-.20),(1.20,-.275)],BRONZE,160)
 for z,r in [(-.235,1.373),(-.195,1.394),(.137,1.38),(.184,1.348)]:
     torus('case_turned_reveal',r,.008,BRASS_EDGE,(0,0,z),segments=144)
@@ -373,6 +426,7 @@ for i in range(40):
     tube_path('crown_flute_'+str(i),points,.005,BRASS_EDGE,5)
 for y,r in [(-.12,.119),(.10,.124)]:
     torus('crown_end_reveal',r,.008,BRASS,(0,y,0),axis=(0,1,0),segments=64)
+disk('crown_top_button',.064,.012,BRASS_EDGE,(0,.133,0),axis=(0,1,0),bevel=.004,segments=48)
 part('crown_stem','Заводной вал','Передаёт движение головки узлам завода и установки времени.',
      'Сталь','movement',rest=(0,1.30,0),offset=(0,.20,.12),start=.66,end=.94,anchor=(0,.12,.01))
 disk('winding_stem',.025,.58,STEEL,axis=(0,1,0),segments=24)
@@ -382,8 +436,10 @@ for y in [-.21,-.16,.14]:
 # 6. Separable front bezel, multi-step metal profile.
 part('front_bezel','Ободок','Переднее кольцо фиксирует защитное стекло и обрамляет циферблат.',
      'Полированная латунь','case',rest=(0,0,.335),offset=(-.32,.10,2.62),start=0,end=.23,anchor=(1.23,.35,.03))
-lathe('front_bezel_profile',[(1.25,-.095),(1.32,-.085),(1.36,-.04),(1.36,.005),(1.33,.047),
-                           (1.26,.070),(1.18,.066),(1.135,.04),(1.125,.006),(1.15,-.038),(1.19,-.078)],BRASS,160)
+lathe('front_bezel_profile',[(1.25,-.095),(1.29,-.093),(1.32,-.085),(1.347,-.064),(1.36,-.04),(1.364,-.018),
+                           (1.36,.005),(1.348,.029),(1.33,.047),(1.298,.062),
+                           (1.26,.070),(1.22,.072),(1.18,.066),(1.15,.052),(1.135,.04),
+                           (1.126,.021),(1.125,.006),(1.135,-.017),(1.15,-.038),(1.19,-.078)],BRASS,160)
 for r,z in [(1.322,.047),(1.195,.068),(1.134,.023)]:
     torus('bezel_polished_reveal',r,.006,BRASS_EDGE,(0,0,z),segments=144)
 for r in [1.238,1.249,1.260,1.271,1.282]:
@@ -398,7 +454,18 @@ lathe('crystal_shallow_lens',[(0,.035),(.35,.031),(.70,.019),(1.0,.001),(1.125,-
 # 8. Dial, typography and minute marks. All are native exported geometry.
 part('dial_face','Циферблат','Эмалевый диск с часовыми и минутными метками показывает время и закрывает механизм со стороны стрелок.',
      'Светлая эмаль, печатные метки','dial',rest=(0,0,.236),offset=(-.70,-.18,1.35),start=.26,end=.55,anchor=(.7,.7,.025))
-disk('vitreous_enamel_dial',1.165,.050,ENAMEL,segments=160,bevel=.012)
+dial=disk('vitreous_enamel_dial',1.165,.050,ENAMEL,segments=160,bevel=.012)
+# True shallow counterbore: the seconds face sits below the main enamel surface.
+cutter=disk('seconds_recess_cutter',.280,.050,DARK,(0,-.534,.031),segments=96,bevel=.003)
+mod=dial.modifiers.new('Recessed small seconds seat','BOOLEAN'); mod.operation='DIFFERENCE'; mod.solver='EXACT'; mod.object=cutter
+bpy.context.view_layer.objects.active=dial
+bpy.ops.object.modifier_apply(modifier=mod.name)
+bpy.data.objects.remove(cutter,do_unlink=True)
+# Boolean cap n-gons must not average the flat enamel normal with the recess
+# wall. Native Blender front/back points along -/+Y, not Blender Z.
+for polygon in dial.data.polygons:
+    if abs(polygon.normal.y) > .99:
+        polygon.use_smooth = False
 # Printed rings lie above the enamel without z-fighting.
 for r,w in [(1.098,.0025),(1.022,.0018),(.817,.0016)]:
     line_ring('dial_printed_circle',r,w*2,INK,(0,0,.0268),segments=112)
@@ -411,24 +478,25 @@ for i in range(60):
 roman=['XII','I','II','III','IV','V','VI','VII','VIII','IX','X','XI']
 for i,label in enumerate(roman):
     a=TAU*i/12
-    size=.165 if i in [0,3,6,9] else .151
+    size=.182 if i in [0,3,6,9] else .166
     text('hour_'+label,label,size,(.914*math.sin(a),.914*math.cos(a),.0295),INK)
 text('dial_signature','ХОД ВРЕМЕНИ',.071,(0,.365,.0298),INK,font=SANS,spacing=1.06)
 text('dial_subtitle','МЕХАНИЧЕСКИЕ ЧАСЫ',.032,(0,.258,.0300),INK,font=SANS,spacing=1.03)
 # Small seconds, inset enamel with 60 subtle ticks and concentric finishing.
-disk('small_seconds_recess',.281,.003,SUBDIAL,(0,-.534,.0278),segments=96,bevel=.001)
+disk('small_seconds_recess',.276,.004,SUBDIAL,(0,-.534,.009),segments=96,bevel=.001)
+torus('seconds_enamel_recess_lip',.277,.0025,ENAMEL,(0,-.534,.013),segments=96,tube=6)
 for r in [.252,.271]:
-    line_ring('small_seconds_ring',r,.0036,INK,(0,-.534,.030),segments=80)
+    line_ring('small_seconds_ring',r,.0036,INK,(0,-.534,.012),segments=80)
 for r in [.044,.071,.098,.125,.152,.179,.205]:
-    line_ring('seconds_enamel_turning',r,.0016,ENAMEL,(0,-.534,.031),segments=64)
+    line_ring('seconds_enamel_turning',r,.0016,ENAMEL,(0,-.534,.0118),segments=64)
 for i in range(60):
     a=TAU*i/60
     inner=.235 if i%5==0 else .246
     bar('seconds_mark_'+str(i),(inner*math.sin(a),-.534+inner*math.cos(a)),
-        (.262*math.sin(a),-.534+.262*math.cos(a)),.004 if i%5==0 else .002,.001,INK,.032)
+        (.262*math.sin(a),-.534+.262*math.cos(a)),.004 if i%5==0 else .002,.001,INK,.013)
 for i,label in [(0,'60'),(1,'15'),(2,'30'),(3,'45')]:
     a=i*math.pi/2
-    text('seconds_'+label,label,.037,(.208*math.sin(a),-.534+.208*math.cos(a),.033),INK,font=SANS)
+    text('seconds_'+label,label,.044,(.208*math.sin(a),-.534+.208*math.cos(a),.014),INK,font=SANS)
 
 # 9–12. Thin dial support, two ornamental hands at 10:10, small seconds.
 part('dial_support','Опора циферблата','Тонкая опора соединяет циферблат с платиной механизма.',
@@ -449,10 +517,17 @@ def hand(name,length,width,angle):
             (width*.55,-.08),(width*.70,-.15),(width*.48,-.21)]
     ca,sa=math.cos(angle),math.sin(angle)
     points=[(x*ca-y*sa,x*sa+y*ca) for x,y in points]
-    poly(name+'_spade',points,.009,BLUE,bevel=.0015)
+    blade=poly(name+'_spade',points,.012,BLUE,bevel=.002)
+    # Pierced lozenge within the wide portion of the lancet, a real through opening.
+    pierce=( -length*.45*sa, length*.45*ca, 0 )
+    cutter=disk(name+'_piercing_cutter',width*.22,.045,DARK,pierce,segments=24,bevel=0)
+    mod=blade.modifiers.new('Pierced lancet opening','BOOLEAN'); mod.operation='DIFFERENCE'; mod.solver='EXACT'; mod.object=cutter
+    bpy.context.view_layer.objects.active=blade
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    bpy.data.objects.remove(cutter,do_unlink=True)
     ring(name+'_pivot_eye',.065,.031,.012,BLUE,segments=48,bevel=.002)
     # A finer central ridge gives blue steel distinct specular edges.
-    a=(0,.11); b=(0,length*.73)
+    a=(0,.11); b=(0,length*.34)
     a=(a[0]*ca-a[1]*sa,a[0]*sa+a[1]*ca)
     b=(b[0]*ca-b[1]*sa,b[0]*sa+b[1]*ca)
     bar(name+'_polished_ridge',a,b,width*.10,.002,STEEL,.006)
@@ -472,7 +547,13 @@ disk('small_second_pivot',.024,.013,BRASS_EDGE,(0,0,.006),bevel=.002,segments=32
 # 13. Mainplate is the stationary spatial anchor of the construction.
 part('movement_mainplate','Основная платина','Несущая основа механизма. В её опорах расположены оси колёс и узлы регулирования хода.',
      'Матовая латунь','movement',rest=(0,0,-.132),anchor=(.90,-.55,.02))
-disk('mainplate',1.148,.064,BRASS,segments=144,bevel=.012)
+mainplate=disk('mainplate',1.148,.064,BRASS,segments=144,bevel=.012)
+for x,y in [(-.88,.37),(.78,.62),(.91,-.30),(-.62,-.79)]:
+    cutter=disk('plate_pivot_bore',.026,.12,DARK,(x,y,0),segments=24,bevel=0)
+    mod=mainplate.modifiers.new('Bored plate fastener seat','BOOLEAN'); mod.operation='DIFFERENCE'; mod.solver='EXACT'; mod.object=cutter
+    bpy.context.view_layer.objects.active=mainplate
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    bpy.data.objects.remove(cutter,do_unlink=True)
 ring('mainplate_outer_ridge',1.13,1.075,.012,BRASS,(0,0,.038),segments=144)
 # Concentric machining is actual shallow surface geometry, not a heavy noise map.
 for r in [.20,.28,.36,.44,.52,.60,.68,.76,.84,.92,1.0]:
@@ -513,12 +594,9 @@ for r in [.11,.22,.31]: torus('barrel_lid_turning',r,.002,BRONZE,(0,0,.014),segm
 disk('barrel_lid_axle',.035,.08,STEEL_LIGHT,(0,0,.033),segments=32)
 part('mainspring','Заводная пружина','При раскручивании пружина отдаёт запасённую энергию барабану. Здесь показана условная спираль.',
      'Пружинная сталь','movement',rest=(.622,.462,-.005),offset=(.42,.22,.53),start=.65,end=.96,anchor=(.19,.16,.01))
-points=[]
-for i in range(320):
-    t=i/319; a=t*TAU*7.3; r=.045+.242*t
-    points.append((r*math.cos(a),r*math.sin(a),0))
-tube_path('barrel_coiled_mainspring',points,.0045,DARK,4)
+ribbon_spiral('barrel_flat_ribbon_mainspring',7.3,.045,.287,.030,.0042)
 disk('mainspring_arbor',.037,.07,STEEL,(0,0,.0),segments=32)
+ring('arbor_recessed_bushing',.049,.038,.015,STEEL_LIGHT,(0,0,-.026),segments=32,bevel=.002)
 
 # 22–23. Ratchet and click (nonidentical to the transmitting wheels).
 part('ratchet_wheel','Храповое колесо','Узел завода удерживает пружину от обратного раскручивания при заводе.',
@@ -552,6 +630,7 @@ ring('balance_cock_bearing_hole',.08,.033,.048,BRASS,(0,0,0),segments=64)
 bearing('balance_endstone',(0,0,.032),.041)
 bar('balance_regulator_arm',(.01,0),(-.15,.12),.018,.018,STEEL_LIGHT,.032)
 text('balance_regulator_mark','+  −',.056,(.04,.10,.027),RUBY,font=SANS)
+poly('regulator_index',[(-.15,.105),(-.175,.16),(-.115,.145)],.008,BLUE,(0,0,.038),bevel=.001)
 
 # 26–27. Pallet/anchor, separate fork link.
 part('pallet_fork','Анкерная вилка','Попеременно удерживает и освобождает зубья спускового колеса, передавая импульсы балансу.',
@@ -631,17 +710,71 @@ for i,(x,y) in enumerate([(-.73,.67),(.73,-.67)],1):
     disk('dial_foot_shaft',.023,.17,STEEL_LIGHT,segments=24,bevel=.002)
     disk('dial_foot_shoulder',.043,.019,BRASS,(0,0,.06),segments=32,bevel=.002)
 
+# Six scroll key poses share the same 47 carriers. Angles are SITE-local XYZ radians.
+# Rest TRS still comes only from the GLB; these values describe the destination.
+story_motion={
+ 'back_cover': (0,.20,(.70,-.04,-1.15),(.04,-.23,.035)),
+ 'front_bezel': (.015,.20,(-.42,.10,2.20),(.055,-.10,-.035)),
+ 'front_glass': (.035,.20,(-.34,.09,1.88),(.04,-.08,-.025)),
+ 'hand_hour': (.205,.40,(-.92,.12,1.54),(.045,-.10,.045)),
+ 'hand_minute': (.22,.40,(-.94,.16,1.72),(.055,-.09,-.04)),
+ 'hand_second': (.23,.40,(-.88,-.06,1.40),(.04,-.10,.025)),
+ 'dial_face': (.225,.40,(-.95,-.10,1.12),(.06,-.14,-.04)),
+ 'dial_support': (.265,.42,(-.70,-.09,.80),(.035,-.08,-.025)),
+ 'movement_bridge_upper': (.415,.60,(.04,.72,.74),(.12,.08,-.07)),
+ 'movement_bridge_train': (.43,.61,(.84,-.08,.78),(-.07,.10,.09)),
+ 'movement_bridge_center': (.435,.61,(.49,.37,.83),(.10,.08,-.06)),
+ 'movement_bridge_balance': (.425,.60,(.56,-.34,.82),(-.10,.08,.07)),
+ 'movement_bridge_pallet': (.445,.62,(.17,-.30,.78),(-.08,.06,-.04)),
+ 'mainspring_barrel': (.635,.83,(.50,.35,.40),(.035,.09,0)),
+ 'barrel_cover': (.62,.80,(.88,.93,1.0),(.09,.12,-.10)),
+ 'mainspring': (.66,.84,(.53,.32,.67),(.035,.08,0)),
+ 'ratchet_wheel': (.62,.83,(.94,.72,1.40),(.07,.08,0)),
+ 'winding_click': (.65,.85,(.52,.36,.73),(.08,.06,.12)),
+ 'balance_assembly': (.635,.84,(.51,-.35,.56),(-.04,.08,0)),
+ 'motion_works': (.61,.83,(-.20,.12,.98),(.04,-.06,0)),
+ 'hour_wheel': (.63,.85,(.04,-.08,.94),(.035,-.05,0)),
+ 'crown': (.80,.96,(0,.28,.04),(.04,0,-.045)),
+ 'crown_stem': (.81,.97,(0,.18,.08),(0,0,0)),
+ 'bow': (.84,1,(0,.04,-.02),(.025,0,0)),
+}
+spin_turns={'gear_center':1,'gear_intermediate':-2,'gear_fourth':3,'gear_escape':-4,
+            'gear_winding':1,'motion_works':-1,'hour_wheel':1,'ratchet_wheel':-.5}
+for carrier in PARTS:
+    meta=json.loads(carrier['watch_part_meta'])
+    name=carrier.name
+    if name in story_motion:
+        start,end,offset,angles=story_motion[name]
+        meta.update(start=start,end=end,explodedOffset=list(offset),explodedEuler=list(angles))
+    elif name.startswith('gear_'):
+        meta.update(start=.605,end=.835,explodedEuler=[.045,.07,0])
+    elif name.startswith('jewel_'):
+        meta.update(start=.81,end=1,explodedEuler=[.10,.08,0])
+    elif name.startswith('screw_'):
+        index=int(name.rsplit('_',1)[1])
+        meta.update(start=.79+(index%3)*.02,end=1,explodedEuler=[.08,-.055,.16+(index%4)*.12])
+    elif name.startswith('dial_fastener_'):
+        meta.update(start=.77,end=.96,explodedEuler=[.06,.04,0])
+    dx,dy,dz=meta['explodedOffset']
+    front=name in {'front_bezel','front_glass','dial_face','dial_support','hand_hour','hand_minute','hand_second'}
+    meta['mobileOffset']=[dx*(.66 if front else .77),dy*.92,dz*(.68 if front else .80)]
+    if name in spin_turns: meta['spinTurns']=spin_turns[name]
+    if name=='movement_bridge_upper': meta['labelAnchor']=[-.30,.92,.033]
+    carrier['watch_part_meta']=json.dumps(meta,ensure_ascii=False)
+
 # Collapse decoration by carrier, preserving carriers and material boundaries.
 # This keeps the glTF draw count bounded without merging moving components.
 for carrier in PARTS:
     children=[obj for obj in carrier.children if obj.type=='MESH']
     if not children:
         raise RuntimeError('Empty part: '+carrier.name)
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in children: obj.select_set(True)
-    bpy.context.view_layer.objects.active=children[0]
-    bpy.ops.object.join()
-    merged=bpy.context.view_layer.objects.active
+    if len(children)>1:
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in children: obj.select_set(True)
+        bpy.context.view_layer.objects.active=children[0]
+        bpy.ops.object.join()
+        merged=bpy.context.view_layer.objects.active
+    else: merged=children[0]
     merged.name=carrier.name+'_geometry'
     # An all-flat gear preserves true tooth facets; smooth turned surfaces remain smooth.
     merged.select_set(False)
@@ -655,6 +788,6 @@ scene.render.engine='BLENDER_EEVEE_NEXT'
 scene.world=scene.world or bpy.data.worlds.new('Watch Studio World')
 scene.world.color=(.02,.028,.04)
 # Saving preserves a recoverable .blend1 of a previous generated revision.
-bpy.ops.wm.save_as_mainfile(filepath=str(BLEND))
+bpy.ops.wm.save_as_mainfile(filepath=str(BLEND),compress=True)
 runpy.run_path(str(BASE/'assets/blender/export_watch.py'),run_name='__main__')
 print('WATCH_BUILD_DONE',len(PARTS),'parts',str(OUT),flush=True)

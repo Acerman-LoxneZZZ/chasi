@@ -34,6 +34,8 @@ for (const part of parts) {
   assert(['case', 'dial', 'movement', 'fastener'].includes(part.category), `${part.nodeName}: invalid category`)
   assert.equal(typeof part.selectable, 'boolean', `${part.nodeName}: selectable must be boolean`)
   for (const key of ['restPosition', 'explodedOffset', 'restScale', 'labelAnchor']) assert(part[key]?.length === 3 && part[key].every(Number.isFinite), `${part.nodeName}: invalid ${key}`)
+  assert(part.mobileOffset?.length === 3 && part.mobileOffset.every(Number.isFinite), `${part.nodeName}: invalid mobile offset`)
+  assert(Number.isFinite(part.spinTurns ?? 0), `${part.nodeName}: invalid absolute wheel turns`)
   for (const key of ['restQuaternion', 'explodedQuaternion']) {
     assert(part[key]?.length === 4 && part[key].every(Number.isFinite), `${part.nodeName}: invalid ${key}`)
     assert(Math.abs(Math.hypot(...part[key]) - 1) < 0.0001, `${part.nodeName}: ${key} is not normalized`)
@@ -61,5 +63,8 @@ for (const mesh of gltf.meshes || []) for (const primitive of mesh.primitives) {
   if (primitive.mode === undefined || primitive.mode === 4) triangles += (primitive.indices === undefined ? positions.count : gltf.accessors[primitive.indices].count) / 3
 }
 assert(triangles > 1000, 'Unexpectedly empty watch geometry')
+assert(triangles <= 200000, `Triangle budget exceeded: ${triangles}`)
+assert(primitives <= 150, `Primitive budget exceeded: ${primitives}`)
+assert(data.length <= 8000000, `GLB budget exceeded: ${data.length}`)
 const report = { valid: true, model: 'public/models/pocket-watch.glb', sizeBytes: data.length, parts: parts.length, gltfNodes: nodes.length, meshes: gltf.meshes.length, primitives, vertices, triangles, externalResources: 0 }
 console.log(JSON.stringify(report, null, 2))

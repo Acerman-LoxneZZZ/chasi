@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { ProgressController } from '../animation/progressController'
 import { Icon } from './Icon'
+import { storyStageIndex } from '../data/story'
 
 interface ControlsProps {
   controller: ProgressController
@@ -13,7 +14,7 @@ interface ControlsProps {
   onReset: () => void
 }
 
-export const stageTitle = (progress: number) => progress === 0 ? 'Часы собраны' : progress < 0.26 ? 'Открываем корпус' : progress < 0.52 ? 'Снимаем циферблат' : progress < 0.8 ? 'Раскрываем механизм' : progress < 1 ? 'Отделяем детали' : 'Механизм раскрыт'
+export const stageTitle = (progress: number) => ['Часы собраны', 'Открываем корпус', 'Снимаем циферблат', 'Раскрываем передачу', 'Энергия и ритм', 'Механизм раскрыт'][storyStageIndex(progress)]
 
 export function ExplosionControls({ controller, progress, target, ready, labels, reducedMotion, onLabels, onReset }: ControlsProps) {
   const percent = Math.round(progress * 100)
@@ -30,8 +31,8 @@ export function ExplosionControls({ controller, progress, target, ready, labels,
     </div>
     <div className="controls-actions">
       <div className="primary-actions">
-        <button className="button button--outline" disabled={!ready || (progress === 0 && target === null)} onClick={() => target === 0 ? controller.pause() : controller.animateTo(0, reducedMotion)}><Icon name={target === 0 ? 'pause' : 'collapse'} size={19} />{target === 0 ? 'Пауза' : 'Собрать'}</button>
-        <button className="button button--brass" disabled={!ready || (progress === 1 && target === null)} onClick={() => target === 1 ? controller.pause() : controller.animateTo(1, reducedMotion)}><Icon name={target === 1 ? 'pause' : 'expand'} size={19} />{target === 1 ? 'Пауза' : 'Разобрать'}</button>
+        <button className="button button--outline" data-pause-transition={target === 0 || undefined} disabled={!ready || (progress === 0 && target === null)} onClick={() => target === 0 ? controller.pause() : controller.animateTo(0, reducedMotion)}><Icon name={target === 0 ? 'pause' : 'collapse'} size={19} />{target === 0 ? 'Пауза' : 'Собрать'}</button>
+        <button className="button button--brass" data-pause-transition={target === 1 || undefined} disabled={!ready || (progress === 1 && target === null)} onClick={() => target === 1 ? controller.pause() : controller.animateTo(1, reducedMotion)}><Icon name={target === 1 ? 'pause' : 'expand'} size={19} />{target === 1 ? 'Пауза' : 'Разобрать'}</button>
       </div>
       <div className="secondary-actions">
         <button className="text-action" disabled={!ready} onClick={onReset}><Icon name="reset" size={16} />Сбросить вид</button>

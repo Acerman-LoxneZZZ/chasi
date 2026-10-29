@@ -8,12 +8,12 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / 'artifacts' / 'hod-vremeni.zip'
 OUTPUT.parent.mkdir(exist_ok=True)
 FILES = [
-    'README.md', 'SETUP_REPORT.md', 'ASSET_SOURCES.md',
+    'README.md', 'SETUP_REPORT.md', 'ASSET_SOURCES.md', 'PROMPT_REDESIGN_SCROLL_WATCH.md',
     'package.json', 'package-lock.json', 'index.html', 'tsconfig.json',
     'vite.config.ts', 'vitest.config.ts', 'playwright.config.ts',
     '.gitignore', 'start.sh', 'Ход времени.desktop',
 ]
-DIRECTORIES = ['src', 'public', 'assets', 'docs', 'scripts', 'tests', 'dist', '.codex']
+DIRECTORIES = ['src', 'public', 'assets', 'docs', 'scripts', 'tests', 'dist']
 paths = [ROOT / name for name in FILES]
 for directory in DIRECTORIES:
     paths.extend(path for path in (ROOT / directory).rglob('*') if path.is_file())

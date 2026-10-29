@@ -9,6 +9,7 @@ import json
 import math
 import struct
 from pathlib import Path
+from mathutils import Euler, Quaternion
 
 BASE=Path(__file__).resolve().parents[2]
 TARGET=BASE/'public/models/pocket-watch.glb'
@@ -49,10 +50,13 @@ for name,part in meta.items():
     if 'matrix' in node: raise RuntimeError('Unexpected matrix instead of TRS: '+name)
     part['restPosition']=node.get('translation',[0,0,0])
     part['restQuaternion']=node.get('rotation',[0,0,0,1])
-    part['explodedQuaternion']=part['restQuaternion'][:]
+    angles=part.pop('explodedEuler',[0,0,0])
+    x,y,z,w=part['restQuaternion']
+    q=(Quaternion((w,x,y,z)) @ Euler(angles,'XYZ').to_quaternion()).normalized()
+    part['explodedQuaternion']=[q.x,q.y,q.z,q.w]
     part['restScale']=node.get('scale',[1,1,1])
     if part['end']<=part['start']: raise RuntimeError('Invalid animation interval: '+name)
-    for field in ['restPosition','restQuaternion','explodedOffset','explodedQuaternion','restScale','labelAnchor']:
+    for field in ['restPosition','restQuaternion','explodedOffset','explodedQuaternion','restScale','labelAnchor','mobileOffset']:
         if not all(math.isfinite(x) for x in part[field]): raise RuntimeError('Non-finite '+name+'.'+field)
     if min(part['restScale'])<=0: raise RuntimeError('Non-positive scale: '+name)
     q=part['restQuaternion']
@@ -80,6 +84,7 @@ summary={'status':'passed','blenderVersion':bpy.app.version_string,
          'model':'public/models/pocket-watch.glb','manifest':'src/data/watch-parts.json',
          'bytes':len(blob),'independentParts':len(parts),'nodes':len(nodes),
          'meshes':len(gltf.get('meshes',[])),'materials':len(gltf.get('materials',[])),
+         'primitives':sum(len(m['primitives']) for m in gltf.get('meshes',[])),
          'triangles':triangles,'externalImages':len(gltf.get('images',[])),
          'checks':['glTF2 header and byte length','unique names','all carriers are direct watch_root children',
                    'manifest matches exported nodes','rest TRS read from exported GLB','positive scales',

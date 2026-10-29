@@ -5,7 +5,7 @@ const mainNames = ['case_body', 'front_bezel', 'front_glass', 'dial_face', 'hand
 
 export function PartList({ parts, selected, onSelect, ready }: { parts: WatchPart[]; selected: string | null; onSelect: (id: string | null) => void; ready: boolean }) {
   const mainParts = mainNames.map(name => parts.find(part => part.nodeName === name)).filter((part): part is WatchPart => Boolean(part?.selectable))
-  return <ul className="part-list" aria-label="Основные узлы часов">
-    {mainParts.map(part => <li key={part.id}><button className={`part-chip ${selected === part.id ? 'part-chip--selected' : ''}`} aria-pressed={selected === part.id} disabled={!ready} onClick={() => onSelect(selected === part.id ? null : part.id)}>{part.title}<Icon name={selected === part.id ? 'close' : 'chevron'} size={15} /></button></li>)}
-  </ul>
+  const others = parts.filter(part => part.selectable && !mainNames.includes(part.nodeName))
+  const item = (part: WatchPart) => <li key={part.id}><button className={`part-chip ${selected === part.id ? 'part-chip--selected' : ''}`} aria-pressed={selected === part.id} disabled={!ready} onClick={() => onSelect(selected === part.id ? null : part.id)}>{part.title}<Icon name={selected === part.id ? 'close' : 'chevron'} size={15} /></button></li>
+  return <div className="part-catalog"><ul className="part-list" aria-label="Основные узлы часов">{mainParts.map(item)}</ul><details className="all-parts"><summary>Все {parts.length} узлов</summary><ul className="part-list" aria-label="Остальные узлы часов">{others.map(item)}</ul></details></div>
 }

@@ -17,6 +17,8 @@ export interface WatchPart {
   restScale: Vec3
   labelAnchor: Vec3
   selectable: boolean
+  mobileOffset?: Vec3
+  spinTurns?: number
 }
 
 export interface PartPose {
