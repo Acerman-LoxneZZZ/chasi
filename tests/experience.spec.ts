@@ -100,9 +100,14 @@ test('story buttons move document, pause, reverse and yield to wheel and keyboar
   expect(await progress(page)).toBe(paused)
   expect(await page.evaluate(() => scrollY)).toBe(y)
   await setProgress(page, 20)
-  // Start through the real button handler without spending animation time in
-  // Playwright's stability wait; interruption itself uses native browser input.
-  await page.getByRole('button', { name: 'Разобрать', exact: true }).evaluate(button => (button as HTMLButtonElement).click())
+  // SwiftShader can delay CDP wheel delivery by a complete 6.5s passage. Check
+  // cancellation through the real DOM wheel listener synchronously, then use
+  // native wheel input to prove the document remains under manual control.
+  await page.getByRole('button', { name: 'Разобрать', exact: true }).evaluate(button => {
+    ;(button as HTMLButtonElement).click()
+    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 80, bubbles: true }))
+  })
+  await expect(page.getByRole('button', { name: 'Пауза', exact: true })).toHaveCount(0)
   await page.mouse.wheel(0, 80)
   await expect(page.getByRole('button', { name: 'Пауза', exact: true })).toHaveCount(0)
   expect(await progress(page)).toBeLessThan(.8)

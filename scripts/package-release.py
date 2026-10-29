@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / 'artifacts' / 'hod-vremeni.zip'
 OUTPUT.parent.mkdir(exist_ok=True)
 FILES = [
-    'README.md', 'SETUP_REPORT.md', 'ASSET_SOURCES.md', 'PROMPT_REDESIGN_SCROLL_WATCH.md',
+    'README.md', 'AGENTS.md', 'WORK_STATE.md', 'SETUP_REPORT.md', 'ASSET_SOURCES.md', 'PROMPT_REDESIGN_SCROLL_WATCH.md',
     'package.json', 'package-lock.json', 'index.html', 'tsconfig.json',
     'vite.config.ts', 'vitest.config.ts', 'playwright.config.ts',
     '.gitignore', 'start.sh', 'Ход времени.desktop',

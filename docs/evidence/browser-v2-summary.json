@@ -1,0 +1,118 @@
+{
+  "verifiedAtUtc": "2026-10-29T15:59:55.613Z",
+  "passed": 16,
+  "failed": 0,
+  "method": "15 scenarios passed in the final full run; the mouse-pause/input scenario passed in a targeted rerun after improving test scheduling for SwiftShader. Application build unchanged. Programmatic wheel cancellation uses a real DOM wheel event, followed by native wheel scroll; native scrolling and touch are also tested separately.",
+  "runs": [
+    "docs/browser-v2-full.json",
+    "docs/browser-test-results.json"
+  ],
+  "tests": [
+    {
+      "title": "native range, exact endpoints, reverse poses, scroll mapping and a single GLB request",
+      "status": "passed",
+      "durationMs": 18362,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "slow and fast native scrolling, stop, reverse and on-demand idle rendering",
+      "status": "passed",
+      "durationMs": 31333,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "story buttons move document, pause, reverse and yield to wheel and keyboard",
+      "status": "passed",
+      "durationMs": 56293,
+      "source": "docs/browser-test-results.json"
+    },
+    {
+      "title": "Space on Pause stops without restarting, and Tab interrupts a story transition",
+      "status": "passed",
+      "durationMs": 24363,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "manual mode preserves pose and camera, allows orbit and resumes at current manual progress",
+      "status": "passed",
+      "durationMs": 49603,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "HTML labels follow visible nodes, stay outside the model, and selection includes all 47 groups",
+      "status": "passed",
+      "durationMs": 33255,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "resize and orientation preserve progress and mode, with safe projected bounds",
+      "status": "passed",
+      "durationMs": 24098,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "browser scroll restoration reloads the current story configuration",
+      "status": "passed",
+      "durationMs": 35935,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "reduced motion defaults to compact manual mode and exact direct endpoints",
+      "status": "passed",
+      "durationMs": 25049,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "runtime reduced-motion preference preserves progress",
+      "status": "passed",
+      "durationMs": 20685,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "loading HTTP failure has a working retry and no mandatory long story",
+      "status": "passed",
+      "durationMs": 17295,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "unavailable WebGL retains a loaded fallback and disables 3D controls",
+      "status": "passed",
+      "durationMs": 8925,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "WebGL context loss and restoration retain the current progress and mode",
+      "status": "passed",
+      "durationMs": 21185,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "200% layout density, keyboard focus and touch target sizes",
+      "status": "passed",
+      "durationMs": 43276,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "mobile touch / a vertical scene swipe scrolls the story and rotates only in manual mode",
+      "status": "passed",
+      "durationMs": 88981,
+      "source": "docs/browser-v2-full.json"
+    },
+    {
+      "title": "mobile touch / one mobile callout stays below the model; range tap and model selection work",
+      "status": "passed",
+      "durationMs": 26411,
+      "source": "docs/browser-v2-full.json"
+    }
+  ],
+  "screenshots": 20,
+  "projectionFailures": 0,
+  "horizontalOverflows": 0,
+  "environment": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "devicePixelRatio": 1,
+    "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "method": "Chrome headless with ANGLE SwiftShader; viewport/touch emulation, not a physical phone or hardware GPU benchmark"
+  }
+}
