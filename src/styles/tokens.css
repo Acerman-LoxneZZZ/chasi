@@ -1,0 +1,16 @@
+:root {
+  font-family: 'Manrope Variable', 'Segoe UI', sans-serif;
+  color: #f1eee7;
+  background: #0e1620;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --background: #0e1620;
+  --surface: #16212e;
+  --text: #f1eee7;
+  --muted: #b4bdca;
+  --quiet: #a3aebb;
+  --brass: #c49b5c;
+  --line: #334456;
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+}

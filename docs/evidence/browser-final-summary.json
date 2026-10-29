@@ -1,0 +1,139 @@
+{
+  "aggregate": true,
+  "method": "Six unchanged passing scenarios from the first production run plus four targeted passing scenarios after the animation/overflow fixes; this is explicitly not a single fresh ten-test run.",
+  "finalScenarios": 10,
+  "finalPassed": 10,
+  "finalFailed": 0,
+  "finalSkipped": 0,
+  "runs": [
+    {
+      "report": "docs/browser-test-results-initial.json",
+      "stats": {
+        "startTime": "2026-10-28T21:45:06.241Z",
+        "duration": 259015.494,
+        "expected": 6,
+        "skipped": 2,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "report": "docs/browser-test-results.json",
+      "stats": {
+        "startTime": "2026-10-28T21:53:59.212Z",
+        "duration": 126527.752,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "title": "native keyboard control, continuous progress, exact return and one model request",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 21946,
+      "sourceReport": "docs/browser-test-results-initial.json",
+      "phase": "unchanged scenario, first production run"
+    },
+    {
+      "title": "labels, camera rotation, reset and accessible selection preserve progress",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 47460,
+      "sourceReport": "docs/browser-test-results-initial.json",
+      "phase": "unchanged scenario, first production run"
+    },
+    {
+      "title": "reduced-motion controls set exact endpoints immediately",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 17384,
+      "sourceReport": "docs/browser-test-results-initial.json",
+      "phase": "unchanged scenario, first production run"
+    },
+    {
+      "title": "failed model loading shows a real retry that requests the resource again",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 16516,
+      "sourceReport": "docs/browser-test-results-initial.json",
+      "phase": "unchanged scenario, first production run"
+    },
+    {
+      "title": "unavailable WebGL shows the fallback and disables inoperative controls",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 9626,
+      "sourceReport": "docs/browser-test-results-initial.json",
+      "phase": "unchanged scenario, first production run"
+    },
+    {
+      "title": "context loss is handled and restoration reinitializes the scene",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 29555,
+      "sourceReport": "docs/browser-test-results-initial.json",
+      "phase": "unchanged scenario, first production run"
+    },
+    {
+      "title": "automatic movement pauses, reverses, yields to manual input and completes",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 44618,
+      "sourceReport": "docs/browser-test-results.json",
+      "phase": "targeted verification after fixes"
+    },
+    {
+      "title": "responsive composition retains progress and has no horizontal overflow",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 27766,
+      "sourceReport": "docs/browser-test-results.json",
+      "phase": "targeted verification after fixes"
+    },
+    {
+      "title": "save desktop and mobile evidence for the assembled and exploded model",
+      "groups": [
+        "experience.spec.ts"
+      ],
+      "status": "passed",
+      "durationMs": 32050,
+      "sourceReport": "docs/browser-test-results.json",
+      "phase": "targeted verification after fixes"
+    },
+    {
+      "title": "touch selection and a native range tap work in the mobile viewport",
+      "groups": [
+        "experience.spec.ts",
+        "mobile touch interaction"
+      ],
+      "status": "passed",
+      "durationMs": 17610,
+      "sourceReport": "docs/browser-test-results.json",
+      "phase": "targeted verification after fixes"
+    }
+  ],
+  "fixedIssues": [
+    "ProgressController changed from capped frame deltas to elapsed wall time; verified with irregular-frame unit tests and full automatic browser transitions.",
+    "Decorative orbit overflow at 360px fixed by clipping the experience surface; verified at 320,360,390,768,1280,1440,1920 CSS-pixel widths."
+  ]
+}

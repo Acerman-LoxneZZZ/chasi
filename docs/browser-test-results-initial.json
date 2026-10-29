@@ -1,0 +1,565 @@
+{
+  "config": {
+    "argv": [
+      "/home/nolimetrus/.nvm/versions/node/v22.23.3/bin/node",
+      "/home/nolimetrus/Рабочий стол/3DD/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/nolimetrus/Рабочий стол/3DD/playwright.config.ts",
+    "rootDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/nolimetrus/Рабочий стол/3DD/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/nolimetrus/Рабочий стол/3DD/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "snapshotDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "locale": "ru-RU",
+          "colorScheme": "dark",
+          "headless": true,
+          "launchOptions": {
+            "executablePath": "/usr/bin/google-chrome",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/browser-test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "experience.spec.ts",
+      "file": "experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "native keyboard control, continuous progress, exact return and one model request",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21946,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:45:08.606Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-afd5493f9797533fb3eb",
+          "file": "experience.spec.ts",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "automatic movement pauses, reverses, yields to manual input and completes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 61210,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('slider', { name: 'Разборка часов', exact: true })\nExpected: \u001b[32m\"0\"\u001b[39m\nReceived: \u001b[31m\"38.8\"\u001b[39m\nTimeout:  30000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" getByRole('slider', { name: 'Разборка часов', exact: true }) with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('slider', { name: 'Разборка часов', exact: true })\u001b[22m\n\u001b[2m    11 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"52.300000000000004\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 52,3 процентов\"/>\u001b[22m\n\u001b[2m       - unexpected value \"52.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"51.588888888888896\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 51,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"51.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"50.87777777777779\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 50,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"50.9\"\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"49.45555555555557\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 49,5 процентов\"/>\u001b[22m\n\u001b[2m    - unexpected value \"49.5\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"48.744444444444454\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 48,7 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"48.7\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"48.033333333333346\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 48 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"48\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"47.32222222222223\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 47,3 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"47.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"46.61111111111112\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 46,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"46.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"45.900000000000006\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 45,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"45.9\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"45.1888888888889\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 45,2 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"45.2\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"44.47777777777778\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 44,5 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"44.5\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"43.76666666666667\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 43,8 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"43.8\"\u001b[22m\n\u001b[2m    4 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"43.05555555555556\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 43,1 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"43.1\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"42.34444444444445\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 42,3 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"42.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"41.63333333333333\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 41,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"41.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"40.922222222222224\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 40,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"40.9\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"40.21111111111111\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 40,2 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"40.2\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"39.49999999999999\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 39,5 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"39.5\"\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"38.788888888888884\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 38,8 процентов\"/>\u001b[22m\n\u001b[2m    - unexpected value \"38.8\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('slider', { name: 'Разборка часов', exact: true })\nExpected: \u001b[32m\"0\"\u001b[39m\nReceived: \u001b[31m\"38.8\"\u001b[39m\nTimeout:  30000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" getByRole('slider', { name: 'Разборка часов', exact: true }) with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('slider', { name: 'Разборка часов', exact: true })\u001b[22m\n\u001b[2m    11 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"52.300000000000004\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 52,3 процентов\"/>\u001b[22m\n\u001b[2m       - unexpected value \"52.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"51.588888888888896\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 51,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"51.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"50.87777777777779\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 50,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"50.9\"\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"49.45555555555557\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 49,5 процентов\"/>\u001b[22m\n\u001b[2m    - unexpected value \"49.5\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"48.744444444444454\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 48,7 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"48.7\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"48.033333333333346\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 48 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"48\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"47.32222222222223\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 47,3 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"47.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"46.61111111111112\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 46,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"46.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"45.900000000000006\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 45,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"45.9\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"45.1888888888889\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 45,2 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"45.2\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"44.47777777777778\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 44,5 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"44.5\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"43.76666666666667\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 43,8 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"43.8\"\u001b[22m\n\u001b[2m    4 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"43.05555555555556\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 43,1 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"43.1\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"42.34444444444445\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 42,3 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"42.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"41.63333333333333\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 41,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"41.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"40.922222222222224\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 40,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"40.9\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"40.21111111111111\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 40,2 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"40.2\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"39.49999999999999\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 39,5 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"39.5\"\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"38.788888888888884\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 38,8 процентов\"/>\u001b[22m\n\u001b[2m    - unexpected value \"38.8\"\u001b[22m\n\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:60:30",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 30,
+                      "line": 60
+                    },
+                    "snippet": "  58 |   await expect(slider(page)).toHaveValue('52.3')\n  59 |   await page.getByRole('button', { name: 'Собрать', exact: true }).click()\n> 60 |   await expect(slider(page)).toHaveValue('0', { timeout: 30_000 })\n     |                              ^\n  61 |   await page.getByRole('button', { name: 'Разобрать', exact: true }).click()\n  62 |   await expect(slider(page)).toHaveValue('100', { timeout: 45_000 })\n  63 | })"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 30,
+                        "line": 60
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('slider', { name: 'Разборка часов', exact: true })\nExpected: \u001b[32m\"0\"\u001b[39m\nReceived: \u001b[31m\"38.8\"\u001b[39m\nTimeout:  30000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" getByRole('slider', { name: 'Разборка часов', exact: true }) with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('slider', { name: 'Разборка часов', exact: true })\u001b[22m\n\u001b[2m    11 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"52.300000000000004\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 52,3 процентов\"/>\u001b[22m\n\u001b[2m       - unexpected value \"52.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"51.588888888888896\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 51,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"51.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"50.87777777777779\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 50,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"50.9\"\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"49.45555555555557\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 49,5 процентов\"/>\u001b[22m\n\u001b[2m    - unexpected value \"49.5\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"48.744444444444454\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 48,7 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"48.7\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"48.033333333333346\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 48 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"48\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"47.32222222222223\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 47,3 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"47.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"46.61111111111112\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 46,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"46.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"45.900000000000006\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 45,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"45.9\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"45.1888888888889\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 45,2 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"45.2\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"44.47777777777778\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 44,5 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"44.5\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"43.76666666666667\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 43,8 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"43.8\"\u001b[22m\n\u001b[2m    4 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"43.05555555555556\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 43,1 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"43.1\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"42.34444444444445\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 42,3 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"42.3\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"41.63333333333333\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 41,6 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"41.6\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"40.922222222222224\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 40,9 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"40.9\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"40.21111111111111\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 40,2 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"40.2\"\u001b[22m\n\u001b[2m    3 × locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"39.49999999999999\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 39,5 процентов\"/>\u001b[22m\n\u001b[2m      - unexpected value \"39.5\"\u001b[22m\n\u001b[2m    - locator resolved to <input min=\"0\" max=\"100\" step=\"0.1\" type=\"range\" id=\"explosion-range\" value=\"38.788888888888884\" aria-describedby=\"range-help\" aria-valuetext=\"Разобрано на 38,8 процентов\"/>\u001b[22m\n\u001b[2m    - unexpected value \"38.8\"\u001b[22m\n\n\n  58 |   await expect(slider(page)).toHaveValue('52.3')\n  59 |   await page.getByRole('button', { name: 'Собрать', exact: true }).click()\n> 60 |   await expect(slider(page)).toHaveValue('0', { timeout: 30_000 })\n     |                              ^\n  61 |   await page.getByRole('button', { name: 'Разобрать', exact: true }).click()\n  62 |   await expect(slider(page)).toHaveValue('100', { timeout: 45_000 })\n  63 | })\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:60:30"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:45:31.293Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-automatic-movem-e7b1f--manual-input-and-completes/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-automatic-movem-e7b1f--manual-input-and-completes/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 30,
+                    "line": 60
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-f7031b29550704ccfdc5",
+          "file": "experience.spec.ts",
+          "line": 47,
+          "column": 1
+        },
+        {
+          "title": "labels, camera rotation, reset and accessible selection preserve progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 47460,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:46:35.191Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-1dcb6769a09dcd4b9ea6",
+          "file": "experience.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "responsive composition retains progress and has no horizontal overflow",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 21714,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:98:102",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 102,
+                      "line": 98
+                    },
+                    "snippet": "   96 |     await expect(slider(page)).toHaveValue('100')\n   97 |     await expect(canvas(page)).toHaveAttribute('data-progress', '1.00000')\n>  98 |     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true)\n      |                                                                                                      ^\n   99 |     const rect = await slider(page).boundingBox()\n  100 |     expect(rect!.width).toBeGreaterThan(200)\n  101 |   }"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 102,
+                        "line": 98
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n   96 |     await expect(slider(page)).toHaveValue('100')\n   97 |     await expect(canvas(page)).toHaveAttribute('data-progress', '1.00000')\n>  98 |     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true)\n      |                                                                                                      ^\n   99 |     const rect = await slider(page).boundingBox()\n  100 |     expect(rect!.width).toBeGreaterThan(200)\n  101 |   }\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:98:102"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:47:23.373Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-responsive-comp-376cd--has-no-horizontal-overflow/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-responsive-comp-376cd--has-no-horizontal-overflow/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 102,
+                    "line": 98
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-89de6b0d2f448e4355cb",
+          "file": "experience.spec.ts",
+          "line": 91,
+          "column": 1
+        },
+        {
+          "title": "reduced-motion controls set exact endpoints immediately",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 17384,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:47:46.702Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-1f39cb68327d8f0b2c50",
+          "file": "experience.spec.ts",
+          "line": 104,
+          "column": 1
+        },
+        {
+          "title": "failed model loading shows a real retry that requests the resource again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16516,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:48:04.775Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-3d3d5e82c2cbfde9af39",
+          "file": "experience.spec.ts",
+          "line": 113,
+          "column": 1
+        },
+        {
+          "title": "unavailable WebGL shows the fallback and disables inoperative controls",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9626,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:48:21.411Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-71c8748ce39395f52db4",
+          "file": "experience.spec.ts",
+          "line": 128,
+          "column": 1
+        },
+        {
+          "title": "context loss is handled and restoration reinitializes the scene",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 29555,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:48:31.161Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-a19c1be2942ba6efafff",
+          "file": "experience.spec.ts",
+          "line": 147,
+          "column": 1
+        },
+        {
+          "title": "save desktop and mobile evidence for the assembled and exploded model",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "interrupted",
+                  "duration": 23906,
+                  "error": {
+                    "message": "Error: page.screenshot: Test ended.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n",
+                    "stack": "Error: page.screenshot: Test ended.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:172:16",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 16,
+                      "line": 172
+                    },
+                    "snippet": "  170 |     await setProgress(page, percent)\n  171 |     await page.waitForTimeout(200)\n> 172 |     await page.screenshot({ path: `docs/screenshots/desktop-${percent}.png`, fullPage: true })\n      |                ^\n  173 |   }\n  174 |   await page.setViewportSize({ width: 390, height: 844 })\n  175 |   await page.evaluate(() => window.scrollTo(0, 0))"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 16,
+                        "line": 172
+                      },
+                      "message": "Error: page.screenshot: Test ended.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\n\n  170 |     await setProgress(page, percent)\n  171 |     await page.waitForTimeout(200)\n> 172 |     await page.screenshot({ path: `docs/screenshots/desktop-${percent}.png`, fullPage: true })\n      |                ^\n  173 |   }\n  174 |   await page.setViewportSize({ width: 390, height: 844 })\n  175 |   await page.evaluate(() => window.scrollTo(0, 0))\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:172:16"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T21:49:00.796Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-save-desktop-an-bf0de-ssembled-and-exploded-model/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-save-desktop-an-bf0de-ssembled-and-exploded-model/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 16,
+                    "line": 172
+                  }
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-59820a244243c46c1281",
+          "file": "experience.spec.ts",
+          "line": 166,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile touch interaction",
+          "file": "experience.spec.ts",
+          "line": 184,
+          "column": 6,
+          "specs": [
+            {
+              "title": "touch selection and a native range tap work in the mobile viewport",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "116f6b4a9defd92cdbb9-f214e020082c2986f093",
+              "file": "experience.spec.ts",
+              "line": 187,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T21:45:06.241Z",
+    "duration": 259015.494,
+    "expected": 6,
+    "skipped": 2,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

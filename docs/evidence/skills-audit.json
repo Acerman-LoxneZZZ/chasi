@@ -1,0 +1,386 @@
+[
+  {
+    "skill": "imagegen",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/skills/.system/imagegen/SKILL.md",
+    "readable": true,
+    "bytes": 19201,
+    "sha256": "681ddb4ad6d06a2acc78a3535b583f8d0c1ea800ecda3d56370d3310fd2cd4ba"
+  },
+  {
+    "skill": "openai-docs",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/skills/.system/openai-docs/SKILL.md",
+    "readable": true,
+    "bytes": 5437,
+    "sha256": "aa6829e21df2223167c85d2e49b6337a7345c84c1033f1ec10182c7882b36d45"
+  },
+  {
+    "skill": "skill-creator",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/skills/.system/skill-creator/SKILL.md",
+    "readable": true,
+    "bytes": 15311,
+    "sha256": "6656e54755638e8efcf275a472b9672eaa8a9a1b9e59dc210e275b03b59e1e66"
+  },
+  {
+    "skill": "skill-installer",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/skills/.system/skill-installer/SKILL.md",
+    "readable": true,
+    "bytes": 3367,
+    "sha256": "d68b77e5bbb34dedab89d134da52855f140fc4b4299b80104f534e3b9e98f8ee"
+  },
+  {
+    "skill": "banner-design",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/banner-design/SKILL.md",
+    "readable": true,
+    "bytes": 7071,
+    "sha256": "ccb89ddc848f60bfe630cb19dfe3e062df94a029467a9b15259f2761019ac5c4"
+  },
+  {
+    "skill": "baseline-ui",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/baseline-ui/SKILL.md",
+    "readable": true,
+    "bytes": 3419,
+    "sha256": "fea3322f36d58fdafafce2aef56e4556dd2ac7b20876b7dff7d8be7f25fa597f"
+  },
+  {
+    "skill": "better-accessibility",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-accessibility/SKILL.md",
+    "readable": true,
+    "bytes": 10949,
+    "sha256": "f3f9dc26c947dbdfc64be80d3c0d278d5d8bb070c7826b2dae6bf8c380e81586"
+  },
+  {
+    "skill": "better-colors",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-colors/SKILL.md",
+    "readable": true,
+    "bytes": 7698,
+    "sha256": "2fc5964fe9adae02e8ba4d80d40ad85d23da227f3eab3b55e06c7df0ac7e7652"
+  },
+  {
+    "skill": "better-interface",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-interface/SKILL.md",
+    "readable": true,
+    "bytes": 8779,
+    "sha256": "915ed5dc1442d9b78782900ff8b62160133362a2fe23998917814bfb6422869e"
+  },
+  {
+    "skill": "better-layout",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-layout/SKILL.md",
+    "readable": true,
+    "bytes": 8414,
+    "sha256": "4e7fd6880f41a87a21bb3be8e0b2bd7e7b8c561af5fb706ec0bb3e58877d60ec"
+  },
+  {
+    "skill": "better-typography",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-typography/SKILL.md",
+    "readable": true,
+    "bytes": 12244,
+    "sha256": "8f00a576f6c8d2f8d72dfbffe765ce569982509d01533ea5881de6e1918d3a68"
+  },
+  {
+    "skill": "better-ui",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-ui/SKILL.md",
+    "readable": true,
+    "bytes": 11122,
+    "sha256": "2d5f9fa4f3bbf045da914349b6e5fde559c947e5323968350b65bb2cdc6b3e4f"
+  },
+  {
+    "skill": "better-writing",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/better-writing/SKILL.md",
+    "readable": true,
+    "bytes": 9414,
+    "sha256": "109e4337da3621410c225b137d4683d8c246ca06071990a22882376ad60ec6e3"
+  },
+  {
+    "skill": "brand",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/brand/SKILL.md",
+    "readable": true,
+    "bytes": 3926,
+    "sha256": "1c24139633e2ebf11da4f97eaeb1c0564f8658a40b3ad779387a5b8c6cb76dbc"
+  },
+  {
+    "skill": "build-design",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/build-design/SKILL.md",
+    "readable": true,
+    "bytes": 6085,
+    "sha256": "d51cb44f594de7248340e9369c767f70a955483ba77f9976697cdbaf2f073a68"
+  },
+  {
+    "skill": "component-canvas",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/component-canvas/SKILL.md",
+    "readable": true,
+    "bytes": 8900,
+    "sha256": "ef2d4b55a2ab83b5e00f0e7f13d7e5efd84a2743dac701d1854fafd9d09418ea"
+  },
+  {
+    "skill": "create-canvas",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/create-canvas/SKILL.md",
+    "readable": true,
+    "bytes": 13554,
+    "sha256": "a2043194d190b49f3aaebdd85de3466d689f87fb6c2b54207635088dba7de5d4"
+  },
+  {
+    "skill": "create-design-md",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/create-design-md/SKILL.md",
+    "readable": true,
+    "bytes": 16208,
+    "sha256": "adba4fa94a9ca0291811ac26405e8fe15c1a6375743a80971c6f895bb837eeed"
+  },
+  {
+    "skill": "design",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/design/SKILL.md",
+    "readable": true,
+    "bytes": 14196,
+    "sha256": "e93fe3683b7fa18a9bfcd00c0dc6e12c6859be07b7bfe20145f96ea49b72da13"
+  },
+  {
+    "skill": "design-system",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/design-system/SKILL.md",
+    "readable": true,
+    "bytes": 7458,
+    "sha256": "8aa5ff93320559a6e5289d37b6b06b3307737dbfb4a6f3fc44135c705613c511"
+  },
+  {
+    "skill": "documents:documents",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-primary-runtime/documents/26.1025.11240/skills/documents/SKILL.md",
+    "readable": true,
+    "bytes": 41564,
+    "sha256": "c9b9ba61ac15f20a600220bc10a380c7753992bbd3c323bfe33fae864adefc21"
+  },
+  {
+    "skill": "fixing-accessibility",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/fixing-accessibility/SKILL.md",
+    "readable": true,
+    "bytes": 4718,
+    "sha256": "549261e8a53b53a1a20c0ddbf736821e5fc0876ad82eee76e0efab8e9ee9dadf"
+  },
+  {
+    "skill": "fixing-metadata",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/fixing-metadata/SKILL.md",
+    "readable": true,
+    "bytes": 4439,
+    "sha256": "b8315ff95a92dcfa48c33e2b4838a31d9448bd46252aab45726549ce865d6547"
+  },
+  {
+    "skill": "fixing-motion-performance",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/fixing-motion-performance/SKILL.md",
+    "readable": true,
+    "bytes": 5565,
+    "sha256": "0a2d654902bc04263ce68c8c02967ef03f17b482e855360a5463211d99d7baa9"
+  },
+  {
+    "skill": "frontend-design",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/frontend-design/SKILL.md",
+    "readable": true,
+    "bytes": 9390,
+    "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3"
+  },
+  {
+    "skill": "impeccable",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/impeccable/SKILL.md",
+    "readable": true,
+    "bytes": 11762,
+    "sha256": "fab04b31f946573b00a8559db1fc070f8ea5825254d491c2b13156e5661a86d7"
+  },
+  {
+    "skill": "improve-ui",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/improve-ui/SKILL.md",
+    "readable": true,
+    "bytes": 7830,
+    "sha256": "fa2ac808f6d9dab7bb3620880b014d2c18e227e5b006102856038096e573e69a"
+  },
+  {
+    "skill": "pages:maintain-space",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/pages/0.1.26/skills/maintain-space/SKILL.md",
+    "readable": true,
+    "bytes": 6600,
+    "sha256": "53570e6cb8663d370dce15ed0d67208876c3b13015832c352daa759213e7378e"
+  },
+  {
+    "skill": "pages:manage-schedules",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/pages/0.1.26/skills/manage-schedules/SKILL.md",
+    "readable": true,
+    "bytes": 7719,
+    "sha256": "e0a464a83f15a6e896c5536cab775f667ebd0dd61eb64fe3c877a41935d64bd9"
+  },
+  {
+    "skill": "pages:organize-space",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/pages/0.1.26/skills/organize-space/SKILL.md",
+    "readable": true,
+    "bytes": 8959,
+    "sha256": "fe553fb15809c972ae528d64917489e958f8cbf9432629caa79fd6da6b207da4"
+  },
+  {
+    "skill": "pages:write-page",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/pages/0.1.26/skills/write-page/SKILL.md",
+    "readable": true,
+    "bytes": 10721,
+    "sha256": "39cb2ab7aa056cd00a38067f833cf5a7f19206e104e58320fc113ba699c14493"
+  },
+  {
+    "skill": "pdf:pdf",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-primary-runtime/pdf/26.1025.11240/skills/pdf/SKILL.md",
+    "readable": true,
+    "bytes": 7809,
+    "sha256": "a6e20f4ae66364a06d577dd51e0ce66ee2ef955be129cbe195e0a27f403daaf8"
+  },
+  {
+    "skill": "plugin-management:plugin-management",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/plugin-management/0.1.0/skills/plugin-management/SKILL.md",
+    "readable": true,
+    "bytes": 2983,
+    "sha256": "653841cc21205269f08b0ce135891e1518dac616a766bcfb0b57d788d3f68b10"
+  },
+  {
+    "skill": "presentations:Presentations",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-primary-runtime/presentations/26.1025.11240/skills/presentations/SKILL.md",
+    "readable": true,
+    "bytes": 29794,
+    "sha256": "bb3726eff35cb82241fd2c3b09fcdb18cc3bf3daefddf8df929d2e0bd4d2af2f"
+  },
+  {
+    "skill": "sites:sites",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/sites/1.1.2/skills/sites/SKILL.md",
+    "readable": true,
+    "bytes": 12370,
+    "sha256": "00750ea5ca37e2b49afd2a57fee2149d22ee4f48af40bc094e6d2cee3e7bd1ad"
+  },
+  {
+    "skill": "sites:sites-remix",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/sites/1.1.2/skills/sites-remix/SKILL.md",
+    "readable": true,
+    "bytes": 7348,
+    "sha256": "34a249750d98e38f676fa391819593ab5c14e5f46f9137832a8c49180d47022d"
+  },
+  {
+    "skill": "slides",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/slides/SKILL.md",
+    "readable": true,
+    "bytes": 1720,
+    "sha256": "86c07f19ec09f79441d3837e909cfcd51034b83bdcc88094c15e652be1e765cb"
+  },
+  {
+    "skill": "spreadsheets:Spreadsheets",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.1025.11240/skills/spreadsheets/SKILL.md",
+    "readable": true,
+    "bytes": 65314,
+    "sha256": "25da47cec10100f2a08df9feaa252864a738816aca30562ae6ba111d7b1eb48e"
+  },
+  {
+    "skill": "spreadsheets:excel-live-control",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.1025.11240/skills/excel-live-control/SKILL.md",
+    "readable": true,
+    "bytes": 71942,
+    "sha256": "1c27488fa2a59ce2cc8925a12527ee9c7aa40ccf0701f3f2719ab17858586e8b"
+  },
+  {
+    "skill": "teardown",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/teardown/SKILL.md",
+    "readable": true,
+    "bytes": 10593,
+    "sha256": "9cf92fbee3ffbf28da72ef02ff2ba74bb6333f406cebf379a5c54a3554a72298"
+  },
+  {
+    "skill": "template-creator:template-creator",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-primary-runtime/template-creator/26.1025.11240/skills/template-creator/SKILL.md",
+    "readable": true,
+    "bytes": 19036,
+    "sha256": "f1d14fd2847a2e879611a8b8f872f5dc4676a0607958d015274d2dc61e812deb"
+  },
+  {
+    "skill": "ui-skills-root",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/ui-skills-root/SKILL.md",
+    "readable": true,
+    "bytes": 1448,
+    "sha256": "d4e1033f910467164a9cd3931277c1b309cb87c6d23cb5f184a65bfdf92b1c9c"
+  },
+  {
+    "skill": "ui-styling",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/ui-styling/SKILL.md",
+    "readable": true,
+    "bytes": 10945,
+    "sha256": "625e302c60ee8f2e22d56cbe638c4a739e2657f566dae42689503ad517c30f1e"
+  },
+  {
+    "skill": "ui-ux-pro-max",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.agents/skills/ui-ux-pro-max/SKILL.md",
+    "readable": true,
+    "bytes": 15969,
+    "sha256": "ea087c341bfb5b23195c7302027268ede86da802554c18a5c4896a6017b439f9"
+  },
+  {
+    "skill": "visualize:visualize",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-bundled/visualize/1.0.49/skills/visualize/SKILL.md",
+    "readable": true,
+    "bytes": 33386,
+    "sha256": "37a648f231b3716956e5b534bff1eef36195b5f7261ccd78e913a9ad5c961f0f"
+  },
+  {
+    "skill": "work-pets:create-pet",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/work-pets/0.1.6/skills/create-pet/SKILL.md",
+    "readable": true,
+    "bytes": 17353,
+    "sha256": "841354fb8116f8fdfd3b643b30828f5180196c594d3fed9b669b948b88892af1"
+  },
+  {
+    "skill": "work-pets:pets",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/work-pets/0.1.6/skills/pets/SKILL.md",
+    "readable": true,
+    "bytes": 3552,
+    "sha256": "1bf5d45fd6a6390aab777229293fb05cef7cf898aac882f8955e40c378e52fcd"
+  },
+  {
+    "skill": "work-pets:update-pet",
+    "status": "Уже доступен",
+    "path": "/home/nolimetrus/.codex/plugins/cache/openai-curated-remote/work-pets/0.1.6/skills/update-pet/SKILL.md",
+    "readable": true,
+    "bytes": 4272,
+    "sha256": "c63c98d67b6ad781a72a8f9837ba1fb5e2d2a8054a2562e4025890a97d8a0e67"
+  }
+]

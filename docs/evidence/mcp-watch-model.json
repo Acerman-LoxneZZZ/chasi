@@ -1,0 +1,174 @@
+{
+  "client": "external MCP Python SDK",
+  "verified_at_utc": "2026-10-28T21:38:58.939088+00:00",
+  "native_codex_tools_reloaded": false,
+  "steps": [
+    {
+      "tool": "execute_blender_code",
+      "arguments": {
+        "code": "import runpy\nrunpy.run_path('/home/nolimetrus/Рабочий стол/3DD/assets/blender/build_watch.py', run_name='__main__')"
+      },
+      "is_error": false,
+      "text": [
+        "Code executed successfully: Warning: No mesh data to join\nInfo: Saved as \"pocket-watch.blend\"\n00:39:14 | INFO: Starting glTF 2.0 export\n00:39:14 | INFO: Extracting primitive: convex_back_cover_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: balance_axle_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: barrel_lid_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: bow_pivot_left_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: case_pendant_neck_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: crown_end_reveal_mesh.002\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: stem_collar_mesh.003\n00:39:14 | INFO: Primitives created: 1\n00:39:14 | INFO: Extracting primitive: dial_printed_circle_mesh.003\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: dial_foot_shaft_mesh.002\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: dial_foot_shaft_mesh.003\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: dial_foot_mesh.003\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bezel_micro_ring_mesh.005\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: crystal_shallow_lens_mesh.001\n00:39:14 | INFO: Primitives created: 1\n00:39:14 | INFO: Extracting primitive: gear_center_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: gear_escape_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: gear_fourth_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: gear_intermediate_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: gear_winding_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: hour_hand_pivot_eye_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: central_cap_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: small_second_needle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: hour_reduction_wheel_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: separate_setting_1_pivot_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: separate_setting_2_pivot_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: separate_setting_3_pivot_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: barrel_coiled_mainspring_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: barrel_drum_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: motion_work_cannon_axle_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: balance_cock_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: center_bridge_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: pallet_bridge_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: train_bridge_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: upper_bridge_bearing_island_mesh.002\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: mainplate_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: pallet_anchor_mesh.001\n00:39:14 | INFO: Primitives created: 3\n00:39:14 | INFO: Extracting primitive: ratchet_axle_mesh.001\n00:39:14 | INFO: Primitives created: 1\n00:39:14 | INFO: Extracting primitive: bridge_screw_01_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_02_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_03_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_04_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_05_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_06_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_07_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_08_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_09_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: bridge_screw_10_headbase_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:14 | INFO: Extracting primitive: click_lever_mesh.001\n00:39:14 | INFO: Primitives created: 2\n00:39:15 | INFO: Finished glTF 2.0 export in 0.983548641204834 s\n\nWATCH_EXPORT_VALIDATED {\"status\": \"passed\", \"blenderVersion\": \"4.5.9 LTS\", \"model\": \"public/models/pocket-watch.glb\", \"manifest\": \"src/data/watch-parts.json\", \"bytes\": 3020672, \"independentParts\": 47, \"nodes\": 95, \"meshes\": 47, \"materials\": 12, \"triangles\": 120704, \"externalImages\": 0, \"checks\": [\"glTF2 header and byte length\", \"unique names\", \"all carriers are direct watch_root children\", \"manifest matches exported nodes\", \"rest TRS read from exported GLB\", \"positive scales\", \"finite values\", \"normalized quaternions\", \"Y-up / Z-forward landmarks\", \"no cameras\", \"no external textures\"], \"coordinateSystem\": \"X right, Y up to crown, +Z front\"}\nWATCH_BUILD_DONE 47 parts /home/nolimetrus/Рабочий стол/3DD/public/models/pocket-watch.glb\n"
+      ]
+    },
+    {
+      "tool": "get_scene_info",
+      "arguments": {
+        "root": "watch_root",
+        "fields": [
+          "location",
+          "children",
+          "materials",
+          "details"
+        ],
+        "limit": 120
+      },
+      "is_error": false,
+      "text": [
+        "Scene 'PocketWatch_Exhibit' | 48 empty, 47 mesh | active dial_fastener_02_geometry | selected watch_root, case_body, case_body_geometry, back_cover, back_cover_geometry +90 more | mode OBJECT\n\nShowing 95 of 95 (name | type | location | details | materials | children):\nwatch_root | empty | at (0.0, 0.0, 0.0) | 47 children\n  back_cover | empty | at (0.0, 0.31, 0.0) | 1 children\n    back_cover_geometry | mesh | at (0.0, 0.31, 0.0) | 3793 faces | mat Satin brass, Warm aged case\n  balance_assembly | empty | at (0.53, -0.03, -0.48) | 1 children\n    balance_assembly_geometry | mesh | at (0.53, -0.03, -0.48) | 3416 faces | mat Polished steel, Polished brass edges, Blued steel hands\n  barrel_cover | empty | at (0.62, -0.06, 0.46) | 1 children\n    barrel_cover_geometry | mesh | at (0.62, -0.06, 0.46) | 1368 faces | mat Satin brass, Warm aged case, Polished steel\n  bow | empty | at (0.0, 0.0, 1.88) | 1 children\n    bow_geometry | mesh | at (0.0, 0.0, 1.88) | 1552 faces | mat Polished brass edges, Satin brass\n  case_body | empty | at (0.0, 0.0, 0.0) | 1 children\n    case_body_geometry | mesh | at (0.0, 0.0, 0.0) | 5720 faces | mat Warm aged case, Polished brass edges\n  crown | empty | at (0.0, 0.0, 1.7) | 1 children\n    crown_geometry | mesh | at (0.0, 0.0, 1.7) | 2616 faces | mat Satin brass, Polished brass edges\n  crown_stem | empty | at (0.0, 0.0, 1.3) | 1 children\n    crown_stem_geometry | mesh | at (0.0, 0.0, 1.3) | 480 faces | mat Brushed steel\n  dial_face | empty | at (0.0, -0.24, 0.0) | 1 children\n    dial_face_geometry | mesh | at (0.0, -0.24, 0.0) | 6447 faces | mat Charcoal dial printing, Ivory vitreous enamel, Recessed seconds enamel\n  dial_fastener_01 | empty | at (-0.73, -0.12, 0.67) | 1 children\n    dial_fastener_01_geometry | mesh | at (-0.73, -0.12, 0.67) | 240 faces | mat Polished steel, Satin brass\n  dial_fastener_02 | empty | at (0.73, -0.12, -0.67) | 1 children\n    dial_fastener_02_geometry | mesh | at (0.73, -0.12, -0.67) | 240 faces | mat Polished steel, Satin brass\n  dial_support | empty | at (0.0, -0.17, 0.0) | 1 children\n    dial_support_geometry | mesh | at (0.0, -0.17, 0.0) | 1736 faces | mat Brushed steel, Satin brass\n  front_bezel | empty | at (0.0, -0.34, 0.0) | 1 children\n    front_bezel_geometry | mesh | at (0.0, -0.34, 0.0) | 3152 faces | mat Satin brass, Polished brass edges\n  front_glass | empty | at (0.0, -0.4, 0.0) | 1 children\n    front_glass_geometry | mesh | at (0.0, -0.4, 0.0) | 896 faces | mat Optical crystal\n  gear_center | empty | at (0.0, -0.01, 0.1) | 1 children\n    gear_center_geometry | mesh | at (0.0, -0.01, 0.1) | 2040 faces | mat Brushed steel, Satin brass\n  gear_escape | empty | at (-0.1, -0.05, -0.63) | 1 children\n    gear_escape_geometry | mesh | at (-0.1, -0.05, -0.63) | 1448 faces | mat Brushed steel, Satin brass\n  gear_fourth | empty | at (-0.46, -0.04, -0.49) | 1 children\n    gear_fourth_geometry | mesh | at (-0.46, -0.04, -0.49) | 1672 faces | mat Brushed steel, Satin brass\n  gear_intermediate | empty | at (-0.57, -0.03, -0.05) | 1 children\n    gear_intermediate_geometry | mesh | at (-0.57, -0.03, -0.05) | 1768 faces | mat Brushed steel, Satin brass\n  gear_winding | empty | at (-0.14, -0.04, 0.81) | 1 children\n    gear_winding_geometry | mesh | at (-0.14, -0.04, 0.81) | 1480 faces | mat Brushed steel, Satin brass\n  hand_hour | empty | at (0.0, -0.3, 0.0) | 1 children\n    hand_hour_geometry | mesh | at (0.0, -0.3, 0.0) | 363 faces | mat Blued steel hands, Brushed steel\n  hand_minute | empty | at (0.0, -0.32, 0.0) | 1 children\n    hand_minute_geometry | mesh | at (0.0, -0.32, 0.0) | 483 faces | mat Brushed steel, Blued steel hands\n  hand_second | empty | at (0.0, -0.29, -0.53) | 1 children\n    hand_second_geometry | mesh | at (0.0, -0.29, -0.53) | 171 faces | mat Blued steel hands, Polished brass edges\n  hour_wheel | empty | at (0.23, -0.15, -0.03) | 1 children\n    hour_wheel_geometry | mesh | at (0.23, -0.15, -0.03) | 1416 faces | mat Brushed steel, Satin brass\n  jewel_setting_1 | empty | at (-0.57, -0.15, -0.05) | 1 children\n    jewel_setting_1_geometry | mesh | at (-0.57, -0.15, -0.05) | 456 faces | mat Polished steel, Synthetic ruby bearings\n  jewel_setting_2 | empty | at (-0.46, -0.16, -0.49) | 1 children\n    jewel_setting_2_geometry | mesh | at (-0.46, -0.16, -0.49) | 456 faces | mat Polished steel, Synthetic ruby bearings\n  jewel_setting_3 | empty | at (0.53, -0.17, -0.48) | 1 children\n    jewel_setting_3_geometry | mesh | at (0.53, -0.17, -0.48) | 456 faces | mat Polished steel, Synthetic ruby bearings\n  mainspring | empty | at (0.62, 0.0, 0.46) | 1 children\n    mainspring_geometry | mesh | at (0.62, 0.0, 0.46) | 1398 faces | mat Dark spring steel, Brushed steel\n  mainspring_barrel | empty | at (0.62, 0.01, 0.46) | 1 children\n    mainspring_barrel_geometry | mesh | at (0.62, 0.01, 0.46) | 2532 faces | mat Satin brass, Polished brass edges\n  motion_works | empty | at (0.0, -0.16, 0.0) | 1 children\n    motion_works_geometry | mesh | at (0.0, -0.16, 0.0) | 1512 faces | mat Brushed steel, Satin brass\n  movement_bridge_balance | empty | at (0.53, -0.13, -0.48) | 1 children\n    movement_bridge_balance_geometry | mesh | at (0.53, -0.13, -0.48) | 893 faces | mat Satin brass, Polished steel, Synthetic ruby bearings\n  movement_bridge_center | empty | at (0.0, -0.13, 0.1) | 1 children\n    movement_bridge_center_geometry | mesh | at (0.0, -0.13, 0.1) | 538 faces | mat Satin brass, Polished steel, Synthetic ruby bearings\n  movement_bridge_pallet | empty | at (0.2, -0.12, -0.55) | 1 children\n    movement_bridge_pallet_geometry | mesh | at (0.2, -0.12, -0.55) | 523 faces | mat Satin brass, Polished steel, Synthetic ruby bearings\n  movement_bridge_train | empty | at (-0.35, -0.12, -0.32) | 1 children\n    movement_bridge_train_geometry | mesh | at (-0.35, -0.12, -0.32) | 1044 faces | mat Satin brass, Polished steel, Synthetic ruby bearings\n  movement_bridge_upper | empty | at (0.0, -0.1, 0.0) | 1 children\n    movement_bridge_upper_geometry | mesh | at (0.0, -0.1, 0.0) | 1925 faces | mat Satin brass, Polished steel, Synthetic ruby bearings\n  movement_mainplate | empty | at (0.0, 0.13, 0.0) | 1 children\n    movement_mainplate_geometry | mesh | at (0.0, 0.13, 0.0) | 4304 faces | mat Satin brass, Warm aged case, Brushed steel\n  pallet_fork | empty | at (0.2, -0.06, -0.55) | 1 children\n    pallet_fork_geometry | mesh | at (0.2, -0.06, -0.55) | 352 faces | mat Brushed steel, Synthetic ruby bearings, Polished steel\n  ratchet_wheel | empty | at (0.62, -0.12, 0.46) | 1 children\n    ratchet_wheel_geometry | mesh | at (0.62, -0.12, 0.46) | 1576 faces | mat Brushed steel\n  screw_bridge_01 | empty | at (-0.86, -0.16, 0.36) | 1 children\n    screw_bridge_01_geometry | mesh | at (-0.86, -0.16, 0.36) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_02 | empty | at (-0.67, -0.16, 0.82) | 1 children\n    screw_bridge_02_geometry | mesh | at (-0.67, -0.16, 0.82) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_03 | empty | at (-0.14, -0.16, 0.91) | 1 children\n    screw_bridge_03_geometry | mesh | at (-0.14, -0.16, 0.91) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_04 | empty | at (0.35, -0.18, 0.3) | 1 children\n    screw_bridge_04_geometry | mesh | at (0.35, -0.18, 0.3) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_05 | empty | at (-0.65, -0.16, -0.24) | 1 children\n    screw_bridge_05_geometry | mesh | at (-0.65, -0.16, -0.24) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_06 | empty | at (-0.32, -0.16, -0.64) | 1 children\n    screw_bridge_06_geometry | mesh | at (-0.32, -0.16, -0.64) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_07 | empty | at (0.93, -0.18, -0.67) | 1 children\n    screw_bridge_07_geometry | mesh | at (0.93, -0.18, -0.67) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_08 | empty | at (0.9, -0.17, 0.76) | 1 children\n    screw_bridge_08_geometry | mesh | at (0.9, -0.17, 0.76) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_09 | empty | at (0.97, 0.06, -0.3) | 1 children\n    screw_bridge_09_geometry | mesh | at (0.97, 0.06, -0.3) | 406 faces | mat Polished steel, Blued steel hands\n  screw_bridge_10 | empty | at (-0.6, 0.06, -0.83) | 1 children\n    screw_bridge_10_geometry | mesh | at (-0.6, 0.06, -0.83) | 406 faces | mat Polished steel, Blued steel hands\n  winding_click | empty | at (0.85, -0.13, 0.75) | 1 children\n    winding_click_geometry | mesh | at (0.85, -0.13, 0.75) | 192 faces | mat Brushed steel, Polished brass edges"
+      ]
+    },
+    {
+      "tool": "execute_blender_code",
+      "arguments": {
+        "code": "import bpy, json\nroot=bpy.data.objects['watch_root']\nparts=list(root.children)\nassert len(parts)==47\nassert all(any(c.type=='MESH' for c in p.children) for p in parts)\nprint(json.dumps({'scene':bpy.context.scene.name,'parts':len(parts),'mesh_objects':sum(o.type=='MESH' for o in bpy.context.scene.objects),'file':bpy.data.filepath,'part_names':sorted(p.name for p in parts)},ensure_ascii=False))\nfrom mathutils import Vector\neye=Vector((2.2,-6,2.0)); center=Vector((0,0,.25))\nfor area in bpy.context.screen.areas:\n    if area.type=='VIEW_3D':\n        space=area.spaces.active\n        space.region_3d.view_location=center\n        space.region_3d.view_distance=5.3\n        space.region_3d.view_rotation=(center-eye).to_track_quat('-Z','Y')\n        space.shading.type='MATERIAL'\n        space.overlay.show_overlays=False\n"
+      },
+      "is_error": false,
+      "text": [
+        "Code executed successfully: {\"scene\": \"PocketWatch_Exhibit\", \"parts\": 47, \"mesh_objects\": 47, \"file\": \"/home/nolimetrus/Рабочий стол/3DD/assets/blender/pocket-watch.blend\", \"part_names\": [\"back_cover\", \"balance_assembly\", \"barrel_cover\", \"bow\", \"case_body\", \"crown\", \"crown_stem\", \"dial_face\", \"dial_fastener_01\", \"dial_fastener_02\", \"dial_support\", \"front_bezel\", \"front_glass\", \"gear_center\", \"gear_escape\", \"gear_fourth\", \"gear_intermediate\", \"gear_winding\", \"hand_hour\", \"hand_minute\", \"hand_second\", \"hour_wheel\", \"jewel_setting_1\", \"jewel_setting_2\", \"jewel_setting_3\", \"mainspring\", \"mainspring_barrel\", \"motion_works\", \"movement_bridge_balance\", \"movement_bridge_center\", \"movement_bridge_pallet\", \"movement_bridge_train\", \"movement_bridge_upper\", \"movement_mainplate\", \"pallet_fork\", \"ratchet_wheel\", \"screw_bridge_01\", \"screw_bridge_02\", \"screw_bridge_03\", \"screw_bridge_04\", \"screw_bridge_05\", \"screw_bridge_06\", \"screw_bridge_07\", \"screw_bridge_08\", \"screw_bridge_09\", \"screw_bridge_10\", \"winding_click\"]}\n"
+      ]
+    },
+    {
+      "tool": "look",
+      "arguments": {
+        "mode": "angles",
+        "target": [
+          "watch_root"
+        ],
+        "views": [
+          [
+            2.2,
+            -6,
+            2.0
+          ]
+        ],
+        "shading": "material",
+        "max_size": 1000
+      },
+      "is_error": false,
+      "text": [
+        "Tiles left to right, top to bottom: (2.2, -6, 2). Framed 95 objects, 2.83 x 0.81 x 3.68 m across, centred at [0.0, -0.03, 0.42]."
+      ]
+    },
+    {
+      "tool": "execute_blender_code",
+      "arguments": {
+        "code": "import bpy\nfor obj in bpy.data.objects['front_glass'].children:\n    obj.hide_set(True)\nprint('VIEWPORT_ONLY_CRYSTAL_HIDDEN_NOT_SAVED')"
+      },
+      "is_error": false,
+      "text": [
+        "Code executed successfully: VIEWPORT_ONLY_CRYSTAL_HIDDEN_NOT_SAVED\n"
+      ]
+    },
+    {
+      "tool": "look",
+      "arguments": {
+        "mode": "angles",
+        "target": [
+          "watch_root"
+        ],
+        "views": [
+          [
+            2.2,
+            -6,
+            2.0
+          ]
+        ],
+        "shading": "material",
+        "max_size": 1000
+      },
+      "is_error": false,
+      "text": [
+        "Tiles left to right, top to bottom: (2.2, -6, 2). Framed 95 objects, 2.83 x 0.81 x 3.68 m across, centred at [0.0, -0.03, 0.42]."
+      ]
+    }
+  ],
+  "protocol_version": "2025-11-25",
+  "discovered_tools": [
+    "get_addon_status",
+    "disable_telemetry",
+    "get_scene_info",
+    "execute_blender_code",
+    "record_trajectory_feedback",
+    "look",
+    "generate_3d",
+    "search_assets",
+    "import_asset"
+  ],
+  "images": [
+    "docs/evidence/mcp-watch-model-0.png"
+  ],
+  "technical_viewport_preview": {
+    "image": "docs/evidence/mcp-watch-technical-preview.png",
+    "note": "Only the crystal mesh is hidden in the live Blender viewport to inspect the dial; not saved to blend or GLB. Full glass geometry remains in exported files and original capture.",
+    "gui_left_open": true,
+    "gui_scene": "PocketWatch_Exhibit"
+  },
+  "passed": true,
+  "artifacts": [
+    {
+      "path": "assets/blender/build_watch.py",
+      "bytes": 40010,
+      "sha256": "09cd234903ee97496976f676f97c0f89177121ad4eff1f9db74326a055fbcf93"
+    },
+    {
+      "path": "assets/blender/export_watch.py",
+      "bytes": 5595,
+      "sha256": "8d0a1b1ee658614deecefc400fc086286dc0446697ae5c610e614938964e42de"
+    },
+    {
+      "path": "assets/blender/pocket-watch.blend",
+      "bytes": 6347266,
+      "sha256": "6d7fb54f3bfa3cbbd3c94fbfd1243248030b22169150f56c6201eeefe401fc56"
+    },
+    {
+      "path": "public/models/pocket-watch.glb",
+      "bytes": 3020672,
+      "sha256": "c99b483b1115316e186a6473a92d4e5ee476d9b5bc1f05611000e7b5fb48b918"
+    },
+    {
+      "path": "src/data/watch-parts.json",
+      "bytes": 40320,
+      "sha256": "4a8301b04f5d31e7aa3e95f21d61903df397fca462b122b4b980a842aa6a9c3b"
+    }
+  ],
+  "model_validation": {
+    "status": "passed",
+    "blenderVersion": "4.5.9 LTS",
+    "model": "public/models/pocket-watch.glb",
+    "manifest": "src/data/watch-parts.json",
+    "bytes": 3020672,
+    "independentParts": 47,
+    "nodes": 95,
+    "meshes": 47,
+    "materials": 12,
+    "triangles": 120704,
+    "externalImages": 0,
+    "checks": [
+      "glTF2 header and byte length",
+      "unique names",
+      "all carriers are direct watch_root children",
+      "manifest matches exported nodes",
+      "rest TRS read from exported GLB",
+      "positive scales",
+      "finite values",
+      "normalized quaternions",
+      "Y-up / Z-forward landmarks",
+      "no cameras",
+      "no external textures"
+    ],
+    "coordinateSystem": "X right, Y up to crown, +Z front"
+  }
+}

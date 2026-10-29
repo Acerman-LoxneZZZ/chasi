@@ -1,0 +1,126 @@
+{
+  "client": "MCP Python SDK external verification client",
+  "test_entity": "PocketWatch_MCP_Test_68c2784440",
+  "steps": [
+    {
+      "tool": "get_addon_status",
+      "arguments": {},
+      "is_error": false,
+      "text": [
+        "{\n  \"up_to_date\": true,\n  \"protocol_version\": 15,\n  \"expected_protocol_version\": 15,\n  \"addon_version\": [\n    1,\n    8\n  ],\n  \"capabilities\": [\n    \"bpy_api_lookup\",\n    \"describe_node_type\",\n    \"drain_human_activity\",\n    \"execute_code\",\n    \"get_addon_info\",\n    \"get_object_info\",\n    \"get_scene_info\",\n    \"get_telemetry_consent\",\n    \"get_viewport_screenshot\",\n    \"get_world_state_snapshot\",\n    \"list_scene_items\",\n    \"pick_viewport_object\",\n    \"set_telemetry_consent\"\n  ],\n  \"blender_version\": \"4.5.9 LTS\",\n  \"premium_generators\": [],\n  \"libraries\": {\n    \"polyhaven\": \"off\",\n    \"sketchfab\": \"off\",\n    \"polypizza\": \"off\"\n  },\n  \"generators\": {\n    \"tripo\": \"off\",\n    \"hunyuan3d\": \"off\",\n    \"hyper3d\": \"off\",\n    \"meshy\": \"off\"\n  },\n  \"source\": \"native\",\n  \"warning\": null,\n  \"telemetry_consent\": false,\n  \"update_command\": \"uvx mcp-for-blender install-addon\",\n  \"after_install\": \"If the addon file was updated: in Blender, Preferences \\u2192 Add-ons \\u2192 disable/enable 'Interface: Blender MCP', or restart Blender, then Start MCP Server.\"\n}"
+      ]
+    },
+    {
+      "tool": "get_scene_info",
+      "arguments": {
+        "fields": [
+          "settings",
+          "location"
+        ],
+        "limit": 5
+      },
+      "is_error": false,
+      "text": [
+        "Scene 'PocketWatchDevelopment' | empty | active none | selected none | mode OBJECT\n(unsaved) | engine BLENDER_EEVEE_NEXT | frames 1-250 (now 1) at 24 fps | 1920x1080 | camera none | HDRI none | unit scale 1.0\n\nShowing 0 of 0 (name | type | location):"
+      ]
+    },
+    {
+      "tool": "execute_blender_code",
+      "arguments": {
+        "code": "import bpy, json\nname = 'PocketWatch_MCP_Test_68c2784440'\ncol = bpy.data.collections.new(name)\nbpy.context.scene.collection.children.link(col)\nbpy.ops.mesh.primitive_cube_add(size=0.35, location=(0,0,0.2))\nobj = bpy.context.object\nobj.name = name\nobj.data.name = name + \"_mesh\"\nfor collection in list(obj.users_collection):\n    collection.objects.unlink(obj)\ncol.objects.link(obj)\nmat = bpy.data.materials.new(name + \"_material\")\nmat.diffuse_color = (0.5, 0.2, 0.06, 1)\nobj.data.materials.append(mat)\nprint(json.dumps({\"name\": obj.name, \"location\": list(obj.location), \"collection\": col.name}))"
+      },
+      "is_error": false,
+      "text": [
+        "Code executed successfully: {\"name\": \"PocketWatch_MCP_Test_68c2784440\", \"location\": [0.0, 0.0, 0.20000000298023224], \"collection\": \"PocketWatch_MCP_Test_68c2784440\"}\n"
+      ]
+    },
+    {
+      "tool": "execute_blender_code",
+      "arguments": {
+        "code": "import bpy, json\nobj=bpy.data.objects['PocketWatch_MCP_Test_68c2784440']\nobj.location.x=0.65\nobj.data.materials[0].diffuse_color=(0.08,0.4,0.6,1)\nprint(json.dumps({\"name\":obj.name,\"location\":list(obj.location),\"material_rgba\":list(obj.data.materials[0].diffuse_color)}))"
+      },
+      "is_error": false,
+      "text": [
+        "Code executed successfully: {\"name\": \"PocketWatch_MCP_Test_68c2784440\", \"location\": [0.6499999761581421, 0.0, 0.20000000298023224], \"material_rgba\": [0.07999999821186066, 0.4000000059604645, 0.6000000238418579, 1.0]}\n"
+      ]
+    },
+    {
+      "tool": "get_scene_info",
+      "arguments": {
+        "query": "PocketWatch_MCP_Test_68c2784440",
+        "fields": [
+          "location",
+          "materials"
+        ],
+        "limit": 5
+      },
+      "is_error": false,
+      "text": [
+        "Scene 'PocketWatchDevelopment' | 1 mesh | active PocketWatch_MCP_Test_68c2784440 | selected PocketWatch_MCP_Test_68c2784440 | mode OBJECT\n\nShowing 1 of 1 (name | type | location | materials):\nPocketWatch_MCP_Test_68c2784440 | mesh | at (0.65, 0.0, 0.2) | mat PocketWatch_MCP_Test_68c2784440_material"
+      ]
+    },
+    {
+      "tool": "look",
+      "arguments": {
+        "mode": "angles",
+        "target": [
+          "PocketWatch_MCP_Test_68c2784440"
+        ],
+        "views": [
+          "three_quarter"
+        ],
+        "shading": "solid",
+        "max_size": 640
+      },
+      "is_error": false,
+      "text": [
+        "Tiles left to right, top to bottom: three_quarter. Framed 1 objects, 0.35 x 0.35 x 0.35 m across, centred at [0.65, 0.0, 0.2]."
+      ]
+    },
+    {
+      "tool": "execute_blender_code",
+      "arguments": {
+        "code": "import bpy, json\nname = 'PocketWatch_MCP_Test_68c2784440'\nobj = bpy.data.objects.get(name)\nif obj is not None:\n    mesh = obj.data\n    bpy.data.objects.remove(obj, do_unlink=True)\n    if mesh.users == 0:\n        bpy.data.meshes.remove(mesh)\ncol = bpy.data.collections.get(name)\nif col is not None:\n    bpy.data.collections.remove(col)\nmat = bpy.data.materials.get(name + \"_material\")\nif mat is not None and mat.users == 0:\n    bpy.data.materials.remove(mat)\nprint(json.dumps({\"test_object_removed\": bpy.data.objects.get(name) is None, \"test_collection_removed\": bpy.data.collections.get(name) is None}))"
+      },
+      "is_error": false,
+      "text": [
+        "Code executed successfully: {\"test_object_removed\": true, \"test_collection_removed\": true}\n"
+      ]
+    },
+    {
+      "tool": "get_scene_info",
+      "arguments": {
+        "query": "PocketWatch_MCP_Test_68c2784440",
+        "limit": 5
+      },
+      "is_error": false,
+      "text": [
+        "Scene 'PocketWatchDevelopment' | empty | active none | selected none | mode OBJECT\n\nShowing 0 of 0 (name | type | location | size | hidden | children):"
+      ]
+    }
+  ],
+  "protocol_version": "2025-11-25",
+  "server_info": {
+    "name": "MCP for Blender",
+    "title": null,
+    "version": "1.30.0",
+    "websiteUrl": null,
+    "icons": null
+  },
+  "discovered_tools": [
+    "get_addon_status",
+    "disable_telemetry",
+    "get_scene_info",
+    "execute_blender_code",
+    "record_trajectory_feedback",
+    "look",
+    "generate_3d",
+    "search_assets",
+    "import_asset"
+  ],
+  "images": [
+    "docs/evidence/mcp-test-scene-0.png"
+  ],
+  "final_scene_query": "Scene 'PocketWatchDevelopment' | empty | active none | selected none | mode OBJECT\n\nShowing 0 of 0 (name | type | location | size | hidden | children):",
+  "passed": true
+}

@@ -1,0 +1,21 @@
+{
+  "method": "720x500 CSS viewport at DPR 2, equivalent layout density to 1440x1000 at 200%; not native browser zoom",
+  "viewport": [
+    720,
+    500
+  ],
+  "devicePixelRatio": 2,
+  "scrollWidth": 720,
+  "slider": {
+    "x": 48,
+    "y": 241.5,
+    "width": 300,
+    "height": 44,
+    "top": 241.5,
+    "right": 348,
+    "bottom": 285.5,
+    "left": 48
+  },
+  "value": "100",
+  "enabled": true
+}

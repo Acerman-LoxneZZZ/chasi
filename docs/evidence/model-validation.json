@@ -1,0 +1,12 @@
+{
+  "valid": true,
+  "model": "public/models/pocket-watch.glb",
+  "sizeBytes": 3020672,
+  "parts": 47,
+  "gltfNodes": 95,
+  "meshes": 47,
+  "primitives": 101,
+  "vertices": 97525,
+  "triangles": 120704,
+  "externalResources": 0
+}

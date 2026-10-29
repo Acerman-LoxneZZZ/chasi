@@ -1,0 +1,60 @@
+{
+  "verified_at_utc": "2026-10-28T21:23:12.647925+00:00",
+  "platform": "Linux-6.14.0-37-generic-x86_64-with-glibc2.39",
+  "blender": {
+    "executable": "/home/nolimetrus/Рабочий стол/3DD/.tools/blender/blender-4.5.9-linux-x64/blender",
+    "version": "4.5.9 LTS",
+    "download_url": "https://download.blender.org/release/Blender4.5/blender-4.5.9-linux-x64.tar.xz",
+    "archive_sha256": "dcdc3eca6c9825bb35a8033b689c053f3cb5a9b0cd2a61b2eac2a49436b4ad3d"
+  },
+  "uv": {
+    "version": "0.13.6",
+    "path": "/home/nolimetrus/.local/bin/uv"
+  },
+  "mcp": {
+    "package": "mcp-for-blender",
+    "version": "2.2.6",
+    "sdk_version": "1.30.0",
+    "source_repo": "https://github.com/ahujasid/mcp-for-blender",
+    "source_revision": "8782963ba87a4c90482198bd7c7e17219ac3a0f7",
+    "executable": "/home/nolimetrus/.local/bin/mcp-for-blender",
+    "python": "/home/nolimetrus/.local/share/uv/tools/mcp-for-blender/bin/python",
+    "transport": "stdio",
+    "blender_host": "127.0.0.1",
+    "blender_port": 9876,
+    "addon_path": "/home/nolimetrus/Рабочий стол/3DD/.tools/blender-user/scripts/addons/blender_mcp.py",
+    "addon_sha256": "6c2917c157c26d7549adcbd480243db2154a9b06bc580664f090530c8ef3801f",
+    "addon_version": [
+      1,
+      8
+    ],
+    "addon_protocol": 15,
+    "telemetry_enabled": false,
+    "sdk_smoke_test_passed": true,
+    "sdk_tools_discovered": [
+      "get_addon_status",
+      "disable_telemetry",
+      "get_scene_info",
+      "execute_blender_code",
+      "record_trajectory_feedback",
+      "look",
+      "generate_3d",
+      "search_assets",
+      "import_asset"
+    ],
+    "codex_configuration_path": "/home/nolimetrus/Рабочий стол/3DD/.codex/config.toml",
+    "codex_cli_config_discovered": true,
+    "native_tools_discovered_in_current_turn": false,
+    "native_discovery_limitation": "No supported MCP hot-reload tool exposed in the active conversation. New server registered for the next client session; external SDK verification is not native tool discovery.",
+    "watch_model_built_via_mcp": true,
+    "watch_model_evidence": "docs/evidence/mcp-watch-model.json",
+    "watch_model_screenshot": "docs/evidence/mcp-watch-technical-preview.png",
+    "watch_model_verified_at_utc": "2026-10-28T21:38:58.939088+00:00"
+  },
+  "skills": {
+    "requested": 48,
+    "already_available": 48,
+    "installed": 0
+  },
+  "evidence": "docs/evidence/mcp-smoke-test.json"
+}

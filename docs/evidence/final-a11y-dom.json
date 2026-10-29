@@ -1,0 +1,13 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "module": "http://127.0.0.1:4173/assets/index-Bi65FQsc.js",
+  "language": "ru",
+  "webglIntentionallyDisabled": true,
+  "sceneStatus": "unsupported",
+  "outputLive": "off",
+  "partInfoLiveRegions": 1,
+  "coarseStageStatusRegions": 1,
+  "sliderDisabled": true,
+  "fallbackLoaded": true,
+  "passed": true
+}
