@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 
-const runs = ['docs/browser-v2-full.json', 'docs/browser-test-results.json']
+const runs = ['docs/browser-v2-full.json', 'docs/browser-v2-targeted.json']
 const tests = new Map()
 function collect(suites, source, parents = []) {
   for (const suite of suites ?? []) {

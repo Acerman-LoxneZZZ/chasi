@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { PerspectiveCamera, Quaternion, Vector3 } from 'three'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { CameraRig } from './CameraRig'
+import { CameraRig, evaluateStoryCameraAngles } from './CameraRig'
 
 const setup = () => {
   const camera = new PerspectiveCamera(33, 1, .1, 100)
@@ -13,10 +13,44 @@ const setup = () => {
 }
 
 describe('scenario camera and measured framing', () => {
+  it('makes a complete measured orbit instead of taking the short quaternion path', () => {
+    const { camera, rig, points } = setup()
+    for (const [width, height, expectedDegrees] of [[1440, 900, 423], [390, 700, 407]]) {
+      let previous = 0, turn = 0
+      for (let index = 0; index <= 200; index++) {
+        rig.frame(index / 200, width, height, points)
+        const direction = new Vector3(0, 0, 1).applyQuaternion(camera.quaternion)
+        const angle = Math.atan2(direction.x, direction.z)
+        if (index) turn += Math.atan2(Math.sin(angle - previous), Math.cos(angle - previous))
+        previous = angle
+      }
+      expect(turn * 180 / Math.PI).toBeCloseTo(expectedDegrees, 9)
+      // Both endpoints show the front, despite the complete revolution between.
+      rig.frame(0, width, height, points)
+      expect(new Vector3(0, 0, 1).applyQuaternion(camera.quaternion).z).toBeGreaterThan(.8)
+      rig.frame(1, width, height, points)
+      expect(new Vector3(0, 0, 1).applyQuaternion(camera.quaternion).z).toBeGreaterThan(.65)
+    }
+  })
+  it('keeps the long orbit absolute, clamped and reversible with a restrained pitch and roll', () => {
+    for (const mobile of [false, true]) {
+      const expected = evaluateStoryCameraAngles(.37, mobile)
+      const output = { yaw: 0, pitch: 0, roll: 0 }
+      for (const p of [1, .1, .9, .25, 0, .37]) evaluateStoryCameraAngles(p, mobile, output)
+      expect(output).toEqual(expected)
+      for (let index = 0; index <= 200; index++) {
+        const angles = evaluateStoryCameraAngles(index / 200, mobile, output)
+        expect(Math.abs(angles.pitch)).toBeLessThan(22 * Math.PI / 180)
+        expect(Math.abs(angles.roll)).toBeLessThan(9 * Math.PI / 180)
+      }
+      expect(evaluateStoryCameraAngles(-2, mobile)).toEqual(evaluateStoryCameraAngles(0, mobile))
+      expect(evaluateStoryCameraAngles(5, mobile)).toEqual(evaluateStoryCameraAngles(1, mobile))
+    }
+  })
   it('keeps all bounds inside the viewport at required desktop and phone sizes', () => {
     const { camera, rig, points } = setup()
     for (const [width, height] of [[1440, 620], [1280, 430], [390, 350], [360, 330]]) {
-      for (const p of [0, .2, .4, .6, .8, 1, .4, 0]) {
+      for (const p of Array.from({ length: 41 }, (_, index) => index / 40)) {
         rig.frame(p, width, height, points)
         for (const point of points) {
           const projected = point.clone().project(camera)

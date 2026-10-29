@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clampProgress, createPose, evaluatePartTransform, validateParts } from './evaluatePartTransform'
+import { clampProgress, createPose, evaluatePartTransform, smootherStep, validateParts } from './evaluatePartTransform'
 import type { WatchPart } from '../types'
 
 const base: WatchPart = {
@@ -46,12 +46,25 @@ describe('absolute exploded-view transforms', () => {
     }
   })
 
-  it('interpolates the local interval with smoothstep and quaternion slerp', () => {
+  it('interpolates the local interval with quintic smootherstep and quaternion slerp', () => {
     const pose = evaluatePartTransform(base, 0.5)
     base.restPosition.forEach((value, index) => expect(pose.position[index]).toBeCloseTo(value + base.explodedOffset[index] / 2, 12))
     expect(pose.quaternion[1]).toBeCloseTo(Math.sin(Math.PI / 8), 12)
     expect(pose.quaternion[3]).toBeCloseTo(Math.cos(Math.PI / 8), 12)
     expect(Math.hypot(...pose.quaternion)).toBeCloseTo(1, 12)
+  })
+
+  it('eases acceleration as well as velocity into the edges of a local interval', () => {
+    const epsilon = 1e-4
+    expect(smootherStep(0)).toBe(0)
+    expect(smootherStep(.5)).toBe(.5)
+    expect(smootherStep(1)).toBe(1)
+    // A cubic-sized displacement near either edge gives zero first and second derivatives.
+    expect(smootherStep(epsilon)).toBeLessThan(11 * epsilon ** 3)
+    expect(1 - smootherStep(1 - epsilon)).toBeLessThan(11 * epsilon ** 3)
+    const p = base.start + (base.end - base.start) * .25
+    const pose = evaluatePartTransform(base, p)
+    base.restPosition.forEach((value, index) => expect(pose.position[index]).toBeCloseTo(value + base.explodedOffset[index] * .103515625, 12))
   })
 
   it('takes the shortest rotation when destination quaternions have a negative dot product', () => {

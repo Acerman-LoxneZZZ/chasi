@@ -5,7 +5,7 @@
   "method": "15 scenarios passed in the final full run; the mouse-pause/input scenario passed in a targeted rerun after improving test scheduling for SwiftShader. Application build unchanged. Programmatic wheel cancellation uses a real DOM wheel event, followed by native wheel scroll; native scrolling and touch are also tested separately.",
   "runs": [
     "docs/browser-v2-full.json",
-    "docs/browser-test-results.json"
+    "docs/browser-v2-targeted.json"
   ],
   "tests": [
     {
@@ -24,7 +24,7 @@
       "title": "story buttons move document, pause, reverse and yield to wheel and keyboard",
       "status": "passed",
       "durationMs": 56293,
-      "source": "docs/browser-test-results.json"
+      "source": "docs/browser-v2-targeted.json"
     },
     {
       "title": "Space on Pause stops without restarting, and Tab interrupts a story transition",

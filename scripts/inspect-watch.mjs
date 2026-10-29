@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync, readFileSync } from 'node:fs'
 
 const output = process.argv[2] || '.cache/watch-preview'
 const comparison = process.argv.includes('--comparison')
+const quick = process.argv.includes('--quick')
 mkdirSync(output, { recursive: true })
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 const results = []
@@ -58,15 +59,21 @@ try {
       results.push({ percent, viewport: [1440, 1000], comparison: true, camera: JSON.parse(await page.locator('canvas').getAttribute('data-camera')) })
     }
   }
-  for (const [width, height] of (process.argv.includes('--debug') || comparison ? [] : [[1440, 1000], [1280, 800], [390, 844], [360, 800]])) {
+  for (const [width, height] of (process.argv.includes('--debug') || comparison ? [] : quick ? [[1440, 1000], [390, 844]] : [[1440, 1000], [1280, 800], [390, 844], [360, 800]])) {
     await page.setViewportSize({ width, height })
     await page.waitForTimeout(150)
-    for (const percent of [0, 25, 50, 75, 100]) {
+    for (const percent of (quick ? [0, 50, 100] : [0, 25, 50, 75, 100])) {
       await page.evaluate(p => {
         const section = document.querySelector('.watch-story')
         window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * p / 100, behavior: 'instant' })
       }, percent)
       await page.waitForTimeout(250)
+      await page.waitForFunction(() => {
+        const canvas = document.querySelector('canvas')
+        return canvas?.dataset.renderedProgress === canvas?.dataset.progress
+      }, undefined, { timeout: 15000 })
+      // Allow a completed WebGL frame to reach the compositor after DPR changes.
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
       await page.screenshot({ path: `${output}/${width}x${height}-${percent}.png` })
       const metrics = await page.locator('canvas').evaluate(el => ({ progress: Number(el.dataset.progress), bounds: JSON.parse(el.dataset.bounds || '{}'), camera: JSON.parse(el.dataset.camera || '{}'), labels: [...document.querySelectorAll('.part-label:not([hidden])')].map(label => ({ node: label.dataset.node, text: label.textContent, bounds: label.getBoundingClientRect().toJSON() })), drawCalls: el.dataset.drawCalls, triangles: el.dataset.triangles, dpr: el.dataset.dpr, canvas: el.getBoundingClientRect().toJSON(), overflow: document.documentElement.scrollWidth > innerWidth + 1, scrollY }))
       results.push({ viewport: [width, height], percent, ...metrics })

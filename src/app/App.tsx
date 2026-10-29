@@ -23,19 +23,6 @@ function useReducedMotion() {
   return reduced
 }
 
-const journey = [
-  { title: 'Энергия', description: 'Заводная пружина запасает энергию и постепенно отдаёт её механизму.', nodeName: 'mainspring_barrel', kind: 'spring' },
-  { title: 'Движение', description: 'Колёсная передача связывает пружину со стрелками и передаёт вращение.', nodeName: 'gear_center', kind: 'gear' },
-  { title: 'Ритм', description: 'Спуск и баланс дозируют энергию, задавая равномерный ход.', nodeName: 'balance_assembly', kind: 'balance' },
-  { title: 'Время', description: 'Стрелки превращают движение механизма в часы, минуты и секунды.', nodeName: 'dial_face', kind: 'dial' },
-]
-
-function MechanismIcon({ kind }: { kind: string }) {
-  return <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden="true">
-    {kind === 'spring' ? <><circle cx="32" cy="32" r="22"/><path d="M32 12c-27 0-27 40 0 40s24-34 0-34-21 28 0 28 17-22 0-22-12 16 0 16 8-10 0-10v-5"/></> : kind === 'gear' ? <><circle cx="32" cy="32" r="17"/><circle cx="32" cy="32" r="5"/>{Array.from({ length: 12 }, (_, i) => <path key={i} d="M29 15v-5h6v5" transform={`rotate(${i * 30} 32 32)`}/>)}<path d="m32 15 0 12m0 10v12M15 32h12m10 0h12"/></> : kind === 'balance' ? <><circle cx="32" cy="32" r="22"/><circle cx="32" cy="32" r="17"/><circle cx="32" cy="32" r="4"/><path d="M32 10v18m0 8v18M10 32h18m8 0h18M19 21l-4-5m30 5 4-5M19 43l-4 5m30-5 4 5"/></> : <><circle cx="32" cy="32" r="22"/><path d="M32 14v4m0 28v4M14 32h4m28 0h4M32 32l-8-9m8 9 12-12"/><circle cx="32" cy="32" r="2"/></>}
-  </svg>
-}
-
 export function App() {
   const reducedMotion = useReducedMotion()
   const controller = useMemo(() => new ProgressController(), [])
@@ -44,82 +31,116 @@ export function App() {
   const { mode, compact } = useSyncExternalStore(coordinator.subscribe, coordinator.getSnapshot)
   const storySection = useRef<HTMLElement>(null)
   const storyPin = useRef<HTMLDivElement>(null)
+  const tools = useRef<HTMLDetailsElement>(null)
+  const detailDialog = useRef<HTMLDialogElement>(null)
   const [status, setStatus] = useState<SceneStatus>('loading')
-  const [labels, setLabels] = useState(true)
+  const [labels, setLabels] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)
   const ready = status === 'ready'
   const currentPart = parts.find(part => part.id === selected) ?? null
-  const choosePart = useCallback((id: string | null) => setSelected(id), [])
   const chapter = storyStageIndex(progress)
   const stage = storyStages[chapter]
+
+  const openDetails = useCallback(() => {
+    coordinator.inspect()
+    if (tools.current) tools.current.open = false
+    if (detailDialog.current && !detailDialog.current.open) detailDialog.current.showModal()
+  }, [coordinator])
+  const choosePart = useCallback((id: string | null) => {
+    setSelected(id)
+    if (id) openDetails()
+  }, [openDetails])
+  const revealControls = () => {
+    if (tools.current) tools.current.open = true
+    requestAnimationFrame(() => document.getElementById('explosion-range')?.focus({ preventScroll: true }))
+  }
+  const closeControls = () => {
+    if (tools.current) {
+      tools.current.open = false
+      tools.current.querySelector('summary')?.focus({ preventScroll: true })
+    }
+  }
+  const changeMode = () => {
+    if (tools.current) tools.current.open = false
+    if (mode === 'story') coordinator.inspect()
+    else coordinator.resume()
+  }
 
   useEffect(() => () => controller.dispose(), [controller])
   useLayoutEffect(() => {
     coordinator.connect(storySection.current!, storyPin.current!)
     return () => coordinator.dispose()
   }, [coordinator])
-  useEffect(() => {
-    if (reducedMotion) coordinator.reduceMotion()
-  }, [reducedMotion, coordinator])
+  useEffect(() => { if (reducedMotion) coordinator.reduceMotion() }, [reducedMotion, coordinator])
   useEffect(() => {
     if (status === 'error' || status === 'unsupported') coordinator.reduceMotion()
+    if (status === 'error' || status === 'unsupported' || status === 'context-lost') detailDialog.current?.close()
   }, [status, coordinator])
-
-  const selectFromJourney = (nodeName: string) => {
-    const part = parts.find(part => part.nodeName === nodeName)
-    if (!part || !ready) return
-    coordinator.inspect()
-    controller.set(nodeName === 'dial_face' ? .4 : .85)
-    setSelected(part.id)
-    document.getElementById('explore')?.scrollIntoView({ behavior: reducedMotion ? 'instant' : 'smooth', block: 'start' })
-  }
+  useEffect(() => {
+    const outside = (event: PointerEvent) => {
+      if (tools.current?.open && event.target instanceof Node && !tools.current.contains(event.target)) tools.current.open = false
+    }
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && tools.current?.open) {
+        tools.current.open = false
+        tools.current.querySelector('summary')?.focus({ preventScroll: true })
+      }
+    }
+    document.addEventListener('pointerdown', outside)
+    document.addEventListener('keydown', escape)
+    return () => {
+      document.removeEventListener('pointerdown', outside)
+      document.removeEventListener('keydown', escape)
+    }
+  }, [])
 
   return <>
-    <a className="skip-link" href="#explosion-range">К управлению разборкой</a>
+    <a className="skip-link" href="#explosion-range" onClick={event => { event.preventDefault(); revealControls() }}>К управлению часами</a>
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="Ход времени — начало страницы"><WatchMark /><span>Ход времени</span></a>
-      <span className="header-caption">Интерактивная экспозиция</span>
-      <nav aria-label="Основная навигация"><a href="#anatomy">Устройство</a><a href="#about">О проекте <Icon name="arrow" size={16} /></a></nav>
+      <a className="brand" href="#top" aria-label="Ход времени — начало истории"><WatchMark /><span>Ход времени</span></a>
+      <nav aria-label="Управление просмотром">
+        <button className="header-button details-button" aria-label="Детали часов" disabled={!ready} onClick={openDetails}><Icon name="layers" size={17} /><span>Детали</span></button>
+        <button className="header-button mode-button" disabled={!ready} onClick={changeMode}><span className="mode-dot" aria-hidden="true" /><span>{mode === 'story' ? 'Рассмотреть' : 'Продолжить историю'}</span></button>
+      </nav>
     </header>
 
     <main id="top">
       <section ref={storySection} id="explore" className={`watch-story ${compact ? 'watch-story--compact' : ''}`} data-mode={mode} aria-labelledby="hero-title">
         <div ref={storyPin} className="story-pin">
-          <div className="story-heading">
+          <div className="story-heading sr-only">
             <h1 id="hero-title">{stage.title}</h1>
-            <p id="scene-instructions">{mode === 'story' ? stage.subtitle : 'Вращайте часы. Остановитесь на любой детали.'}</p>
+            <p id="scene-instructions">{mode === 'story' ? 'Прокручивайте страницу: часы поворачиваются и раскрывают механизм. ' + stage.subtitle : 'Перетаскивайте часы для вращения. Откройте управление, чтобы изменить степень разборки.'}</p>
           </div>
           <div className="story-stage">
             <Experience parts={parts} controller={controller} mode={mode} reducedMotion={reducedMotion} labels={labels} selected={selected} resetKey={resetKey} onSelect={choosePart} onStatus={setStatus} />
-            {chapter === 0 && !selected && labels && <p className="mobile-scene-invitation" aria-hidden="true">{mode === 'story' ? 'Листайте страницу — часы раскроются слой за слоем.' : 'Двигайте ползунок, чтобы раскрыть механизм.'}</p>}
-            <div className="scene-meta" aria-hidden="true"><span>Карманные механические часы</span><span>47 деталей</span></div>
           </div>
-          <div className="story-controls page-width">
-            <div className="mode-bar">
-              <span className="mode-status"><span className="status-dot" />{mode === 'story' ? 'История' : 'Рассмотреть'}<span className="mode-hint">{mode === 'story' ? 'Прокрутка раскрывает механизм' : 'Свободное вращение'}</span></span>
-              <button className="mode-button" disabled={!ready} onClick={mode === 'story' ? coordinator.inspect : coordinator.resume}><Icon name={mode === 'story' ? 'rotate' : 'arrow'} size={17} />{mode === 'story' ? 'Рассмотреть' : 'Продолжить историю'}</button>
+          <div className="exhibit-dock">
+            <div className="dock-left">
+              <details ref={tools} className="exhibit-tools">
+                <summary><Icon name="layers" size={17} /><span>Управление</span><span className="tools-plus" aria-hidden="true">+</span></summary>
+                <div className="controls-popover">
+                  <div className="popover-heading"><span>{mode === 'story' ? 'История' : 'Свободный просмотр'}</span><button className="icon-button" aria-label="Закрыть управление" onClick={closeControls}><Icon name="close" size={16} /></button></div>
+                  <ExplosionControls controller={controller} progress={progress} target={target} ready={ready} labels={labels} reducedMotion={reducedMotion} onLabels={() => setLabels(value => !value)} onReset={() => setResetKey(value => value + 1)} />
+                  <p className="controls-state">{ready ? stageTitle(progress) : status === 'loading' ? 'Подготавливаем модель' : 'Управление 3D недоступно'}</p>
+                </div>
+              </details>
+              <span className="scroll-cue" aria-hidden="true"><span className="scroll-stroke" />{mode === 'manual' ? 'Свободное вращение' : progress > .98 ? 'Прокрутите обратно' : 'Прокрутите, чтобы заглянуть внутрь'}</span>
             </div>
-            <ExplosionControls controller={controller} progress={progress} target={target} ready={ready} labels={labels} reducedMotion={reducedMotion} onLabels={() => setLabels(value => !value)} onReset={() => setResetKey(value => value + 1)} />
-            <div className="controls-footer"><span className={`scene-status ${target !== null ? 'scene-status--active' : ''}`}><span />{ready ? stageTitle(progress) : status === 'loading' ? 'Подготавливаем модель' : 'Управление 3D недоступно'}</span><span className="chapter-count">{String(chapter + 1).padStart(2, '0')} / 06</span></div>
-            <div className="sr-only" role="status" aria-live="polite">{ready ? stageTitle(progress) : status === 'loading' ? 'Модель загружается' : 'Модель недоступна'}</div>
+            <div className="exhibit-progress" aria-hidden="true"><span className="chapter-count">{String(chapter + 1).padStart(2, '0')}<span> / 06</span></span><output aria-live="off">{Math.round(progress * 100)}<span>%</span></output></div>
           </div>
+          <div className="story-hairline" aria-hidden="true"><span style={{ width: `${progress * 100}%` }} /></div>
+          <div className="sr-only" role="status" aria-live="polite">{ready ? stageTitle(progress) : status === 'loading' ? 'Модель загружается' : 'Модель недоступна'}</div>
         </div>
       </section>
-
-      <section className="anatomy-section page-width" id="anatomy" aria-labelledby="anatomy-title">
-        <div className="anatomy-heading"><div><span className="section-kicker">Исследуйте детали</span><h2 id="anatomy-title">Маленький мир внутри.</h2></div><p>От внешнего контура до тончайшей пружины —<br className="desktop-break" /> у каждого узла есть своё назначение.</p></div>
-        <div className="anatomy-layout"><PartList parts={parts} selected={selected} ready={ready} onSelect={choosePart} /><div className="anatomy-part-description"><PartInfo part={currentPart} progress={progress} onClose={() => setSelected(null)} /></div></div>
-      </section>
-
-      <section className="inside-section page-width" aria-labelledby="inside-title">
-        <div className="inside-heading"><span className="section-kicker">От пружины к стрелкам</span><h2 id="inside-title">Что скрыто внутри</h2><p>Четыре шага, которые превращают запас энергии в движение времени.</p></div>
-        <ol className="energy-journey">{journey.map((step, index) => <li key={step.title} className="journey-step"><div className="journey-symbol"><MechanismIcon kind={step.kind} />{index < journey.length - 1 && <span className="journey-connector" aria-hidden="true"><Icon name="arrow" size={20} /></span>}</div><div className="journey-title"><span>0{index + 1}</span><h3>{step.title}</h3></div><p>{step.description}</p><button className="journey-link" disabled={!ready} onClick={() => selectFromJourney(step.nodeName)}>Найти в модели<Icon name="arrow" size={16} /></button></li>)}</ol>
-      </section>
-
-      <section className="about-section page-width" id="about" aria-labelledby="about-title"><WatchMark className="about-mark" /><div><h2 id="about-title">Время — в деталях.</h2><p>«Ход времени» — цифровая экспозиция о красоте простой механики. Авторская демонстрационная модель помогает понять устройство часов и не служит инструкцией по ремонту конкретного механизма.</p></div><a className="back-to-model" href="#explore">Вернуться к часам <Icon name="arrow" size={19} /></a></section>
     </main>
 
-    <footer className="site-footer page-width"><span>Ход времени</span><span>Создано, чтобы рассматривать.</span><a href="#top">Наверх <span aria-hidden="true">↑</span></a></footer>
+    <dialog ref={detailDialog} className="detail-dialog" aria-labelledby="parts-title" onClick={event => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
+      <div className="drawer-content">
+        <div className="drawer-heading"><div><span className="section-kicker">47 частей одного целого</span><h2 id="parts-title">Устройство часов</h2></div><button className="icon-button" aria-label="Закрыть детали" onClick={() => detailDialog.current?.close()}><Icon name="close" size={20} /></button></div>
+        <div className="drawer-info"><PartInfo part={currentPart} progress={progress} onClose={() => setSelected(null)} /></div>
+        <PartList parts={parts} selected={selected} ready={ready} onSelect={choosePart} />
+      </div>
+    </dialog>
   </>
 }

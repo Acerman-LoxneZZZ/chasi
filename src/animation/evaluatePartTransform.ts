@@ -2,13 +2,16 @@ import type { PartPose, WatchPart } from '../types'
 
 export const clampProgress = (value: number) => Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0
 
+/** Zero velocity and acceleration at either end of a local movement interval. */
+export const smootherStep = (value: number) => value * value * value * (value * (value * 6 - 15) + 10)
+
 export const createPose = (): PartPose => ({ position: [0, 0, 0], quaternion: [0, 0, 0, 1], scale: [1, 1, 1] })
 
 /** Absolute, allocation-free pose evaluation. The same progress always gives the same pose. */
 export function evaluatePartTransform(part: WatchPart, progress: number, out: PartPose = createPose(), mobile = false): PartPose {
   const p = clampProgress(progress)
   const u = part.end > part.start ? Math.max(0, Math.min(1, (p - part.start) / (part.end - part.start))) : 0
-  const e = u * u * (3 - 2 * u)
+  const e = smootherStep(u)
 
   const offset = mobile && part.mobileOffset ? part.mobileOffset : part.explodedOffset
   for (let i = 0; i < 3; i++) {

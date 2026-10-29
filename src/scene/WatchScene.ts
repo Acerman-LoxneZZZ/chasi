@@ -1,13 +1,14 @@
 import {
   ACESFilmicToneMapping, AmbientLight, Color, DirectionalLight, Group, Material,
   Mesh, MeshStandardMaterial, Object3D, PerspectiveCamera, PMREMGenerator, Raycaster,
-  Scene, SRGBColorSpace, Vector2, Vector3, WebGLRenderer, WebGLRenderTarget,
+  Quaternion, Scene, SRGBColorSpace, Vector2, Vector3, WebGLRenderer, WebGLRenderTarget,
 } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { createPose, evaluatePartTransform, validateParts } from '../animation/evaluatePartTransform'
 import type { ProgressController } from '../animation/progressController'
+import { RenderProgressFollower } from '../animation/renderProgress'
 import type { ViewMode } from '../animation/scrollCoordinator'
 import { shortFunctions, storyStageIndex, storyStages } from '../data/story'
 import type { WatchPart } from '../types'
@@ -63,9 +64,18 @@ export class WatchScene {
   private direction = new Vector3()
   private frameDuration = 0
   private measuredFrames = 0
-  private queuedAt = 0
+  private lastRenderCost = 0
+  private pendingPixelRatio: number | null = null
   private mode: ViewMode = 'story'
+  private reducedMotion = false
   private initialFrame = true
+  private visualProgress = new RenderProgressFollower()
+  private poseProgress = NaN
+  private displayedProgress = 0
+  private displayedCameraPosition = new Vector3()
+  private displayedCameraQuaternion = new Quaternion()
+  private displayedCameraTarget = new Vector3()
+  private changingMode = false
   private boundsPoints: Vector3[] = []
   private boundsCache: { mesh: Mesh; local: Vector3; world: Vector3 }[] = []
   private leaders: SVGSVGElement
@@ -85,29 +95,32 @@ export class WatchScene {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75))
     this.renderer.outputColorSpace = SRGBColorSpace
     this.renderer.toneMapping = ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 0.84
+    this.renderer.toneMappingExposure = 0.88
     this.renderer.setClearColor(new Color('#0e1620'), 0)
 
     const room = new RoomEnvironment()
     const pmrem = new PMREMGenerator(this.renderer)
-    this.environment = pmrem.fromScene(room, 0.04)
+    this.environment = pmrem.fromScene(room, 0.06)
     this.scene.environment = this.environment.texture
-    this.scene.environmentIntensity = .85
+    this.scene.environmentIntensity = .9
     room.dispose()
     pmrem.dispose()
 
-    this.scene.add(new AmbientLight('#c5d4e5', .35))
-    const key = new DirectionalLight('#fff1d7', 1.9)
-    key.position.set(-3, 6, 8)
-    const fill = new DirectionalLight('#d8e9ff', 1.1)
-    fill.position.set(4, 1, 3)
-    const rim = new DirectionalLight('#f2cf92', 1.8)
-    rim.position.set(1, 2, -5)
+    this.scene.add(new AmbientLight('#c5d4e5', .28))
+    const key = new DirectionalLight('#fff3df', 1.65)
+    key.position.set(-4, 6, 8)
+    const fill = new DirectionalLight('#cbdff7', .7)
+    fill.position.set(5, 0, 4)
+    const rim = new DirectionalLight('#f6d5a0', 2.35)
+    rim.position.set(-4, 3, -5)
     this.scene.add(key, fill, rim)
     this.camera.position.set(5, 2.3, 8)
     this.controls = new OrbitControls(this.camera, canvas)
     this.rig = new CameraRig(this.camera, this.controls)
     this.mode = mode
+    this.reducedMotion = reducedMotion
+    this.visualProgress.reset(progress.getSnapshot().progress, performance.now())
+    this.displayedProgress = progress.getSnapshot().progress
     this.rig.setMode(mode, reducedMotion, canvas)
     this.leaders = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     this.leaders.classList.add('scene-leaders')
@@ -222,10 +235,29 @@ export class WatchScene {
 
   setMode(mode: ViewMode, reducedMotion: boolean) {
     const changed = mode !== this.mode
+    const keepDisplayedFrame = changed && mode === 'manual' && this.renderedFrames > 0
+    const p = keepDisplayedFrame ? this.displayedProgress : this.progress.getSnapshot().progress
+    this.changingMode = true
     this.mode = mode
+    this.reducedMotion = reducedMotion
+    this.visualProgress.reset(p, performance.now())
+    if (keepDisplayedFrame) {
+      // Recompute the fitting baseline for the displayed geometry before OrbitControls
+      // takes ownership, then restore the exact camera that was actually painted.
+      this.applyPose(p)
+      this.camera.position.copy(this.displayedCameraPosition)
+      this.camera.quaternion.copy(this.displayedCameraQuaternion)
+      this.controls.target.copy(this.displayedCameraTarget)
+      this.camera.updateMatrixWorld()
+    }
     this.rig.setMode(mode, reducedMotion, this.canvas)
     this.canvas.dataset.mode = mode
-    if (!changed || mode === 'story') this.rig.frame(this.progress.getSnapshot().progress, this.width, this.height, this.boundsPoints)
+    this.applyPose(p, !changed || mode === 'story')
+    // ScrollCoordinator detaches the owner before emitting manual mode. Commit the
+    // visible pose once so the manual slider represents the frozen frame exactly.
+    if (keepDisplayedFrame && p !== this.progress.getSnapshot().progress) this.progress.set(p)
+    this.canvas.dataset.progress = this.progress.getSnapshot().progress.toFixed(5)
+    this.changingMode = false
     this.invalidate()
   }
 
@@ -243,12 +275,28 @@ export class WatchScene {
   }
 
   resetCamera() {
-    this.rig.frame(this.progress.getSnapshot().progress, this.width, this.height, this.boundsPoints, true)
+    const p = this.progress.getSnapshot().progress
+    this.visualProgress.reset(p, performance.now())
+    this.applyPose(p, true, true)
     this.invalidate()
   }
 
   private updatePose = () => {
     const p = this.progress.getSnapshot().progress
+    if (this.changingMode) {
+      this.visualProgress.reset(p, performance.now())
+      this.canvas.dataset.progress = p.toFixed(5)
+      return
+    }
+    const immediate = this.mode === 'manual' || this.reducedMotion || this.initialFrame || this.renderedFrames === 0 || this.contextLost || document.hidden || this.lastRenderCost > 90
+    this.visualProgress.follow(p, performance.now(), immediate)
+    if (immediate) this.applyPose(p)
+    this.canvas.dataset.progress = p.toFixed(5)
+    this.canvas.dataset.mode = this.mode
+    this.invalidate()
+  }
+
+  private applyPose(p: number, frameCamera = true, resetCamera = false) {
     for (const { part, object } of this.bound) {
       const pose = evaluatePartTransform(part, p, this.pose, this.width < 700)
       object.position.fromArray(pose.position)
@@ -257,25 +305,30 @@ export class WatchScene {
     }
     this.model?.updateMatrixWorld(true)
     for (const entry of this.boundsCache) entry.world.copy(entry.local).applyMatrix4(entry.mesh.matrixWorld)
-    this.rig.frame(p, this.width, this.height, this.boundsPoints, this.initialFrame)
+    if (frameCamera) this.rig.frame(p, this.width, this.height, this.boundsPoints, this.initialFrame || resetCamera)
     if (this.model) this.initialFrame = false
-    this.canvas.dataset.progress = p.toFixed(5)
-    this.canvas.dataset.mode = this.mode
-    this.invalidate()
+    this.poseProgress = p
   }
 
   private resize = () => {
     const parent = this.canvas.parentElement!
     this.width = Math.max(1, parent.clientWidth)
     this.height = Math.max(1, parent.clientHeight)
+    const minimum = Math.min(window.devicePixelRatio, this.width < 700 ? .9 : .85)
+    if (this.pendingPixelRatio !== null) this.pendingPixelRatio = Math.max(this.pendingPixelRatio, minimum)
+    if (this.renderer.getPixelRatio() < minimum) this.renderer.setPixelRatio(minimum)
     this.renderer.setSize(this.width, this.height, false)
     this.leaders.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`)
-    this.updatePose()
+    const p = this.progress.getSnapshot().progress
+    this.visualProgress.reset(p, performance.now())
+    this.applyPose(p)
+    this.canvas.dataset.progress = p.toFixed(5)
+    this.canvas.dataset.mode = this.mode
+    this.invalidate()
   }
 
   private invalidate = () => {
     if (!this.frame && !this.disposed && !this.contextLost && !document.hidden) {
-      this.queuedAt = performance.now()
       this.frame = requestAnimationFrame(this.render)
     }
   }
@@ -284,33 +337,53 @@ export class WatchScene {
     this.frame = 0
     if (this.disposed || this.contextLost) return
     const start = performance.now()
+    if (this.pendingPixelRatio !== null) {
+      this.renderer.setPixelRatio(this.pendingPixelRatio)
+      this.pendingPixelRatio = null
+    }
+    const p = this.visualProgress.sample(start)
+    if (p !== this.poseProgress) this.applyPose(p)
     const moving = this.rig.tick(start)
+    const drawStarted = performance.now()
     this.renderer.render(this.scene, this.camera)
-    this.updateLabels()
+    const renderCost = performance.now() - drawStarted
+    this.lastRenderCost = renderCost
+    this.displayedProgress = p
+    this.displayedCameraPosition.copy(this.camera.position)
+    this.displayedCameraQuaternion.copy(this.camera.quaternion)
+    this.displayedCameraTarget.copy(this.controls.target)
+    this.updateLabels(p)
     this.canvas.dataset.drawCalls = String(this.renderer.info.render.calls)
     this.canvas.dataset.triangles = String(this.renderer.info.render.triangles)
     this.canvas.dataset.frames = String(++this.renderedFrames)
     this.canvas.dataset.dpr = String(this.renderer.getPixelRatio())
-    this.canvas.dataset.renderedProgress = this.progress.getSnapshot().progress.toFixed(5)
+    this.canvas.dataset.renderedProgress = p.toFixed(5)
     this.canvas.dataset.camera = JSON.stringify({ position: this.camera.position.toArray(), quaternion: this.camera.quaternion.toArray(), target: this.controls.target.toArray() })
-    if (moving) this.invalidate()
-    this.frameDuration += Math.max(performance.now() - start, start - this.queuedAt)
+    // A slow software renderer cannot meaningfully display a sub-100ms tail.
+    // Keep its next frame exact instead of stretching visual smoothing over seconds.
+    if (renderCost > 90 && this.visualProgress.moving) this.visualProgress.reset(this.progress.getSnapshot().progress, performance.now())
+    if (moving || this.visualProgress.moving || p !== this.visualProgress.current) this.invalidate()
+    this.frameDuration += renderCost
     this.measuredFrames++
+    const ratio = this.renderer.getPixelRatio()
+    const floor = Math.min(window.devicePixelRatio, this.width < 700 ? .9 : .85)
+    if (renderCost > 90 && ratio > floor) {
+      this.pendingPixelRatio = floor
+      this.invalidate()
+    }
     if (this.measuredFrames === 4) {
       const average = this.frameDuration / 4
-      const ratio = this.renderer.getPixelRatio()
-      // Keep thin hands and dial printing at least one device pixel per CSS pixel.
-      const nextRatio = average > 60 ? 1 : average > 32 ? 1.25 : ratio
+      const nextRatio = average > 60 ? floor : average > 32 ? Math.max(floor, 1.25) : ratio
       this.frameDuration = 0
       this.measuredFrames = 0
       if (nextRatio < ratio) {
-        this.renderer.setPixelRatio(nextRatio)
+        this.pendingPixelRatio = Math.min(this.pendingPixelRatio ?? ratio, nextRatio)
         this.invalidate()
       }
     }
   }
 
-  private updateLabels() {
+  private updateLabels(p: number) {
     for (const { label, leader } of this.bound) { label.hidden = true; leader.style.display = 'none' }
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
     for (const point of this.boundsPoints) {
@@ -323,7 +396,6 @@ export class WatchScene {
     this.canvas.dataset.bounds = JSON.stringify({ minX, minY, maxX, maxY, width: this.width, height: this.height })
     this.canvas.dataset.visibleLabels = '0'
     if (!this.labels || !this.model) return
-    const p = this.progress.getSnapshot().progress
     const mobile = this.width < 700
     const stage = storyStageIndex(p)
     const names: readonly string[] = storyStages[stage].nodes
@@ -400,14 +472,22 @@ export class WatchScene {
     if (document.hidden) {
       this.progress.pause()
       this.rig.suspend()
+      this.visualProgress.reset(this.progress.getSnapshot().progress, performance.now())
       cancelAnimationFrame(this.frame)
       this.frame = 0
-    } else this.invalidate()
+    } else {
+      const p = this.progress.getSnapshot().progress
+      this.visualProgress.reset(p, performance.now())
+      this.applyPose(p)
+      this.invalidate()
+    }
   }
   private onContextLost = (event: Event) => {
     event.preventDefault()
     this.contextLost = true
     this.progress.pause()
+    this.rig.suspend()
+    this.visualProgress.reset(this.progress.getSnapshot().progress, performance.now())
     cancelAnimationFrame(this.frame)
     this.frame = 0
     this.hooks.lost()

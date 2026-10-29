@@ -74,7 +74,7 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
   useEffect(() => { engine.current?.resetCamera() }, [props.resetKey])
 
   const failed = status === 'error' || status === 'unsupported' || status === 'context-lost'
-  return <div className={`experience ${failed ? 'experience--fallback' : ''}`} data-status={status} aria-busy={status === 'loading'}>
+  return <div className={`experience ${props.labels ? 'experience--labels' : ''} ${failed ? 'experience--fallback' : ''}`} data-status={status} aria-busy={status === 'loading'}>
     <div className="canvas-wrap">
       <canvas key={generation} ref={canvas} className={`watch-canvas watch-canvas--${props.mode}`} role="img" aria-label={`Объёмная модель карманных часов. ${props.mode === 'story' ? 'Прокрутка страницы раскрывает механизм.' : 'Перетаскивайте модель для вращения. Ползунок меняет степень разборки.'}`} aria-describedby="scene-instructions" />
     </div>

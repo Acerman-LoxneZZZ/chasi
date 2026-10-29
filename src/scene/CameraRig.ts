@@ -1,14 +1,26 @@
 import { Matrix4, PerspectiveCamera, Quaternion, Vector3 } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { clampProgress } from '../animation/evaluatePartTransform'
+import { clampProgress, smootherStep } from '../animation/evaluatePartTransform'
 import type { ViewMode } from '../animation/scrollCoordinator'
 
 const UP = new Vector3(0, 1, 0)
 const ORIGIN = new Vector3()
-const rotations = (directions: number[][]) => directions.map(direction =>
-  new Quaternion().setFromRotationMatrix(new Matrix4().lookAt(new Vector3(direction[0], direction[1], direction[2]), ORIGIN, UP)))
-const DESKTOP = rotations([[.30, .11, 1], [.50, .18, 1], [.82, .26, 1], [1, .35, 1], [.92, .42, 1], [.94, .38, 1]])
-const MOBILE = rotations([[.19, .07, 1], [.36, .12, 1], [.57, .20, 1], [.64, .27, 1], [.63, .31, 1], [.65, .27, 1]])
+const FORWARD = new Vector3(0, 0, 1)
+const RADIANS = Math.PI / 180
+
+export type StoryCameraAngles = { yaw: number; pitch: number; roll: number }
+
+/** Unwrapped absolute angles retain a whole orbit when the end view faces front again. */
+export function evaluateStoryCameraAngles(progress: number, mobile = false, out: StoryCameraAngles = { yaw: 0, pitch: 0, roll: 0 }) {
+  const p = clampProgress(progress)
+  const eased = smootherStep(p)
+  const wave = Math.sin(p * Math.PI * 2)
+  const arch = Math.sin(p * Math.PI)
+  out.yaw = ((mobile ? -12 : -18) + (mobile ? 407 : 423) * eased) * RADIANS
+  out.pitch = ((mobile ? 5 : 8) + (mobile ? 7 : 8) * wave + (mobile ? 3 : 4) * arch) * RADIANS
+  out.roll = ((mobile ? -2 : -4) * (1 - p) + (mobile ? 3 : 7) * wave) * RADIANS
+  return out
+}
 
 /** Fit actual moving mesh bounds in camera space, instead of a growing guessed sphere. */
 export class CameraRig {
@@ -18,6 +30,10 @@ export class CameraRig {
   private baseline = 8
   private updating = false
   private rotation = new Quaternion()
+  private rollRotation = new Quaternion()
+  private orientation = new Matrix4()
+  private eyeDirection = new Vector3()
+  private angles: StoryCameraAngles = { yaw: 0, pitch: 0, roll: 0 }
   private inverse = new Quaternion()
   private point = new Vector3()
   private low = new Vector3()
@@ -72,11 +88,12 @@ export class CameraRig {
     if (!points.length) return
     this.updating = true
     if (this.mode === 'story' || reset) {
-      const keys = width < 700 ? MOBILE : DESKTOP
-      const t = this.reduced ? 0 : clampProgress(progress) * 5
-      const i = Math.min(4, Math.floor(t))
-      const u = t - i
-      this.rotation.copy(keys[i]).slerp(keys[i + 1], u * u * (3 - 2 * u))
+      const { yaw, pitch, roll } = evaluateStoryCameraAngles(this.reduced ? 0 : progress, width < 700, this.angles)
+      this.eyeDirection.set(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch))
+      this.orientation.lookAt(this.eyeDirection, ORIGIN, UP)
+      this.rotation.setFromRotationMatrix(this.orientation)
+      this.rollRotation.setFromAxisAngle(FORWARD, roll)
+      this.rotation.multiply(this.rollRotation)
       if (reset) { this.zoom = 1; this.transitionStart = null }
     } else this.rotation.copy(this.camera.quaternion)
     this.inverse.copy(this.rotation).invert()
@@ -87,7 +104,10 @@ export class CameraRig {
       this.low.min(this.point); this.high.max(this.point)
     }
     this.center.copy(this.low).add(this.high).multiplyScalar(.5)
-    const fill = width < 700 ? .87 : .84 + .035 * progress
+    // Small perspective margins keep the bow and separated parts within the
+    // viewport while the freed full-screen stage presents a much larger object.
+    const closeup = Math.min(1, clampProgress(progress) / .24)
+    const fill = width < 700 ? .925 : .86 + .075 * smootherStep(closeup)
     const tanY = Math.tan(this.camera.fov * Math.PI / 360) * fill
     const tanX = tanY * this.camera.aspect
     let distance = 0
@@ -115,7 +135,7 @@ export class CameraRig {
   tick(time: number) {
     if (this.transitionStart === null) return false
     const t = clampProgress((time - this.transitionStart) / 380)
-    const e = t * t * (3 - 2 * t)
+    const e = smootherStep(t)
     this.updating = true
     this.camera.position.lerpVectors(this.fromPosition, this.desiredPosition, e)
     this.camera.quaternion.slerpQuaternions(this.fromRotation, this.rotation, e)
