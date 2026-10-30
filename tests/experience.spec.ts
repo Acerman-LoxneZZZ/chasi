@@ -5,20 +5,29 @@ const slider = (page: Page) => page.getByRole('slider', { name: 'Разборк�
 const tools = (page: Page) => page.locator('details.exhibit-tools')
 const progress = async (page: Page) => Number(await canvas(page).getAttribute('data-progress'))
 
-// A short render-only follower can trail native scroll; compare poses only when
-// the actually rendered value has reached the canonical document progress.
+// Compare camera poses only after a model frame has painted the canonical value.
 const settled = async (page: Page) => {
   await expect.poll(async () => canvas(page).evaluate(el => {
     const canonical = Number(el.dataset.progress)
     const rendered = Number(el.dataset.renderedProgress)
-    return Number.isFinite(rendered) && Math.abs(rendered - canonical) < .00001
+    return Number.isFinite(canonical) && Number.isFinite(rendered) && Math.abs(rendered - canonical) < .00001
   }), { timeout: 30000 }).toBe(true)
+}
+const painted = async (page: Page) => {
+  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'ready', { timeout: 60000 })
+  await expect.poll(async () => canvas(page).evaluate(el => {
+    const b = JSON.parse(el.dataset.bounds || '{}') as Record<string, unknown>
+    return Number(el.dataset.drawCalls) > 0 && Number(el.dataset.triangles) > 0
+      && ['minX', 'minY', 'maxX', 'maxY', 'width', 'height'].every(key => typeof b[key] === 'number' && Number.isFinite(b[key]))
+      && Number(b.maxX) > Number(b.minX) && Number(b.maxY) > Number(b.minY)
+      && Number(b.width) > 0 && Number(b.height) > 0
+  }), { timeout: 60000 }).toBe(true)
+  await page.evaluate(() => document.fonts.ready)
+  await settled(page)
 }
 const ready = async (page: Page) => {
   await page.goto('/')
-  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'ready', { timeout: 60000 })
-  await page.evaluate(() => document.fonts.ready)
-  await settled(page)
+  await painted(page)
 }
 const openTools = async (page: Page) => {
   if (!await tools(page).evaluate((el: HTMLDetailsElement) => el.open)) await tools(page).locator('summary').click()
@@ -63,7 +72,10 @@ const assertBounds = async (page: Page) => {
 }
 
 test('the default page contains only a large fullscreen watch with closed tools at all required sizes', async ({ page }) => {
+  test.setTimeout(240000)
   await ready(page)
+  await expect(page.locator('html')).toHaveClass(/\blenis\b/)
+  await expect(page.locator('.watch-story')).toHaveAttribute('data-scroll-engine', 'gsap-lenis')
   await expect(page.locator('main > section')).toHaveCount(1)
   await expect(page.locator('#anatomy, #about, .inside-section, .site-footer')).toHaveCount(0)
   await expect(page.locator('.detail-dialog')).not.toBeVisible()
@@ -84,7 +96,7 @@ test('the default page contains only a large fullscreen watch with closed tools 
   }
 })
 
-test('scroll makes a real complete camera orbit, reverses exactly and stops rendering when idle', async ({ page }) => {
+test('scroll makes a complete orbit and a focused macro dolly, reverses exactly and stops rendering when idle', async ({ page }) => {
   const errors: string[] = [], failedResources: string[] = []
   let modelRequests = 0
   page.on('pageerror', error => errors.push(error.message))
@@ -102,7 +114,27 @@ test('scroll makes a real complete camera orbit, reverses exactly and stops rend
   }
   expect(turn * 180 / Math.PI).toBeGreaterThan(360)
   expect(turn * 180 / Math.PI).toBeLessThan(500)
+  const overview = await camera(page)
+  const distance = (pose: typeof overview) => Math.hypot(...pose.position.map((value, index) => value - pose.target[index]))
+  await scrollToProgress(page, .75)
+  const macro = await canvas(page).evaluate(element => ({
+    weight: Number(element.dataset.macro), focus: JSON.parse(element.dataset.focus || 'null') as number[] | null,
+    bounds: JSON.parse(element.dataset.bounds || '{}') as Record<string, number>,
+    overflow: document.documentElement.scrollWidth > innerWidth + 1,
+  }))
+  expect(macro.weight).toBeCloseTo(1, 4)
+  expect(macro.focus).toHaveLength(3)
+  expect(macro.focus!.every(Number.isFinite)).toBe(true)
+  expect(Math.abs(macro.focus![0])).toBeLessThan(.01)
+  expect(Math.abs(macro.focus![1])).toBeLessThan(.01)
+  expect(macro.focus![2]).toBeGreaterThan(-1)
+  expect(macro.focus![2]).toBeLessThan(1)
+  expect(Object.values(macro.bounds).every(Number.isFinite)).toBe(true)
+  expect(macro.bounds.minX < 0 || macro.bounds.minY < 0 || macro.bounds.maxX > macro.bounds.width || macro.bounds.maxY > macro.bounds.height).toBe(true)
+  expect(distance(await camera(page))).toBeLessThan(distance(overview) * .6)
+  expect(macro.overflow).toBe(false)
   await scrollToProgress(page, 0)
+  await expect(canvas(page)).toHaveAttribute('data-macro', '0.00000')
   expect(await camera(page)).toEqual(initial)
   await expect.poll(async () => {
     const before = await canvas(page).getAttribute('data-frames')
@@ -151,6 +183,7 @@ test('the control popover supports native range keys, exact endpoints, pause and
 })
 
 test('manual orbit and slider ignore document scroll, then resume and reload keep the current pose', async ({ page }) => {
+  test.setTimeout(240000)
   await ready(page)
   await scrollToProgress(page, .4)
   const initial = await camera(page)
@@ -180,7 +213,7 @@ test('manual orbit and slider ignore document scroll, then resume and reload kee
   })).toBeLessThanOrEqual(1)
   await settled(page)
   await page.reload()
-  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'ready', { timeout: 60000 })
+  await painted(page)
   await expect.poll(async () => Math.abs(await progress(page) - .64)).toBeLessThan(.001)
   await settled(page)
 })
@@ -251,8 +284,7 @@ test('a failed GLB request keeps a working retry and compact fallback', async ({
   await expect(page.locator('.watch-story')).toHaveClass(/compact/)
   await expect(page.getByRole('button', { name: 'Детали часов', exact: true })).toBeDisabled()
   await page.getByRole('button', { name: 'Повторить загрузку', exact: true }).click()
-  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'ready', { timeout: 60000 })
-  await settled(page)
+  await painted(page)
   await expect(canvas(page)).toHaveAttribute('data-progress', '0.00000')
   expect(requests).toBe(2)
 })
@@ -270,7 +302,7 @@ test('WebGL loss restores the same configuration and unavailable WebGL shows a r
   expect(supported).toBe(true)
   await expect(page.locator('.experience')).toHaveAttribute('data-status', 'context-lost')
   await page.evaluate(() => (window as unknown as { __restoreWatch: () => void }).__restoreWatch())
-  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'ready', { timeout: 60000 })
+  await painted(page)
   await expect(canvas(page)).toHaveAttribute('data-progress', '0.50000')
   await expect(canvas(page)).toHaveAttribute('data-mode', 'story')
   await settled(page)

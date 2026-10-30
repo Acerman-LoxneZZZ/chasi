@@ -1,30 +1,40 @@
-import { clampProgress } from './evaluatePartTransform'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Lenis from 'lenis'
+import { clampProgress, smootherStep } from './evaluatePartTransform'
 import { ProgressController, type ProgressOwner } from './progressController'
 
 export type ViewMode = 'story' | 'manual'
 export type StoryBounds = { start: number; travel: number }
+type SavedScroll = { y: number; progress: number; active: boolean }
 
 export const progressFromScroll = (scrollY: number, bounds: StoryBounds) =>
   clampProgress((scrollY - bounds.start) / Math.max(1, bounds.travel))
 export const scrollFromProgress = (progress: number, bounds: StoryBounds) =>
   bounds.start + clampProgress(progress) * Math.max(1, bounds.travel)
 
-/** Native page scroll is the only clock in story mode. Manual mode detaches it. */
+/** Lenis moves the native document; a standalone ScrollTrigger owns story progress. */
 export class ScrollCoordinator implements ProgressOwner {
   private snapshot: { mode: ViewMode; compact: boolean }
   private listeners = new Set<() => void>()
   private section: HTMLElement | null = null
   private pin: HTMLElement | null = null
   private observer: ResizeObserver | null = null
-  private frame = 0
+  private trigger: ScrollTrigger | null = null
+  private lenis: Lenis | null = null
   private measureFrame = 0
+  private resumeFrame = 0
   private target: 0 | 1 | null = null
+  private passage = 0
   private initialized = false
+  private measuring = false
+  private syncingLenis = false
   private bounds: StoryBounds = { start: 0, travel: 1 }
-  private restored: { y: number; progress: number; active: boolean } | null = null
+  private restored: SavedScroll | null = null
   private stored = ''
+  private previousScrollBehavior: { value: string; priority: string } | null = null
 
-  constructor(private progress: ProgressController, reducedMotion: boolean) {
+  constructor(private progress: ProgressController, private reducedMotion: boolean) {
     this.snapshot = { mode: reducedMotion ? 'manual' : 'story', compact: reducedMotion }
   }
   getSnapshot = () => this.snapshot
@@ -40,6 +50,11 @@ export class ScrollCoordinator implements ProgressOwner {
   connect(section: HTMLElement, pin: HTMLElement) {
     this.section = section
     this.pin = pin
+    const style = document.documentElement?.style
+    if (style) {
+      this.previousScrollBehavior = { value: style.getPropertyValue('scroll-behavior'), priority: style.getPropertyPriority('scroll-behavior') }
+      style.setProperty('scroll-behavior', 'auto', 'important')
+    }
     if (this.snapshot.mode === 'story') this.progress.attachOwner(this)
     this.observer = new ResizeObserver(this.scheduleMeasure)
     this.observer.observe(section)
@@ -52,51 +67,129 @@ export class ScrollCoordinator implements ProgressOwner {
     window.addEventListener('touchstart', this.onManualInput, { passive: true, capture: true })
     window.addEventListener('keydown', this.onKeyDown, true)
     document.addEventListener('visibilitychange', this.onVisibility)
+    gsap.registerPlugin(ScrollTrigger)
     try {
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
       if (navigation?.type === 'reload' || navigation?.type === 'back_forward') {
-        this.restored = window.history.state?.watchStory ?? null
-        if (!this.restored && navigation.type === 'reload') {
-          const saved = window.sessionStorage.getItem(`hod-vremeni:scroll:${window.location.pathname}`)
-          if (saved) this.restored = JSON.parse(saved)
+        let saved = window.history.state?.watchStory
+        if (!saved && navigation.type === 'reload') {
+          const serialized = window.sessionStorage.getItem(`hod-vremeni:scroll:${window.location.pathname}`)
+          if (serialized) saved = JSON.parse(serialized)
+        }
+        if (saved && Number.isFinite(saved.y) && Number.isFinite(saved.progress)) {
+          this.restored = { y: saved.y, progress: clampProgress(saved.progress), active: saved.active === true }
         }
       }
-    } catch { /* Native restoration remains available when history state is restricted. */ }
+    } catch { /* Native restoration remains available when storage is restricted. */ }
     this.measure()
+    this.startSmoothScroll()
     if (document.readyState === 'complete') this.onPageShow()
-    // Read the browser-restored position after fonts/layout, not a cached zero.
     document.fonts.ready.then(() => { if (this.section) this.scheduleMeasure() })
+  }
+
+  private startSmoothScroll() {
+    if (this.lenis || !this.section || this.snapshot.mode !== 'story' || this.reducedMotion || document.hidden) return
+    this.lenis = new Lenis({
+      autoRaf: false,
+      autoResize: false,
+      smoothWheel: true,
+      syncTouch: false,
+      lerp: .14,
+      anchors: true,
+      stopInertiaOnNavigate: true,
+      prevent: node => node.hasAttribute('data-lenis-prevent') || node.tagName === 'DIALOG' || node.hasAttribute('popover'),
+    })
+    // Official integration: GSAP's one ticker drives Lenis in milliseconds.
+    this.lenis.on('scroll', this.onLenisScroll)
+    gsap.ticker.add(this.tickLenis)
+    gsap.ticker.lagSmoothing(0)
+    this.section.dataset.scrollEngine = 'gsap-lenis'
+  }
+  private stopSmoothScroll() {
+    if (!this.lenis) return
+    gsap.ticker.remove(this.tickLenis)
+    this.lenis.off('scroll', this.onLenisScroll)
+    this.lenis.stop()
+    this.lenis.destroy()
+    this.lenis = null
+    if (this.section) this.section.dataset.scrollEngine = 'native-scrolltrigger'
+  }
+  private tickLenis = (time: number) => {
+    if (!document.hidden) this.lenis?.raf(time * 1000)
+  }
+  private onLenisScroll = () => {
+    if (!this.syncingLenis && !this.measuring) this.syncProgress()
+  }
+  private stopLenisMotion() {
+    if (!this.lenis) return
+    this.syncingLenis = true
+    // stop/start cancels the single Lenis passage, then releases native scrolling.
+    // A persistent stopped class would clip the whole document with Lenis CSS.
+    this.lenis.stop()
+    this.lenis.start()
+    this.syncingLenis = false
   }
 
   private scheduleMeasure = () => {
     if (!this.measureFrame) this.measureFrame = requestAnimationFrame(() => { this.measureFrame = 0; this.measure() })
   }
   private measure = () => {
-    if (!this.section || !this.pin) return
+    if (!this.section || !this.pin || this.measuring) return
     const old = this.bounds
     const y = window.scrollY
     const active = this.initialized && y >= old.start - 1 && y <= old.start + old.travel + 1
     const p = this.snapshot.mode === 'story' ? this.progress.getSnapshot().progress : progressFromScroll(y, old)
+    this.measuring = true
     this.bounds = {
       start: this.section.getBoundingClientRect().top + y,
       travel: Math.max(1, this.section.offsetHeight - this.pin.offsetHeight),
     }
-    const changed = Math.abs(old.start - this.bounds.start) > 0.5 || Math.abs(old.travel - this.bounds.travel) > 0.5
+    const changed = Math.abs(old.start - this.bounds.start) > .5 || Math.abs(old.travel - this.bounds.travel) > .5
     this.initialized = true
-    if (active && changed && !this.snapshot.compact) {
+    if (changed) {
       this.pause()
-      window.scrollTo({ top: scrollFromProgress(p, this.bounds), behavior: 'instant' })
+      this.lenis?.resize()
+      if (active && !this.snapshot.compact) this.jumpTo(scrollFromProgress(p, this.bounds))
     }
     this.section.dataset.storyStart = String(this.bounds.start)
     this.section.dataset.storyTravel = String(this.bounds.travel)
-    this.onScroll()
+    if (!this.trigger) {
+      this.trigger = ScrollTrigger.create({
+        id: 'watch-story', trigger: this.section,
+        start: () => this.bounds.start,
+        end: () => this.bounds.start + this.bounds.travel,
+        pin: false, scrub: false, invalidateOnRefresh: true,
+        onUpdate: self => this.publishProgress(self.progress),
+        onRefresh: self => this.publishProgress(self.progress),
+      })
+    } else if (changed) this.trigger.refresh()
+    this.measuring = false
+    this.syncProgress()
   }
-
+  private publishProgress(value: number) {
+    if (!this.initialized || this.measuring || this.syncingLenis) return
+    if (this.snapshot.mode === 'story') this.progress.commit(clampProgress(value), this.target)
+    this.storeScroll()
+  }
+  private syncProgress() {
+    if (!this.trigger || !this.initialized || this.measuring || this.syncingLenis) return
+    ScrollTrigger.update()
+    this.publishProgress(this.trigger.progress)
+  }
   private onScroll = () => {
-    if (this.snapshot.mode === 'story' && this.initialized) {
-      this.progress.commit(progressFromScroll(window.scrollY, this.bounds), this.target)
+    if (!this.initialized || this.measuring || this.syncingLenis) return
+    // Native scrollbar drags/window.scrollTo must supersede an active Lenis
+    // passage too; otherwise its next tick would pull the document backwards.
+    if (this.lenis?.isScrolling === 'smooth' && Math.abs(window.scrollY - this.lenis.scroll) > 2) {
+      this.target = null
+      this.passage++
+      this.stopLenisMotion()
     }
-    if (this.initialized) this.storeScroll()
+    this.syncProgress()
+  }
+  private jumpTo(y: number) {
+    if (this.lenis) this.lenis.scrollTo(y, { immediate: true, force: true })
+    else window.scrollTo({ top: y, behavior: 'instant' })
   }
   private storeScroll() {
     const y = window.scrollY
@@ -107,16 +200,15 @@ export class ScrollCoordinator implements ProgressOwner {
   }
   private onPageShow = () => {
     this.measure()
+    this.startSmoothScroll()
     if (this.restored && this.snapshot.mode === 'story') {
       const saved = this.restored
       this.restored = null
-      window.scrollTo({ top: saved.active ? scrollFromProgress(saved.progress, this.bounds) : saved.y, behavior: 'instant' })
+      this.jumpTo(saved.active ? scrollFromProgress(saved.progress, this.bounds) : saved.y)
     }
-    this.onScroll()
+    this.syncProgress()
   }
   private onPageHide = () => {
-    // Save on the history entry, including a reload immediately after a range input.
-    // This fills the gap before the browser records its own asynchronous scroll state.
     const y = window.scrollY
     try {
       window.history.replaceState({ ...window.history.state, watchStory: {
@@ -124,45 +216,48 @@ export class ScrollCoordinator implements ProgressOwner {
       } }, '')
     } catch { /* Browsing still works without persistent state. */ }
     this.progress.pause()
+    this.stopSmoothScroll()
   }
 
   seek = (value: number) => {
     this.pause()
     if (!this.section) return
-    window.scrollTo({ top: scrollFromProgress(value, this.bounds), behavior: 'instant' })
-    this.onScroll()
+    this.jumpTo(scrollFromProgress(value, this.bounds))
+    this.syncProgress()
   }
   animate = (target: 0 | 1, reducedMotion: boolean) => {
     this.pause()
-    if (reducedMotion) { this.seek(target); return }
+    if (!this.section || this.snapshot.mode !== 'story') return
+    if (reducedMotion || this.reducedMotion) { this.seek(target); return }
+    this.startSmoothScroll()
     const from = window.scrollY
     const to = scrollFromProgress(target, this.bounds)
-    if (Math.abs(to - from) < 1) { this.seek(target); return }
+    if (Math.abs(to - from) < 1 || !this.lenis) { this.seek(target); return }
     this.target = target
-    const duration = Math.max(350, Math.min(9000, Math.abs(to - from) / this.bounds.travel * 6500))
-    let startedAt: number | null = null
-    this.onScroll()
-    const tick = (time: number) => {
-      this.frame = 0
-      if (this.target === null || this.snapshot.mode !== 'story' || document.hidden) { this.pause(); return }
-      startedAt ??= time
-      const u = clampProgress((time - startedAt) / duration)
-      const eased = u * u * (3 - 2 * u)
-      window.scrollTo({ top: from + (to - from) * eased, behavior: 'instant' })
-      this.onScroll()
-      if (u === 1) this.pause()
-      else this.frame = requestAnimationFrame(tick)
-    }
-    this.frame = requestAnimationFrame(tick)
+    const passage = ++this.passage
+    this.syncProgress()
+    this.lenis.scrollTo(to, {
+      duration: Math.max(.35, Math.min(9, Math.abs(to - from) / this.bounds.travel * 6.5)),
+      easing: smootherStep,
+      lock: false,
+      onComplete: () => {
+        if (passage !== this.passage) return
+        this.target = null
+        this.syncProgress()
+      },
+    })
   }
   pause = () => {
-    if (this.frame) cancelAnimationFrame(this.frame)
-    this.frame = 0
+    this.passage++
     this.target = null
+    this.stopLenisMotion()
     this.progress.commit(this.progress.getSnapshot().progress, null)
   }
   inspect = () => {
+    cancelAnimationFrame(this.resumeFrame)
+    this.resumeFrame = 0
     this.pause()
+    this.stopSmoothScroll()
     this.progress.attachOwner(null)
     this.emit('manual', this.snapshot.compact)
   }
@@ -170,45 +265,68 @@ export class ScrollCoordinator implements ProgressOwner {
     this.progress.pause()
     const p = this.progress.getSnapshot().progress
     const handoff = () => {
+      this.resumeFrame = 0
       if (this.snapshot.mode !== 'manual' || !this.section) return
+      try { this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches } catch { /* Retain the known preference. */ }
       this.initialized = false
       this.measure()
-      window.scrollTo({ top: scrollFromProgress(p, this.bounds), behavior: 'instant' })
+      this.jumpTo(scrollFromProgress(p, this.bounds))
       this.progress.attachOwner(this)
       this.emit('story', false)
-      this.onScroll()
+      this.startSmoothScroll()
+      this.syncProgress()
     }
     if (this.snapshot.compact) {
       this.emit('manual', false)
-      requestAnimationFrame(handoff)
+      this.resumeFrame = requestAnimationFrame(handoff)
     } else handoff()
   }
   reduceMotion = () => {
+    cancelAnimationFrame(this.resumeFrame)
+    this.resumeFrame = 0
     this.progress.pause()
+    this.stopSmoothScroll()
+    this.reducedMotion = true
     this.progress.attachOwner(null)
     this.emit('manual', true)
   }
-  private onManualInput = () => { if (this.snapshot.mode === 'story') this.pause() }
+  private onManualInput = (event: Event) => {
+    if (this.snapshot.mode === 'story' && (this.target !== null || event.type === 'touchstart')) this.pause()
+  }
   private onKeyDown = (event: KeyboardEvent) => {
     if (this.snapshot.mode === 'story') {
-      // Pausing changes the button label/handler. Cancel its native activation so
-      // Space keyup cannot activate the newly rendered "Disassemble" button.
       const activation = event.key === ' ' || event.key === 'Enter'
       const button = activation && event.target instanceof Element ? event.target.closest('button[data-pause-transition="true"]') : null
       if (button) event.preventDefault()
       this.pause()
-    } else if (event.key === 'Escape') {
+    } else if (event.key === 'Escape') this.progress.pause()
+  }
+  private onVisibility = () => {
+    if (document.hidden) {
       this.progress.pause()
+      this.stopSmoothScroll()
+    } else {
+      this.startSmoothScroll()
+      this.syncProgress()
     }
   }
-  private onVisibility = () => { if (document.hidden) this.progress.pause() }
   dispose() {
     this.pause()
+    this.stopSmoothScroll()
+    this.trigger?.kill()
+    this.trigger = null
     this.progress.attachOwner(null)
     this.section = null
     this.pin = null
     this.observer?.disconnect()
     cancelAnimationFrame(this.measureFrame)
+    cancelAnimationFrame(this.resumeFrame)
+    const style = document.documentElement?.style
+    if (style && this.previousScrollBehavior) {
+      const { value, priority } = this.previousScrollBehavior
+      if (value) style.setProperty('scroll-behavior', value, priority)
+      else style.removeProperty('scroll-behavior')
+    }
     window.removeEventListener('scroll', this.onScroll)
     window.removeEventListener('resize', this.scheduleMeasure)
     window.removeEventListener('pageshow', this.onPageShow)

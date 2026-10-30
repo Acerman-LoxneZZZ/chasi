@@ -10,6 +10,12 @@ const RADIANS = Math.PI / 180
 
 export type StoryCameraAngles = { yaw: number; pitch: number; roll: number }
 
+/** A deliberate approach, readable macro hold, and retreat; all scroll reversible. */
+export function evaluateMacroWeight(progress: number) {
+  const p = clampProgress(progress)
+  return smootherStep(clampProgress((p - .54) / .18)) * (1 - smootherStep(clampProgress((p - .78) / .18)))
+}
+
 /** Unwrapped absolute angles retain a whole orbit when the end view faces front again. */
 export function evaluateStoryCameraAngles(progress: number, mobile = false, out: StoryCameraAngles = { yaw: 0, pitch: 0, roll: 0 }) {
   const p = clampProgress(progress)
@@ -45,6 +51,9 @@ export class CameraRig {
   private fromTarget = new Vector3()
   private fromRotation = new Quaternion()
   private transitionStart: number | null = null
+  private macroWeight = 0
+
+  get macro() { return this.macroWeight }
 
   constructor(readonly camera: PerspectiveCamera, readonly controls: OrbitControls) {
     controls.enablePan = false
@@ -82,7 +91,7 @@ export class CameraRig {
     element.style.touchAction = mode === 'story' ? 'pan-y' : 'none'
   }
 
-  frame(progress: number, width: number, height: number, points: Vector3[], reset = false) {
+  frame(progress: number, width: number, height: number, points: Vector3[], reset = false, focus?: Vector3) {
     this.camera.aspect = width / Math.max(1, height)
     this.camera.updateProjectionMatrix()
     if (!points.length) return
@@ -115,11 +124,15 @@ export class CameraRig {
       this.point.copy(world).applyQuaternion(this.inverse).sub(this.center)
       distance = Math.max(distance, this.point.z + Math.max(Math.abs(this.point.x) / tanX, Math.abs(this.point.y) / tanY))
     }
-    this.baseline = distance
+    const macro = focus && !this.reduced ? evaluateMacroWeight(progress) : 0
+    this.macroWeight = macro
+    const dolly = 1 - macro * (width < 700 ? .32 : .64)
+    this.baseline = distance * dolly
     this.desiredTarget.copy(this.center).applyQuaternion(this.rotation)
-    this.desiredPosition.set(0, 0, distance * this.zoom).applyQuaternion(this.rotation).add(this.desiredTarget)
-    this.controls.minDistance = distance * .72
-    this.controls.maxDistance = distance * 2.1
+    if (focus) this.desiredTarget.lerp(focus, macro)
+    this.desiredPosition.set(0, 0, this.baseline * this.zoom).applyQuaternion(this.rotation).add(this.desiredTarget)
+    this.controls.minDistance = this.baseline * .72
+    this.controls.maxDistance = this.baseline * 2.1
     if (this.transitionStart === null) this.apply()
     this.updating = false
   }

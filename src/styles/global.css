@@ -27,6 +27,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 400; }
 .watch-story--compact { height: 100svh; }
 .story-pin { position: sticky; top: 0; width: 100%; height: 100svh; background: radial-gradient(ellipse at 50% 42%, #1b2838 0%, #101b28 36%, #0b131d 72%, #090f17 100%); isolation: isolate; }
 .story-stage { position: absolute; inset: 0; }
+.story-pin::after { content: ''; position: absolute; z-index: 2; inset: 0; pointer-events: none; background: linear-gradient(to bottom, #07101bc9 0, #07101b55 75px, transparent 155px, transparent calc(100% - 145px), #07101b66 calc(100% - 65px), #07101bcc 100%); }
 .experience { position: relative; width: 100%; height: 100%; }
 .canvas-wrap { position: absolute; inset: 0; }
 .watch-canvas { display: block; width: 100%; height: 100%; }

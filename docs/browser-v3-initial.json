@@ -1,0 +1,571 @@
+{
+  "config": {
+    "argv": [
+      "/home/nolimetrus/.nvm/versions/node/v22.23.3/bin/node",
+      "/home/nolimetrus/Рабочий стол/3DD/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/nolimetrus/Рабочий стол/3DD/playwright.config.ts",
+    "rootDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/nolimetrus/Рабочий стол/3DD/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/nolimetrus/Рабочий стол/3DD/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "snapshotDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "locale": "ru-RU",
+          "colorScheme": "dark",
+          "headless": true,
+          "launchOptions": {
+            "executablePath": "/usr/bin/google-chrome",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/browser-test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "experience.spec.ts",
+      "file": "experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the default page contains only a large fullscreen watch with closed tools at all required sizes",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 121788,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m0.0006\u001b[39m\nReceived:   \u001b[31m0.5\u001b[39m\n\nCall Log:\n- Test timeout of 120000ms exceeded",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m0.0006\u001b[39m\nReceived:   \u001b[31m0.5\u001b[39m\n\nCall Log:\n- Test timeout of 120000ms exceeded\n    at scrollToProgress (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:32:69)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:81:7",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 69,
+                      "line": 32
+                    },
+                    "snippet": "  30 |     window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * value, behavior: 'instant' })\n  31 |   }, p)\n> 32 |   await expect.poll(async () => Math.abs(await progress(page) - p)).toBeLessThan(.0006)\n     |                                                                     ^\n  33 |   await settled(page)\n  34 | }\n  35 | const setManualProgress = async (page: Page, percent: number) => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 69,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m0.0006\u001b[39m\nReceived:   \u001b[31m0.5\u001b[39m\n\nCall Log:\n- Test timeout of 120000ms exceeded\n\n  30 |     window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * value, behavior: 'instant' })\n  31 |   }, p)\n> 32 |   await expect.poll(async () => Math.abs(await progress(page) - p)).toBeLessThan(.0006)\n     |                                                                     ^\n  33 |   await settled(page)\n  34 | }\n  35 | const setManualProgress = async (page: Page, percent: number) => {\n    at scrollToProgress (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:32:69)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:81:7"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:48:34.834Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-the-default-pag-a1b0f-tools-at-all-required-sizes/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-the-default-pag-a1b0f-tools-at-all-required-sizes/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 69,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-16d8cb3d89a38dcc1ef4",
+          "file": "experience.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "scroll makes a real complete camera orbit, reverses exactly and stops rendering when idle",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 28322,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m0.0006\u001b[39m\nReceived:   \u001b[31m0.2\u001b[39m\n\nCall Log:\n- Timeout 15000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m0.0006\u001b[39m\nReceived:   \u001b[31m0.2\u001b[39m\n\nCall Log:\n- Timeout 15000ms exceeded while waiting on the predicate\n    at scrollToProgress (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:32:69)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:97:5",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 69,
+                      "line": 32
+                    },
+                    "snippet": "  30 |     window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * value, behavior: 'instant' })\n  31 |   }, p)\n> 32 |   await expect.poll(async () => Math.abs(await progress(page) - p)).toBeLessThan(.0006)\n     |                                                                     ^\n  33 |   await settled(page)\n  34 | }\n  35 | const setManualProgress = async (page: Page, percent: number) => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 69,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m0.0006\u001b[39m\nReceived:   \u001b[31m0.2\u001b[39m\n\nCall Log:\n- Timeout 15000ms exceeded while waiting on the predicate\n\n  30 |     window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * value, behavior: 'instant' })\n  31 |   }, p)\n> 32 |   await expect.poll(async () => Math.abs(await progress(page) - p)).toBeLessThan(.0006)\n     |                                                                     ^\n  33 |   await settled(page)\n  34 | }\n  35 | const setManualProgress = async (page: Page, percent: number) => {\n    at scrollToProgress (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:32:69)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:97:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:50:42.718Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-scroll-makes-a--61e33-d-stops-rendering-when-idle/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-scroll-makes-a--61e33-d-stops-rendering-when-idle/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 69,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-2665176a9ab9c1aa8ed3",
+          "file": "experience.spec.ts",
+          "line": 87,
+          "column": 1
+        },
+        {
+          "title": "the control popover supports native range keys, exact endpoints, pause and interruption",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 43471,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:51:16.956Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-95ddf134bb0555566dd1",
+          "file": "experience.spec.ts",
+          "line": 120,
+          "column": 1
+        },
+        {
+          "title": "manual orbit and slider ignore document scroll, then resume and reload keep the current pose",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 123498,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 66,
+                        "line": 6
+                      },
+                      "message": "Error: locator.getAttribute: Test timeout of 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('canvas.watch-canvas')\u001b[22m\n\n\n  4 | const slider = (page: Page) => page.getByRole('slider', { name: 'Разборка часов', exact: true })\n  5 | const tools = (page: Page) => page.locator('details.exhibit-tools')\n> 6 | const progress = async (page: Page) => Number(await canvas(page).getAttribute('data-progress'))\n    |                                                                  ^\n  7 |\n  8 | // A short render-only follower can trail native scroll; compare poses only when\n  9 | // the actually rendered value has reached the canonical document progress.\n    at progress (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:6:66)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:184:48\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:184:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:52:01.325Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-manual-orbit-an-7f89a-eload-keep-the-current-pose/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-manual-orbit-an-7f89a-eload-keep-the-current-pose/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-ab2fcd87319b516f9155",
+          "file": "experience.spec.ts",
+          "line": 153,
+          "column": 1
+        },
+        {
+          "title": "the native details drawer contains all 47 selectable groups, traps focus and closes with Escape",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 36297,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:54:09.892Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-9af0e8b461533771a556",
+          "file": "experience.spec.ts",
+          "line": 188,
+          "column": 1
+        },
+        {
+          "title": "reduced motion stays compact and direct, including when the preference changes at runtime",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 38111,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:54:46.940Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7a19f4b4176132d0fa98",
+          "file": "experience.spec.ts",
+          "line": 216,
+          "column": 1
+        },
+        {
+          "title": "a failed GLB request keeps a working retry and compact fallback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16326,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:55:25.205Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7342c99b6ffa8faedd29",
+          "file": "experience.spec.ts",
+          "line": 242,
+          "column": 1
+        },
+        {
+          "title": "WebGL loss restores the same configuration and unavailable WebGL shows a real fallback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 49926,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:55:41.644Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-952e1253e3fc2f3bb354",
+          "file": "experience.spec.ts",
+          "line": 260,
+          "column": 1
+        },
+        {
+          "title": "the controls remain usable at 200% layout density with keyboard focus and 44px targets",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 28982,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T16:56:31.667Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-c84cba38714fe2ca5004",
+          "file": "experience.spec.ts",
+          "line": 296,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile fullscreen interaction",
+          "file": "experience.spec.ts",
+          "line": 323,
+          "column": 6,
+          "specs": [
+            {
+              "title": "native swipes scroll only in story mode, and optional labels do not cover the model",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 74077,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-29T16:57:00.779Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "116f6b4a9defd92cdbb9-f29785a91bed5e0f9d65",
+              "file": "experience.spec.ts",
+              "line": 325,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-29T16:48:31.727Z",
+    "duration": 583539.7159999999,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

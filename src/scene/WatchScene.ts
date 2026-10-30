@@ -8,7 +8,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { createPose, evaluatePartTransform, validateParts } from '../animation/evaluatePartTransform'
 import type { ProgressController } from '../animation/progressController'
-import { RenderProgressFollower } from '../animation/renderProgress'
 import type { ViewMode } from '../animation/scrollCoordinator'
 import { shortFunctions, storyStageIndex, storyStages } from '../data/story'
 import type { WatchPart } from '../types'
@@ -64,12 +63,9 @@ export class WatchScene {
   private direction = new Vector3()
   private frameDuration = 0
   private measuredFrames = 0
-  private lastRenderCost = 0
   private pendingPixelRatio: number | null = null
   private mode: ViewMode = 'story'
-  private reducedMotion = false
   private initialFrame = true
-  private visualProgress = new RenderProgressFollower()
   private poseProgress = NaN
   private displayedProgress = 0
   private displayedCameraPosition = new Vector3()
@@ -78,6 +74,7 @@ export class WatchScene {
   private changingMode = false
   private boundsPoints: Vector3[] = []
   private boundsCache: { mesh: Mesh; local: Vector3; world: Vector3 }[] = []
+  private macroFocus = new Vector3()
   private leaders: SVGSVGElement
   private renderedFrames = 0
 
@@ -118,8 +115,6 @@ export class WatchScene {
     this.controls = new OrbitControls(this.camera, canvas)
     this.rig = new CameraRig(this.camera, this.controls)
     this.mode = mode
-    this.reducedMotion = reducedMotion
-    this.visualProgress.reset(progress.getSnapshot().progress, performance.now())
     this.displayedProgress = progress.getSnapshot().progress
     this.rig.setMode(mode, reducedMotion, canvas)
     this.leaders = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -227,7 +222,11 @@ export class WatchScene {
       this.scene.add(this.model)
       this.updatePose()
       this.renderer.compile(this.scene, this.camera)
-      this.invalidate()
+      // Loading is complete only after the populated scene has been painted.
+      // The constructor may already have scheduled an empty sizing frame.
+      cancelAnimationFrame(this.frame)
+      this.frame = 0
+      this.render()
     } finally { window.clearTimeout(timeout) }
   }
 
@@ -239,8 +238,6 @@ export class WatchScene {
     const p = keepDisplayedFrame ? this.displayedProgress : this.progress.getSnapshot().progress
     this.changingMode = true
     this.mode = mode
-    this.reducedMotion = reducedMotion
-    this.visualProgress.reset(p, performance.now())
     if (keepDisplayedFrame) {
       // Recompute the fitting baseline for the displayed geometry before OrbitControls
       // takes ownership, then restore the exact camera that was actually painted.
@@ -276,7 +273,6 @@ export class WatchScene {
 
   resetCamera() {
     const p = this.progress.getSnapshot().progress
-    this.visualProgress.reset(p, performance.now())
     this.applyPose(p, true, true)
     this.invalidate()
   }
@@ -284,13 +280,12 @@ export class WatchScene {
   private updatePose = () => {
     const p = this.progress.getSnapshot().progress
     if (this.changingMode) {
-      this.visualProgress.reset(p, performance.now())
       this.canvas.dataset.progress = p.toFixed(5)
       return
     }
-    const immediate = this.mode === 'manual' || this.reducedMotion || this.initialFrame || this.renderedFrames === 0 || this.contextLost || document.hidden || this.lastRenderCost > 90
-    this.visualProgress.follow(p, performance.now(), immediate)
-    if (immediate) this.applyPose(p)
+    // Lenis owns smoothing. Geometry, labels and UI share the exact ScrollTrigger
+    // progress; a second visual follower would add latency and competing tails.
+    this.applyPose(p)
     this.canvas.dataset.progress = p.toFixed(5)
     this.canvas.dataset.mode = this.mode
     this.invalidate()
@@ -305,7 +300,9 @@ export class WatchScene {
     }
     this.model?.updateMatrixWorld(true)
     for (const entry of this.boundsCache) entry.world.copy(entry.local).applyMatrix4(entry.mesh.matrixWorld)
-    if (frameCamera) this.rig.frame(p, this.width, this.height, this.boundsPoints, this.initialFrame || resetCamera)
+    const gear = this.byId.get('gear_center')
+    if (gear) this.macroFocus.set(0, 0, .06).applyMatrix4(gear.object.matrixWorld)
+    if (frameCamera) this.rig.frame(p, this.width, this.height, this.boundsPoints, this.initialFrame || resetCamera, gear ? this.macroFocus : undefined)
     if (this.model) this.initialFrame = false
     this.poseProgress = p
   }
@@ -320,7 +317,6 @@ export class WatchScene {
     this.renderer.setSize(this.width, this.height, false)
     this.leaders.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`)
     const p = this.progress.getSnapshot().progress
-    this.visualProgress.reset(p, performance.now())
     this.applyPose(p)
     this.canvas.dataset.progress = p.toFixed(5)
     this.canvas.dataset.mode = this.mode
@@ -341,13 +337,12 @@ export class WatchScene {
       this.renderer.setPixelRatio(this.pendingPixelRatio)
       this.pendingPixelRatio = null
     }
-    const p = this.visualProgress.sample(start)
+    const p = this.progress.getSnapshot().progress
     if (p !== this.poseProgress) this.applyPose(p)
     const moving = this.rig.tick(start)
     const drawStarted = performance.now()
     this.renderer.render(this.scene, this.camera)
     const renderCost = performance.now() - drawStarted
-    this.lastRenderCost = renderCost
     this.displayedProgress = p
     this.displayedCameraPosition.copy(this.camera.position)
     this.displayedCameraQuaternion.copy(this.camera.quaternion)
@@ -358,11 +353,11 @@ export class WatchScene {
     this.canvas.dataset.frames = String(++this.renderedFrames)
     this.canvas.dataset.dpr = String(this.renderer.getPixelRatio())
     this.canvas.dataset.renderedProgress = p.toFixed(5)
+    this.canvas.dataset.macro = this.rig.macro.toFixed(5)
+    this.projected.copy(this.macroFocus).project(this.camera)
+    this.canvas.dataset.focus = JSON.stringify(this.projected.toArray())
     this.canvas.dataset.camera = JSON.stringify({ position: this.camera.position.toArray(), quaternion: this.camera.quaternion.toArray(), target: this.controls.target.toArray() })
-    // A slow software renderer cannot meaningfully display a sub-100ms tail.
-    // Keep its next frame exact instead of stretching visual smoothing over seconds.
-    if (renderCost > 90 && this.visualProgress.moving) this.visualProgress.reset(this.progress.getSnapshot().progress, performance.now())
-    if (moving || this.visualProgress.moving || p !== this.visualProgress.current) this.invalidate()
+    if (moving) this.invalidate()
     this.frameDuration += renderCost
     this.measuredFrames++
     const ratio = this.renderer.getPixelRatio()
@@ -472,12 +467,10 @@ export class WatchScene {
     if (document.hidden) {
       this.progress.pause()
       this.rig.suspend()
-      this.visualProgress.reset(this.progress.getSnapshot().progress, performance.now())
       cancelAnimationFrame(this.frame)
       this.frame = 0
     } else {
       const p = this.progress.getSnapshot().progress
-      this.visualProgress.reset(p, performance.now())
       this.applyPose(p)
       this.invalidate()
     }
@@ -487,7 +480,6 @@ export class WatchScene {
     this.contextLost = true
     this.progress.pause()
     this.rig.suspend()
-    this.visualProgress.reset(this.progress.getSnapshot().progress, performance.now())
     cancelAnimationFrame(this.frame)
     this.frame = 0
     this.hooks.lost()

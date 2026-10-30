@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { PerspectiveCamera, Quaternion, Vector3 } from 'three'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { CameraRig, evaluateStoryCameraAngles } from './CameraRig'
+import { CameraRig, evaluateMacroWeight, evaluateStoryCameraAngles } from './CameraRig'
 
 const setup = () => {
   const camera = new PerspectiveCamera(33, 1, .1, 100)
@@ -13,6 +13,22 @@ const setup = () => {
 }
 
 describe('scenario camera and measured framing', () => {
+  it('approaches the gear for a macro hold and retreats to the exact full composition', () => {
+    const { camera, controls, rig, points } = setup()
+    const focus = new Vector3(.45, .3, .2)
+    rig.frame(.75, 1440, 1000, points)
+    const fullDistance = camera.position.distanceTo(controls.target)
+    rig.frame(.75, 1440, 1000, points, false, focus)
+    expect(camera.position.distanceTo(controls.target)).toBeCloseTo(fullDistance * .36, 10)
+    expect(controls.target.distanceTo(focus)).toBeLessThan(1e-12)
+    expect(focus.clone().project(camera).length()).toBeLessThan(1)
+    const macroCamera = camera.position.toArray()
+    for (const p of [1, .1, .9, .3, .75]) rig.frame(p, 1440, 1000, points, false, focus)
+    expect(camera.position.toArray()).toEqual(macroCamera)
+    for (const p of [0, .25, .5, 1]) expect(evaluateMacroWeight(p)).toBe(0)
+    expect(evaluateMacroWeight(.75)).toBe(1)
+    expect(evaluateMacroWeight(NaN)).toBe(0)
+  })
   it('makes a complete measured orbit instead of taking the short quaternion path', () => {
     const { camera, rig, points } = setup()
     for (const [width, height, expectedDegrees] of [[1440, 900, 423], [390, 700, 407]]) {

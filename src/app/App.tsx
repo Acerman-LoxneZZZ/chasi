@@ -119,7 +119,7 @@ export function App() {
             <div className="dock-left">
               <details ref={tools} className="exhibit-tools">
                 <summary><Icon name="layers" size={17} /><span>Управление</span><span className="tools-plus" aria-hidden="true">+</span></summary>
-                <div className="controls-popover">
+                <div className="controls-popover" data-lenis-prevent>
                   <div className="popover-heading"><span>{mode === 'story' ? 'История' : 'Свободный просмотр'}</span><button className="icon-button" aria-label="Закрыть управление" onClick={closeControls}><Icon name="close" size={16} /></button></div>
                   <ExplosionControls controller={controller} progress={progress} target={target} ready={ready} labels={labels} reducedMotion={reducedMotion} onLabels={() => setLabels(value => !value)} onReset={() => setResetKey(value => value + 1)} />
                   <p className="controls-state">{ready ? stageTitle(progress) : status === 'loading' ? 'Подготавливаем модель' : 'Управление 3D недоступно'}</p>
@@ -135,7 +135,7 @@ export function App() {
       </section>
     </main>
 
-    <dialog ref={detailDialog} className="detail-dialog" aria-labelledby="parts-title" onClick={event => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
+    <dialog ref={detailDialog} className="detail-dialog" data-lenis-prevent aria-labelledby="parts-title" onClick={event => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
       <div className="drawer-content">
         <div className="drawer-heading"><div><span className="section-kicker">47 частей одного целого</span><h2 id="parts-title">Устройство часов</h2></div><button className="icon-button" aria-label="Закрыть детали" onClick={() => detailDialog.current?.close()}><Icon name="close" size={20} /></button></div>
         <div className="drawer-info"><PartInfo part={currentPart} progress={progress} onClose={() => setSelected(null)} /></div>
