@@ -1,26 +1,40 @@
-# KARpOV — коммерческий сайт, новая итерация в работе
+# KARpOV — сайт готов
 
-Последний запрос: добавить точки остановки с характеристиками, продолжить страницу красивыми разделами/анимациями и оформить часы под брендом **KARpOV**. Этот запрос отменяет прежнее ограничение «только часы/одна fullscreen-секция» и старое название.
+Последний запрос выполнен: коммерческая презентация карманных часов **KARpOV №01**, пять остановок с характеристиками и дальнейшие разделы с анимацией. Пользователь просит самостоятельную работу без подтверждений и сохранение после выключения.
 
-Предыдущая готовая версия сохранена в Git ef14d61 и неизменяемом архиве artifacts/checkpoints/before-karpov.zip. Не начинать проект заново.
+## Текущая версия
 
-Реализовано:
-- Сохранить Three.js + GSAP ScrollTrigger + Lenis и единственный raw progress. Ввести пять настоящих плато позы, с характеристиками и навигацией по этапам.
-- Заменить маркировку в реальном Blender/GLB на KARpOV, сохранить 47carrier/restTRS и модель.
-- Коммерческая композиция: 3D-презентация → характер коллекции → материалы/механизм → выбор исполнения → спецификация/заключение.
-- Реальный выбор корпуса: латунь, сталь, графит; не выдумывать цены, запас хода, водозащиту, наличие или историю бренда. Сохранять конфигурацию локально, без фиктивной отправки заказа.
-- Рендеры для редакционных разделов из настоящей модели; основная сцена остаётся живой 3D.
+- React / TypeScript / Vite / Three.js + GSAP ScrollTrigger + Lenis. Один raw progress и общий ticker; без второго render follower.
+- Реальные плато в src/animation/storyTimeline.ts:raw0–.10→pose0; .22–.34→.22; .47–.59→.46; .72–.84→.75; .94–1→1. Переходы quintic, прокрутка документа не блокируется.
+- Пять остановок: облик, корпус, циферблат, механизм, целое. Камера согласована с предметом характеристик; yaw desktop−18/40/338/385/405°, mobile−12/32/338/378/395° на пяти pose-ключах. Полный оборот 423°/407° сохранён. Макро 54–96% относится к pose, не raw.
+- Ниже: коллекция, материалы, механизм, три исполнения, спецификация и footer. Редакционные изображения и SVG-анимации дополняют живую 3D-сцену.
+- Латунь/сталь/графит реально меняют PBR пяти корпусных групп, соответствующие WebP и сведения; localStorage karpov:finish. Выбор применяется до первого кадра. Резервное изображение соответствует отделке.
+- Карточка выбора скачивается как .txt локально. Нет фиктивной отправки заказа, оплаты, цен, наличия, водозащиты или запаса хода.
+- Native dialog47 деталей, ручное вращение и controls сохранены. PartInfo получает pose progress. Reduced motion — компактный прямой viewer, дальнейшие разделы доступны.
+- Бренд KARpOV реально заменён в геометрии циферблата, крышки и платины.44 меша/PBR и все 47restTRS сохранены; manifest byte-identical.
 
-Код и модель реализованы. Production entry: index-CNBY7Zpe.js; CSS index-ZchmsDhd.css. Свежие unit:54/54,6 файлов, docs/evidence/unit-karpov.json. Branded GLB:5324520B/187898tri/136primitives/47groups; manifest byte-identical, proof docs/evidence/karpov-model.json. 5WebP из GLB: docs/evidence/karpov-renders.json.
+## Проверки — завершены
 
-Первый browser-прогон:5passed/2failed (docs/browser-karpov-initial.json). Найден реальный overflow material-rule при resize1440→390: GSAP сохранял origin633.6px; исправлен явным from-origin0px0px иCSS0 0. Второй fail — quaternion ULPS~3e-16; тест использует1e-12. Также fallback теперь соответствуетfinish, PartInfo получаетpose-progress.
+Production entry: **dist/assets/index-CK0DU8li.js**, CSS index-ZchmsDhd.css. Эта сборка проверена и упакована.
 
-Выполняются повторные 7 browser-сценариев (2workers), журнал .cache/karpov-browser-final.log; первый сценарий остановок passed. Продукт заморожен на указанной сборке. Параллельно scripts/inspect-commerce.mjs снимает 20production desktop/mobile кадров в docs/screenshots/karpov/, журнал .cache/karpov-shots-final.log (production-кадры переснимаются после исправления). Dev-preview20 кадров уже безerrors/overflow, rootосмотрелhero/materials/selection. Итог новогоbrowserпрогона пока неизвестен. Не переноситьv4 результаты.
+- **55/55 unit**,6 файлов: docs/evidence/unit-karpov.json.
+- **7/7 browser в одном полном прогоне**,2workers,0retries/skip: docs/evidence/browser-karpov-summary.json и docs/browser-karpov-full.json. Исторические initial/pre-camera/targeted JSON не подменяют этот прогон.
+- **20 production-снимков**1440×1000/390×844:docs/screenshots/karpov, включая пять остановок и пять нижних разделов. Ошибок/console/external/overflow нет. Root осмотрел desktop/mobile, циферблат и крупный механизм. Метрики содержат actualentry.
+- Typecheck/build/model verifier прошли. GLB5324520B,187898triangles,136primitives,47groups,95nodes/47meshes/12materials,0externalresources.
+- GLB SHA256 dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35. Источник и dist совпадают. Доказательства: docs/evidence/build-karpov.json, karpov-model.json, karpov-renders.json.
+- Chrome155 headless / ANGLE SwiftShader и viewport emulation. Не называть это проверкой физического телефона или аппаратногоFPS. Старые WebGL-loss/200%/native-touch сценарииV4 отдельно не перепроверялись; no-JSposter есть, отдельного no-JSQA нет.
 
-README/DESIGN/MODEL обновлены. Нужно получитьbrowser/shotрезультаты, исправить реальныеfailuresеслиесть, финализироватьVERIFICATION/WORK_STATE, собратьархивыиGitcheckpoint.
+## Запуск и восстановление
 
-Запуск: ./start.sh → http://127.0.0.1:4173/. Dev5173 при необходимости. После выключения файлы/Git/архивы остаются. Без облачной публикации и Git push. Пользователь просит самостоятельную работу без подтверждений.
+```bash
+cd '/home/nolimetrus/Рабочий стол/3DD'
+./start.sh
+```
 
-Восстановление: git log/status, этот файл и AGENTS.md. Checkpoint: python3 scripts/save-checkpoint.py. Release: python3 scripts/package-release.py. Не включать.git/.tools/node_modules/.codex/.aws/.env.
+Адрес http://127.0.0.1:4173/. После выключения снова запустить start.sh; файлы, Git и архивы остаются. Desktop-ярлык показывает KARpOV. Без нового запроса не переделывать готовый сайт и не повторять весь цикл QA.
 
-Предыдущая проверенная модель:47 групп/188570 треугольников/136 примитивов/5345484B; при ребрендинге текста метрики могут немного измениться. Исторические отчёты: docs/evidence/browser-v4-summary.json и docs/VERIFICATION.md (временно ещё о v4).
+Резервные копии: artifacts/checkpoints/latest.zip и previous.zip. Неизменяемая версия до брендинга: before-karpov.zip и Git ef14d61. Основной коммерческий commit f569b57, responsive-fix7822393, финальный коммит смотрите git log -1. Release: artifacts/hod-vremeni.zip и брендовая копия artifacts/KARpOV.zip. После записи этого файла выполнены финальный commit/package/checkpoint.
+
+При изменениях: npm run build; npm test; npm run verify:model; новые необходимые проверки. Коммерческий QA: npm run test:browser; node scripts/inspect-commerce.mjs. Рендеры: dev5173 + node scripts/render-product.mjs. Сохранение: python3 scripts/package-release.py; python3 scripts/save-checkpoint.py.
+
+Не включать .git/.tools/node_modules/.codex/.aws/.env в архивы. Облачная публикация и Git push не запрошены и не выполнялись.

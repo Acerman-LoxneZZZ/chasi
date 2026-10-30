@@ -1,41 +1,48 @@
-# Проверка fullscreen-версии с GSAP / Lenis
+# KARpOV — проверка коммерческой страницы
 
-30 октября 2026. Проверена production на http://127.0.0.1:4173/, entry `index-BKcFNLGu.js`. Результаты прежних версий сохранены в [VERIFICATION_V2.md](VERIFICATION_V2.md) и [browser-v3-initial.json](browser-v3-initial.json); они не доказывают готовность этой версии.
+30 октября 2026. Production: http://127.0.0.1:4173/, JavaScript `index-CK0DU8li.js`, CSS `index-ZchmsDhd.css`. Старые проверки одной fullscreen-сцены сохранены в [VERIFICATION_V4.md](VERIFICATION_V4.md). Они не выдаются за проверку новой страницы.
 
-## Подтверждено
+## Реализация
 
-- **50/50 unit-тестов**,5 файлов: абсолютные позы 47 групп, rest-TRS, обратимость, многоборотные вращения, измеренное кадрирование, макро-подлёт/отъезд, Lenis→GSAPticker→ScrollTrigger, seek, pause, manual handoff, reduced motion, resize/reload и hidden cleanup. [Сырой JSON](evidence/unit-v4.json).
-- TypeScript и production build проходят. Vite без предупреждений. Фактические dependencies: gsap3.15.0, lenis1.3.27, three0.186.1. Исходный и собранный GLB имеют одинаковый SHA256. [Сборка](evidence/build-v4.json).
-- **20 снимков**:0/25/50/75/100% для 1440×1000,1280×800,390×844,360×800. Все 20 содержат модель; проверено наличие существенной области латунных пикселей, а не только DOM-статуса ready. Ошибок страницы/console, внешних запросов приложения и горизонтального overflow нет. Общие планы вписаны. На 75% корпус намеренно обрезан ради макро, фокус центрального колеса находится в центре canvas. [Метрики](screenshots/cinematic/metrics.json).
-- GLB проверен заново через npm run verify:model:47 групп,95 узлов/47 мешей,188570 треугольников,136 примитивов,5345484 байта, без внешних ресурсов. Геометрия во время этой итерации не пересоздавалась.
+- KARpOV заменён в интерфейсе, metadata, favicon и реальной геометрии циферблата, крышки и платины. Остальные 44 меша/PBR и все 47carrier rest-TRS сохранены. [Сравнение](evidence/karpov-model.json).
+- Одна живая Three.js-сцена, общий GSAP / Lenis ticker и единственный raw progress. Pure mapping создаёт пять настоящих выдержек, без блокировки прокрутки. Части, камера и подписи используют pose progress.
+- Yaw на pose0/.22/.46/.75/1: desktop −18/40/338/385/405°, mobile −12/32/338/378/395°. На каждой остановке видна лицевая сторона или три четверти; полный обход 423°/407° сохраняется между ракурсами. Макро остаётся на 54–96%pose, не raw.
+- Ниже сцены находятся коллекция, материалы, открытая механика, выбор исполнения, спецификация и footer. GSAP двигает редакционные изображения и механическую SVG-схему. Пять прозрачных WebP получены из собственного GLB; дополнительный WebGL renderer на телефоне не запускается. [Рендеры](evidence/karpov-renders.json).
+- Латунь/сталь/графит меняют реальные PBR-материалы пяти корпусных групп и соответствующие изображения. Механизм, эмаль и синёные стрелки сохраняются. Выбор записывается в localStorage и применяется до первого кадра загрузки/восстановления.
+- «Сохранить выбор» скачивает UTF-8 карточку .txt. Ничего не отправляет наружу и не выдаётся за оформленный заказ. Цена, наличие, запас хода и водозащита не выдуманы.
 
-## Браузерные сценарии — 10 подтверждены
+## Подтверждённые проверки
 
-**9 passed /1 failed** в полном прогоне с двумя workers; **1 passed** в целевом повторе после исправления ожидания только в тесте. Это не один полностью зелёный full run. Код приложения и production-сборка между прогонами не менялись. [Машинная сводка](evidence/browser-v4-summary.json), [полный JSON](browser-v4-full.json), [целевой JSON](browser-v4-targeted.json).
+- **55/55 unit-тестов,6 файлов.** В том числе равенство всех 47 поз и камеры внутри пяти плато, обратимость и quintic-границы, полный обход и лицевая сторона на остановках, scroll ownership/resize/reload, independent manual mode. [Сырой JSON](evidence/unit-karpov.json).
+- TypeScript / Vite build проходят, предупреждений Vite нет. Исходный и собранный GLB идентичны. [Сборка и хеши](evidence/build-karpov.json).
+- GLB проверен заново:47 групп,95 узлов/47 мешей,12 материалов,187898 треугольников,136 примитивов,5324520 байт,0 внешних ресурсов. [Модель](evidence/model-validation.json).
+- **20 свежих production-кадров**: пять остановок плюс пять нижних разделов на 1440×1000 и 390×844. Root осмотрел первый экран, циферблат, механизм и мобильный выбор. Во всех десяти кадрах живого viewer подтверждено наличие существенной области модели. Ошибок страницы/console, внешних запросов и горизонтального overflow нет. [Метрики и окружение](screenshots/karpov/metrics.json).
 
-Первичная ошибка controlled-503: assertion стартовал в trace на 275104ms, а GLB-fetch начался на 296652ms, через 21,5 секунды подготовки PMREM в SwiftShader. Старое ожидание 15 секунд истекало ещё до запроса. Теперь тест сначала дожидается реального 503 response (лимит 60s), затем проверяет error, компактный fallback, доступность retry и успешную повторную загрузку ровно вторым запросом. Целевой повтор прошёл.
+## Браузерный прогон
 
-Подтверждены fullscreen на 4 размерах; полный оборот/макро/обратимость/idle; native range/Home/End/Arrow/Space pause/wheel interruption; manual Orbit/slider/document independence/resume/reload; native dialog47 иfocus/Escape; reduced motion иruntime preference; error/retry; WebGL loss/restore/unsupported fallback;200%layout density/keyboard/44px targets; native touch swipe, ручное вращение и необязательные подписи.
+**7/7 passed в одном полном прогоне**, 2workers, без retries и пропусков. [Сводка](evidence/browser-karpov-summary.json), [сырой JSON](browser-karpov-full.json). Проверена та же production-сборка, что указана выше и в метриках снимков.
 
-Сводка воспроизводится командой `node scripts/summarize-browser-v4.mjs`.
+Подтверждены пять точек навигации и реальная неподвижность камеры/механизма внутри плато; manual Orbit/slider/document independence/resume/reload; все нижние разделы, загруженные изображения, desktop/mobile без overflow, переходы якорей и цели 44px; выбор трёх исполнений, localStorage и изменение пикселей настоящего canvas; скачивание карточки без внешней отправки; reduced motion;503→fallback→смена исполнения→успешныйretry.
 
-## Среда и ограничения
+Первый прогон выявил реальные проблемы, которые исправлены: origin декоративной линии сохранял desktop-центр и создавал overflow при resize — теперь from-origin0px0px; fallback согласован с исполнением; камера на остановке циферблата смотрит на лицевую сторону. Два ожидания теста уточнены: quaternion сравнивается с допуском 1e-12, новый storyTravel после resize ожидается до программного seek. Итоговый полный прогон выполнен после этих исправлений, а не составлен из прежних частичных результатов.
 
-Chrome155 headless / Playwright1.64.1, Linux. WebGL2 через ANGLE/Vulkan/SwiftShader, DPR1 при съёмке. Это программный renderer, не аппаратный GPU и не проверка физического телефона. Мобильные размеры, touch и 200%layout density проверяются эмуляцией; аппаратныйFPS не заявлен. Шрифты, GLB и окружение локальные. No-JS здесь отдельно не перепроверялся; index.html содержит noscript-пояснение.
+## Окружение и границы
 
-Модель — авторская демонстрационная конструкция, не точная инженерная симуляция. Стекло использует экономичную прозрачную примесь без transmission-прохода. Общий GSAP ticker обновляет Lenis; WebGL рисует по требованию и прекращает кадры после остановки. Скрытая вкладка прекращает программный проход, уничтожает Lenis и освобождает его ticker.
+Chrome155 headless, Playwright1.64.1, Linux, WebGL2 через ANGLE/Vulkan/SwiftShader. Это программный renderer и viewport-эмуляция, не аппаратный GPU и не физический телефон. АппаратныйFPS не измерен. Текущий прогон не повторяет прежние WebGL-loss/200%/native-touch сценарии V4; не переносить их результаты на новую страницу.
 
-## Воспроизведение
+No-JS содержит брендовый poster и пояснение, но отдельный браузерный no-JS прогон в этой итерации не выполнялся. Модель является авторской демонстрационной конструкцией, а не инженерной симуляцией или подтверждением характеристик реального серийного изделия.
+
+## Повторение и сохранение
 
 ```bash
 npm run build
-npm test -- --reporter=json --outputFile=docs/evidence/unit-v4.json
+npm test -- --reporter=json --outputFile=docs/evidence/unit-karpov.json
 npm run verify:model
 ./start.sh
-PW_BASE_URL=http://127.0.0.1:4173 npm run test:browser
-PW_BASE_URL=http://127.0.0.1:4173 node scripts/inspect-watch.mjs docs/screenshots/cinematic
+PW_BASE_URL=http://127.0.0.1:4173 npm run test:browser -- --fully-parallel --workers=2
+PW_BASE_URL=http://127.0.0.1:4173 node scripts/inspect-commerce.mjs
 python3 scripts/package-release.py
 python3 scripts/save-checkpoint.py
 ```
 
-Продолжение — WORK_STATE.md и AGENTS.md. Исходники, модель, локальная Git-история и атомарные latest.zip/previous.zip сохраняются на диске. Облако и Git push не выполнялись.
+Контекст — WORK_STATE.md / AGENTS.md. Базовая версия сохранена в ef14d61 и before-karpov.zip. Новые коммиты и latest.zip/previous.zip сохраняют исходники/сборку/модель. Секреты, аккаунты, .tools/node_modules/.git не входят в архивы. Публикация и push не выполнялись.

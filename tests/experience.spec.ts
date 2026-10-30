@@ -31,6 +31,12 @@ const camera = async (page: Page) => {
   return JSON.parse((await canvas(page).getAttribute('data-camera'))!) as { position: number[]; quaternion: number[]; target: number[] }
 }
 const scrollToProgress = async (page: Page, value: number) => {
+  // A viewport resize can finish before ResizeObserver has published the new
+  // story travel. Seek using the measured layout, rather than the previous size.
+  await expect.poll(() => page.locator('.watch-story').evaluate(section => {
+    const pin = section.querySelector<HTMLElement>('.story-pin')!
+    return Math.abs(Number((section as HTMLElement).dataset.storyTravel) - Math.max(1, (section as HTMLElement).offsetHeight - pin.offsetHeight))
+  }), { timeout: 30000 }).toBeLessThan(.5)
   await page.evaluate(p => {
     const section = document.querySelector<HTMLElement>('.watch-story')!
     window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * p, behavior: 'instant' })

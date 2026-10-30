@@ -53,7 +53,7 @@ Lenis сглаживает колёсную прокрутку через общ
 
 ## Проверки и сохранение
 
-В текущей KARpOV-итерации подтверждены **54/54 unit-теста**, 6 файлов: [unit-karpov.json](docs/evidence/unit-karpov.json). Новый браузерный набор проверяется отдельно; отчёты прежней fullscreen-версии не доказывают новую страницу. Актуальное состояние QA и ограничения — в [VERIFICATION.md](docs/VERIFICATION.md).
+В текущей KARpOV-итерации подтверждены **55/55 unit-теста**, 6 файлов: [unit-karpov.json](docs/evidence/unit-karpov.json). Финальный браузерный прогон: **7/7 passed**, без повторов и пропусков; [сводка](docs/evidence/browser-karpov-summary.json). Сделаны 20 новых production-снимков. Актуальное состояние QA и ограничения — в [VERIFICATION.md](docs/VERIFICATION.md).
 
 ```bash
 npm run typecheck

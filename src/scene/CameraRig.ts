@@ -7,6 +7,9 @@ const UP = new Vector3(0, 1, 0)
 const ORIGIN = new Vector3()
 const FORWARD = new Vector3(0, 0, 1)
 const RADIANS = Math.PI / 180
+const CAMERA_POSES = [0, .22, .46, .75, 1] as const
+const DESKTOP_YAW = [-18, 40, 338, 385, 405] as const
+const MOBILE_YAW = [-12, 32, 338, 378, 395] as const
 
 export type StoryCameraAngles = { yaw: number; pitch: number; roll: number }
 
@@ -19,10 +22,19 @@ export function evaluateMacroWeight(progress: number) {
 /** Unwrapped absolute angles retain a whole orbit when the end view faces front again. */
 export function evaluateStoryCameraAngles(progress: number, mobile = false, out: StoryCameraAngles = { yaw: 0, pitch: 0, roll: 0 }) {
   const p = clampProgress(progress)
-  const eased = smootherStep(p)
   const wave = Math.sin(p * Math.PI * 2)
   const arch = Math.sin(p * Math.PI)
-  out.yaw = ((mobile ? -12 : -18) + (mobile ? 407 : 423) * eased) * RADIANS
+  const yawStops = mobile ? MOBILE_YAW : DESKTOP_YAW
+  let yaw: number = yawStops[4]
+  // The full orbit happens between the case and dial holds. Every reading
+  // stop returns to the front so its visible materials match the product copy.
+  for (let index = 1; index < CAMERA_POSES.length; index++) {
+    if (p > CAMERA_POSES[index]) continue
+    const u = clampProgress((p - CAMERA_POSES[index - 1]) / (CAMERA_POSES[index] - CAMERA_POSES[index - 1]))
+    yaw = yawStops[index - 1] + (yawStops[index] - yawStops[index - 1]) * smootherStep(u)
+    break
+  }
+  out.yaw = yaw * RADIANS
   out.pitch = ((mobile ? 5 : 8) + (mobile ? 7 : 8) * wave + (mobile ? 3 : 4) * arch) * RADIANS
   out.roll = ((mobile ? -2 : -4) * (1 - p) + (mobile ? 3 : 7) * wave) * RADIANS
   return out

@@ -112,7 +112,7 @@
       "line": 0,
       "specs": [
         {
-          "title": "the default page contains only a large fullscreen watch with closed tools at all required sizes",
+          "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
           "ok": true,
           "tags": [],
           "tests": [
@@ -127,12 +127,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 117478,
+                  "duration": 58338,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T13:39:22.852Z",
+                  "startTime": "2026-10-30T14:30:22.452Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -140,18 +140,18 @@
               "status": "expected"
             }
           ],
-          "id": "116f6b4a9defd92cdbb9-16d8cb3d89a38dcc1ef4",
+          "id": "116f6b4a9defd92cdbb9-e5e89ba591da672fe690",
           "file": "experience.spec.ts",
-          "line": 74,
+          "line": 62,
           "column": 1
         },
         {
-          "title": "scroll makes a complete orbit and a focused macro dolly, reverses exactly and stops rendering when idle",
+          "title": "manual controls preserve the displayed pose and resume and reload the same story position",
           "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 120000,
+              "timeout": 240000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
@@ -161,12 +161,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 80517,
+                  "duration": 104949,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T13:39:22.938Z",
+                  "startTime": "2026-10-30T14:30:22.432Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -174,47 +174,13 @@
               "status": "expected"
             }
           ],
-          "id": "116f6b4a9defd92cdbb9-78e8ff9298b8cd0a415e",
+          "id": "116f6b4a9defd92cdbb9-bd7d0c411939cc7628d0",
           "file": "experience.spec.ts",
-          "line": 99,
+          "line": 98,
           "column": 1
         },
         {
-          "title": "the control popover supports native range keys, exact endpoints, pause and interruption",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 120000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 49324,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-30T13:40:44.523Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "116f6b4a9defd92cdbb9-95ddf134bb0555566dd1",
-          "file": "experience.spec.ts",
-          "line": 152,
-          "column": 1
-        },
-        {
-          "title": "manual orbit and slider ignore document scroll, then resume and reload keep the current pose",
+          "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
           "ok": true,
           "tags": [],
           "tests": [
@@ -229,12 +195,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 142933,
+                  "duration": 73397,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T13:41:21.282Z",
+                  "startTime": "2026-10-30T14:31:21.585Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -242,18 +208,18 @@
               "status": "expected"
             }
           ],
-          "id": "116f6b4a9defd92cdbb9-ab2fcd87319b516f9155",
+          "id": "116f6b4a9defd92cdbb9-f5e5bef52981f68520aa",
           "file": "experience.spec.ts",
-          "line": 185,
+          "line": 129,
           "column": 1
         },
         {
-          "title": "the native details drawer contains all 47 selectable groups, traps focus and closes with Escape",
+          "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
           "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 120000,
+              "timeout": 240000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
@@ -263,12 +229,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 71466,
+                  "duration": 114618,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T13:41:34.107Z",
+                  "startTime": "2026-10-30T14:32:08.111Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -276,52 +242,18 @@
               "status": "expected"
             }
           ],
-          "id": "116f6b4a9defd92cdbb9-9af0e8b461533771a556",
+          "id": "116f6b4a9defd92cdbb9-7f266ab5918682e3f277",
           "file": "experience.spec.ts",
-          "line": 221,
+          "line": 156,
           "column": 1
         },
         {
-          "title": "reduced motion stays compact and direct, including when the preference changes at runtime",
+          "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
           "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 120000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 73242,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-30T13:42:45.762Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "116f6b4a9defd92cdbb9-7a19f4b4176132d0fa98",
-          "file": "experience.spec.ts",
-          "line": 249,
-          "column": 1
-        },
-        {
-          "title": "a failed GLB request keeps a working retry and compact fallback",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 120000,
+              "timeout": 240000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
@@ -330,67 +262,66 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 31384,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.experience')\nExpected: \u001b[32m\"error\"\u001b[39m\nReceived: \u001b[31m\"loading\"\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.experience') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.experience')\u001b[22m\n",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.experience')\nExpected: \u001b[32m\"error\"\u001b[39m\nReceived: \u001b[31m\"loading\"\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.experience') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.experience')\u001b[22m\n\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:283:45",
-                    "location": {
-                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
-                      "column": 45,
-                      "line": 283
-                    },
-                    "snippet": "  281 |   })\n  282 |   await page.goto('/')\n> 283 |   await expect(page.locator('.experience')).toHaveAttribute('data-status', 'error')\n      |                                             ^\n  284 |   await expect(page.locator('.watch-story')).toHaveClass(/compact/)\n  285 |   await expect(page.getByRole('button', { name: 'Детали часов', exact: true })).toBeDisabled()\n  286 |   await page.getByRole('button', { name: 'Повторить загрузку', exact: true }).click()"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
-                        "column": 45,
-                        "line": 283
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.experience')\nExpected: \u001b[32m\"error\"\u001b[39m\nReceived: \u001b[31m\"loading\"\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" locator('.experience') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.experience')\u001b[22m\n\n\n  281 |   })\n  282 |   await page.goto('/')\n> 283 |   await expect(page.locator('.experience')).toHaveAttribute('data-status', 'error')\n      |                                             ^\n  284 |   await expect(page.locator('.watch-story')).toHaveClass(/compact/)\n  285 |   await expect(page.getByRole('button', { name: 'Детали часов', exact: true })).toBeDisabled()\n  286 |   await page.getByRole('button', { name: 'Повторить загрузку', exact: true }).click()\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:283:45"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 46333,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T13:43:44.526Z",
+                  "startTime": "2026-10-30T14:32:35.172Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-a-failed-GLB-re-7ad8d--retry-and-compact-fallback/error-context.md"
-                    },
-                    {
-                      "name": "trace",
-                      "contentType": "application/zip",
-                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-a-failed-GLB-re-7ad8d--retry-and-compact-fallback/trace.zip"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
-                    "column": 45,
-                    "line": 283
-                  }
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
-          "id": "116f6b4a9defd92cdbb9-7342c99b6ffa8faedd29",
+          "id": "116f6b4a9defd92cdbb9-a84157c065a588e7341f",
           "file": "experience.spec.ts",
-          "line": 275,
+          "line": 186,
           "column": 1
         },
         {
-          "title": "WebGL loss restores the same configuration and unavailable WebGL shows a real fallback",
+          "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
           "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 120000,
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46227,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:33:21.648Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-6eb07f7c507a6a140003",
+          "file": "experience.spec.ts",
+          "line": 205,
+          "column": 1
+        },
+        {
+          "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
@@ -400,12 +331,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 98261,
+                  "duration": 35438,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T13:43:59.234Z",
+                  "startTime": "2026-10-30T14:34:02.989Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -413,99 +344,21 @@
               "status": "expected"
             }
           ],
-          "id": "116f6b4a9defd92cdbb9-952e1253e3fc2f3bb354",
+          "id": "116f6b4a9defd92cdbb9-3e2146b61682cf4c0885",
           "file": "experience.spec.ts",
-          "line": 292,
+          "line": 225,
           "column": 1
-        },
-        {
-          "title": "the controls remain usable at 200% layout density with keyboard focus and 44px targets",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 120000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 53831,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-30T13:44:21.573Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "116f6b4a9defd92cdbb9-c84cba38714fe2ca5004",
-          "file": "experience.spec.ts",
-          "line": 328,
-          "column": 1
-        }
-      ],
-      "suites": [
-        {
-          "title": "mobile fullscreen interaction",
-          "file": "experience.spec.ts",
-          "line": 355,
-          "column": 6,
-          "specs": [
-            {
-              "title": "native swipes scroll only in story mode, and optional labels do not cover the model",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 120000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 100307,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-10-30T13:45:16.517Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "116f6b4a9defd92cdbb9-f29785a91bed5e0f9d65",
-              "file": "experience.spec.ts",
-              "line": 357,
-              "column": 3
-            }
-          ]
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-30T13:39:20.291Z",
-    "duration": 457122.20399999997,
-    "expected": 9,
+    "startTime": "2026-10-30T14:30:21.026Z",
+    "duration": 258219.00100000002,
+    "expected": 7,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

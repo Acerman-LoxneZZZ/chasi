@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "productionEntry": "./assets/index-CK0DU8li.js",
+  "command": "PW_BASE_URL=http://127.0.0.1:4173 npm run test:browser -- --fully-parallel --workers=2",
+  "rawSource": "docs/browser-karpov-full.json",
+  "stats": {
+    "startTime": "2026-10-30T14:30:21.026Z",
+    "duration": 258219.00100000002,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "scenarios": 7,
+  "results": [
+    {
+      "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    },
+    {
+      "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    },
+    {
+      "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    },
+    {
+      "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    },
+    {
+      "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    },
+    {
+      "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    },
+    {
+      "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+      "status": "passed",
+      "playwrightStatus": "expected"
+    }
+  ],
+  "screenshots": 20,
+  "metrics": "docs/screenshots/karpov/metrics.json",
+  "environmentLimit": "Chrome headless / ANGLE SwiftShader and viewport emulation; not physical phone or hardware GPU benchmark",
+  "history": "Initial failures and pre-camera reports are historical. This final run independently passed all seven scenarios on the final camera route."
+}

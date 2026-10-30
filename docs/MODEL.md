@@ -73,4 +73,4 @@ npm run dev
 RENDER_BASE_URL=http://127.0.0.1:5173 node scripts/render-product.mjs
 ```
 
-DejaVu Serif / Sans вложены в `assets/blender/fonts/`; лицензии — `docs/licenses/`. Ресурсы перечислены в `ASSET_SOURCES.md`. Модель не заявляет инженерную точность исторического механизма, реальный запас хода или водозащиту. Фактические проверки сайта — `VERIFICATION.md`; unit текущей итерации — 54/54 в `evidence/unit-karpov.json`, браузерные результаты ведутся отдельно.
+DejaVu Serif / Sans вложены в `assets/blender/fonts/`; лицензии — `docs/licenses/`. Ресурсы перечислены в `ASSET_SOURCES.md`. Модель не заявляет инженерную точность исторического механизма, реальный запас хода или водозащиту. Фактические проверки сайта — `VERIFICATION.md`; unit текущей итерации — 55/55 в `evidence/unit-karpov.json`, браузерные результаты ведутся отдельно.

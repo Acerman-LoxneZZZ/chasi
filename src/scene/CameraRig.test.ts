@@ -13,6 +13,17 @@ const setup = () => {
 }
 
 describe('scenario camera and measured framing', () => {
+  it('shows the dial-facing side at every actual product hold while retaining the unwrapped orbit', () => {
+    const { camera, rig, points } = setup()
+    for (const mobile of [false, true]) {
+      const expectedDegrees = mobile ? [-12, 32, 338, 378, 395] : [-18, 40, 338, 385, 405]
+      for (const [index, p] of [0, .22, .46, .75, 1].entries()) {
+        expect(evaluateStoryCameraAngles(p, mobile).yaw * 180 / Math.PI).toBeCloseTo(expectedDegrees[index], 10)
+        rig.frame(p, mobile ? 390 : 1440, mobile ? 844 : 1000, points)
+        expect(new Vector3(0, 0, 1).applyQuaternion(camera.quaternion).z).toBeGreaterThan(.65)
+      }
+    }
+  })
   it('approaches the gear for a macro hold and retreats to the exact full composition', () => {
     const { camera, controls, rig, points } = setup()
     const focus = new Vector3(.45, .3, .2)

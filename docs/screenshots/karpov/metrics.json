@@ -1,0 +1,279 @@
+{
+  "environment": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "entry": "http://127.0.0.1:4173/assets/index-CK0DU8li.js",
+    "method": "Headless Chrome / ANGLE SwiftShader; viewport emulation, not a physical phone or hardware GPU benchmark"
+  },
+  "errors": [],
+  "consoleProblems": [],
+  "externalRequests": [],
+  "results": [
+    {
+      "kind": "stop",
+      "w": 1440,
+      "p": "0.00000",
+      "pose": "0.00000",
+      "overflow": false,
+      "bounds": {
+        "minX": 167.24529961004575,
+        "minY": 84.69400781959318,
+        "maxX": 815.922166942597,
+        "maxY": 929.9999999999999,
+        "width": 1008,
+        "height": 1000
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 1440,
+      "p": "0.28000",
+      "pose": "0.22000",
+      "overflow": false,
+      "bounds": {
+        "minX": 32.95231770833353,
+        "minY": 137.42461739706619,
+        "maxX": 972.6365662085145,
+        "maxY": 933.2626669788344,
+        "width": 1008,
+        "height": 1000
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 1440,
+      "p": "0.53000",
+      "pose": "0.46000",
+      "overflow": false,
+      "bounds": {
+        "minX": 149.47339888161937,
+        "minY": 137.43597442589356,
+        "maxX": 900.600806990415,
+        "maxY": 967.5,
+        "width": 1008,
+        "height": 1000
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 1440,
+      "p": "0.78000",
+      "pose": "0.75000",
+      "overflow": false,
+      "bounds": {
+        "minX": -1291.0269185733541,
+        "minY": -784.3557947705074,
+        "maxX": 1395.7486678255411,
+        "maxY": 2230.0549169032997,
+        "width": 1008,
+        "height": 1000
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 1440,
+      "p": "0.97000",
+      "pose": "1.00000",
+      "overflow": false,
+      "bounds": {
+        "minX": 32.759999999999806,
+        "minY": 172.67993401595132,
+        "maxX": 955.9969726757412,
+        "maxY": 913.7398434197872,
+        "width": 1008,
+        "height": 1000
+      }
+    },
+    {
+      "kind": "design",
+      "w": 1440,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-product.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "materials",
+      "w": 1440,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-detail.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "mechanism",
+      "w": 1440,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-movement.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "selection",
+      "w": 1440,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-product.webp",
+          "loaded": true
+        },
+        {
+          "src": "./images/karpov-product-steel.webp",
+          "loaded": true
+        },
+        {
+          "src": "./images/karpov-product-graphite.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "specifications",
+      "w": 1440,
+      "overflow": false,
+      "images": []
+    },
+    {
+      "kind": "stop",
+      "w": 390,
+      "p": "0.00000",
+      "pose": "0.00000",
+      "overflow": false,
+      "bounds": {
+        "minX": 23.83742673792367,
+        "minY": 26.95484353668541,
+        "maxX": 360.74023216332716,
+        "maxY": 468.73749999999995,
+        "width": 390,
+        "height": 487
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 390,
+      "p": "0.27999",
+      "pose": "0.22000",
+      "overflow": false,
+      "bounds": {
+        "minX": 14.625000000000012,
+        "minY": 87.39745713997705,
+        "maxX": 362.12967789612827,
+        "maxY": 425.5218783965053,
+        "width": 390,
+        "height": 487
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 390,
+      "p": "0.53008",
+      "pose": "0.46000",
+      "overflow": false,
+      "bounds": {
+        "minX": 31.857097249699343,
+        "minY": 65.70291055450377,
+        "maxX": 375.37500000000006,
+        "maxY": 463.4066432624435,
+        "width": 390,
+        "height": 487
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 390,
+      "p": "0.77999",
+      "pose": "0.75000",
+      "overflow": false,
+      "bounds": {
+        "minX": -89.67488957100312,
+        "minY": 20.97771160122701,
+        "maxX": 404.901231907747,
+        "maxY": 463.0847119964487,
+        "width": 390,
+        "height": 487
+      }
+    },
+    {
+      "kind": "stop",
+      "w": 390,
+      "p": "0.96992",
+      "pose": "1.00000",
+      "overflow": false,
+      "bounds": {
+        "minX": 14.624999999999796,
+        "minY": 98.3842225498223,
+        "maxX": 365.33857648605425,
+        "maxY": 419.46854579220667,
+        "width": 390,
+        "height": 487
+      }
+    },
+    {
+      "kind": "design",
+      "w": 390,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-product.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "materials",
+      "w": 390,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-detail.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "mechanism",
+      "w": 390,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-movement.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "selection",
+      "w": 390,
+      "overflow": false,
+      "images": [
+        {
+          "src": "./images/karpov-product.webp",
+          "loaded": true
+        },
+        {
+          "src": "./images/karpov-product-steel.webp",
+          "loaded": true
+        },
+        {
+          "src": "./images/karpov-product-graphite.webp",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "kind": "specifications",
+      "w": 390,
+      "overflow": false,
+      "images": []
+    }
+  ]
+}
