@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { ProgressController } from '../animation/progressController'
 import { ScrollCoordinator } from '../animation/scrollCoordinator'
-import { storyStageIndex, storyStages } from '../data/story'
+import { gsap } from 'gsap'
+import { collectionStops, collectionStopIndex, finishes, type WatchFinish } from '../data/collection'
+import { CollectionPage } from '../components/CollectionPage'
 import { Experience } from '../components/Experience'
 import { ExplosionControls, stageTitle } from '../components/ExplosionControls'
-import { Icon, WatchMark } from '../components/Icon'
+import { Icon } from '../components/Icon'
 import { PartInfo } from '../components/PartInfo'
 import { PartList } from '../components/PartList'
 import rawParts from '../data/watch-parts.json'
@@ -31,16 +33,40 @@ export function App() {
   const { mode, compact } = useSyncExternalStore(coordinator.subscribe, coordinator.getSnapshot)
   const storySection = useRef<HTMLElement>(null)
   const storyPin = useRef<HTMLDivElement>(null)
+  const stationCopy = useRef<HTMLDivElement>(null)
   const tools = useRef<HTMLDetailsElement>(null)
   const detailDialog = useRef<HTMLDialogElement>(null)
   const [status, setStatus] = useState<SceneStatus>('loading')
   const [labels, setLabels] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)
+  const [storyVisible, setStoryVisible] = useState(true)
   const ready = status === 'ready'
   const currentPart = parts.find(part => part.id === selected) ?? null
-  const chapter = storyStageIndex(progress)
-  const stage = storyStages[chapter]
+  const chapter = collectionStopIndex(progress)
+  const stage = collectionStops[chapter]
+  const [finish, setFinish] = useState<WatchFinish>(() => {
+    try { const stored = localStorage.getItem('karpov:finish'); if (finishes.some(item => item.id === stored)) return stored as WatchFinish } catch { /* Storage is optional. */ }
+    return 'brass'
+  })
+  const displayedPart = currentPart && currentPart.category === 'case' && finish !== 'brass'
+    ? { ...currentPart, materialLabel: `Отделка корпуса: ${finishes.find(item => item.id === finish)!.title}` }
+    : currentPart
+  useEffect(() => { try { localStorage.setItem('karpov:finish', finish) } catch { /* Selection remains usable. */ } }, [finish])
+  useLayoutEffect(() => {
+    if (reducedMotion) return
+    const tween = gsap.fromTo(stationCopy.current, { opacity: .35, y: 12 }, { opacity: 1, y: 0, duration: .55, ease: 'power2.out', clearProps: 'transform,opacity' })
+    return () => { tween.kill() }
+  }, [chapter, reducedMotion])
+  const viewIn3D = useCallback((value: number) => {
+    controller.set(value)
+    if (ready && !reducedMotion && coordinator.getSnapshot().mode === 'manual') coordinator.resume()
+    requestAnimationFrame(() => {
+      const section = storySection.current
+      if (section) window.scrollTo({ top: Number(section.dataset.storyStart) + (reducedMotion || !ready ? 0 : Number(section.dataset.storyTravel) * value), behavior: 'instant' })
+      document.querySelector<HTMLButtonElement>('.station-nav button[aria-current="step"]')?.focus({ preventScroll: true })
+    })
+  }, [controller, coordinator, ready, reducedMotion])
 
   const openDetails = useCallback(() => {
     coordinator.inspect()
@@ -74,6 +100,11 @@ export function App() {
   }, [coordinator])
   useEffect(() => { if (reducedMotion) coordinator.reduceMotion() }, [reducedMotion, coordinator])
   useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => setStoryVisible(entry.isIntersecting), { rootMargin: '-90px 0px 0px 0px' })
+    if (storyPin.current) observer.observe(storyPin.current)
+    return () => observer.disconnect()
+  }, [])
+  useEffect(() => {
     if (status === 'error' || status === 'unsupported') coordinator.reduceMotion()
     if (status === 'error' || status === 'unsupported' || status === 'context-lost') detailDialog.current?.close()
   }, [status, coordinator])
@@ -95,25 +126,33 @@ export function App() {
     }
   }, [])
 
-  return <>
+  return <div className="karpov-site">
     <a className="skip-link" href="#explosion-range" onClick={event => { event.preventDefault(); revealControls() }}>К управлению часами</a>
-    <header className="site-header">
-      <a className="brand" href="#top" aria-label="Ход времени — начало истории"><WatchMark /><span>Ход времени</span></a>
+    <header className={`site-header ${storyVisible ? '' : 'site-header--editorial'}`}>
+      <a className="brand karpov-wordmark" href="#top" aria-label="KARpOV — начало коллекции">KARpOV</a>
+      <div className="desktop-menu"><a href="#design">Коллекция</a><a href="#materials">Материалы</a><a href="#mechanism">Механика</a></div>
       <nav aria-label="Управление просмотром">
         <button className="header-button details-button" aria-label="Детали часов" disabled={!ready} onClick={openDetails}><Icon name="layers" size={17} /><span>Детали</span></button>
         <button className="header-button mode-button" disabled={!ready} onClick={changeMode}><span className="mode-dot" aria-hidden="true" /><span>{mode === 'story' ? 'Рассмотреть' : 'Продолжить историю'}</span></button>
+        <a className="header-selection" href="#selection">Выбрать часы <Icon name="arrow" size={15} /></a>
       </nav>
     </header>
 
     <main id="top">
       <section ref={storySection} id="explore" className={`watch-story ${compact ? 'watch-story--compact' : ''}`} data-mode={mode} aria-labelledby="hero-title">
         <div ref={storyPin} className="story-pin">
-          <div className="story-heading sr-only">
-            <h1 id="hero-title">{stage.title}</h1>
-            <p id="scene-instructions">{mode === 'story' ? 'Прокручивайте страницу: часы поворачиваются и раскрывают механизм. ' + stage.subtitle : 'Перетаскивайте часы для вращения. Откройте управление, чтобы изменить степень разборки.'}</p>
-          </div>
+          <div className="story-heading sr-only"><p id="scene-instructions">{mode === 'story' ? 'Прокручивайте страницу: часы поворачиваются и останавливаются для знакомства с деталями.' : 'Перетаскивайте часы для вращения. Ползунок меняет ход истории.'}</p></div>
+          <div className="station-copy" data-station={chapter}><div ref={stationCopy} className="station-copy-inner">
+            <p className="station-kicker">KARpOV <span>Карманные часы №01</span></p>
+            <h1 id="hero-title">{stage.title[0]}<br />{stage.title[1]}</h1>
+            <p className="station-description">{stage.text}</p>
+            <div className="station-fact"><strong>{chapter === 1 ? finishes.find(item => item.id === finish)!.title : stage.fact}</strong><span>{stage.detail}</span></div>
+            <p className="station-note">{stage.note}</p>
+            {chapter === 0 && <a className="station-link" href="#selection">Выбрать исполнение <Icon name="arrow" size={18} /></a>}
+            {chapter === 4 && <a className="station-link" href="#design">Продолжить знакомство <Icon name="arrow" size={18} /></a>}
+          </div></div>
           <div className="story-stage">
-            <Experience parts={parts} controller={controller} mode={mode} reducedMotion={reducedMotion} labels={labels} selected={selected} resetKey={resetKey} onSelect={choosePart} onStatus={setStatus} />
+            <Experience parts={parts} controller={controller} mode={mode} reducedMotion={reducedMotion} labels={labels} selected={selected} resetKey={resetKey} finish={finish} onSelect={choosePart} onStatus={setStatus} />
           </div>
           <div className="exhibit-dock">
             <div className="dock-left">
@@ -121,26 +160,29 @@ export function App() {
                 <summary><Icon name="layers" size={17} /><span>Управление</span><span className="tools-plus" aria-hidden="true">+</span></summary>
                 <div className="controls-popover" data-lenis-prevent>
                   <div className="popover-heading"><span>{mode === 'story' ? 'История' : 'Свободный просмотр'}</span><button className="icon-button" aria-label="Закрыть управление" onClick={closeControls}><Icon name="close" size={16} /></button></div>
+                  <button className="popover-mode quiet-button" onClick={changeMode}>{mode === 'story' ? 'Свободный просмотр' : 'Продолжить историю'}</button>
                   <ExplosionControls controller={controller} progress={progress} target={target} ready={ready} labels={labels} reducedMotion={reducedMotion} onLabels={() => setLabels(value => !value)} onReset={() => setResetKey(value => value + 1)} />
                   <p className="controls-state">{ready ? stageTitle(progress) : status === 'loading' ? 'Подготавливаем модель' : 'Управление 3D недоступно'}</p>
                 </div>
               </details>
               <span className="scroll-cue" aria-hidden="true"><span className="scroll-stroke" />{mode === 'manual' ? 'Свободное вращение' : progress > .98 ? 'Прокрутите обратно' : 'Прокрутите, чтобы заглянуть внутрь'}</span>
             </div>
-            <div className="exhibit-progress" aria-hidden="true"><span className="chapter-count">{String(chapter + 1).padStart(2, '0')}<span> / 06</span></span><output aria-live="off">{Math.round(progress * 100)}<span>%</span></output></div>
+            <nav className="station-nav" aria-label="Остановки знакомства с часами">{collectionStops.map((stop, index) => <button key={stop.name} aria-current={index === chapter ? 'step' : undefined} aria-label={`Остановка ${index + 1}: ${stop.name}`} disabled={!ready} onClick={() => viewIn3D(stop.at)}><span className="station-dot" /><span>{stop.name}</span></button>)}</nav>
+            <div className="exhibit-progress" aria-hidden="true"><span className="chapter-count">{String(chapter + 1).padStart(2, '0')}<span> / 05</span></span><output aria-live="off">{Math.round(progress * 100)}<span>%</span></output></div>
           </div>
           <div className="story-hairline" aria-hidden="true"><span style={{ width: `${progress * 100}%` }} /></div>
           <div className="sr-only" role="status" aria-live="polite">{ready ? stageTitle(progress) : status === 'loading' ? 'Модель загружается' : 'Модель недоступна'}</div>
         </div>
       </section>
+      <CollectionPage finish={finish} onFinish={setFinish} onView3D={viewIn3D} />
     </main>
 
     <dialog ref={detailDialog} className="detail-dialog" data-lenis-prevent aria-labelledby="parts-title" onClick={event => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
       <div className="drawer-content">
         <div className="drawer-heading"><div><span className="section-kicker">47 частей одного целого</span><h2 id="parts-title">Устройство часов</h2></div><button className="icon-button" aria-label="Закрыть детали" onClick={() => detailDialog.current?.close()}><Icon name="close" size={20} /></button></div>
-        <div className="drawer-info"><PartInfo part={currentPart} progress={progress} onClose={() => setSelected(null)} /></div>
+        <div className="drawer-info"><PartInfo part={displayedPart} progress={progress} onClose={() => setSelected(null)} /></div>
         <PartList parts={parts} selected={selected} ready={ready} onSelect={choosePart} />
       </div>
     </dialog>
-  </>
+  </div>
 }

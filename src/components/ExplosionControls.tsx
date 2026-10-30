@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { ProgressController } from '../animation/progressController'
 import { Icon } from './Icon'
-import { storyStageIndex } from '../data/story'
+import { collectionStopIndex, collectionStops } from '../data/collection'
 
 interface ControlsProps {
   controller: ProgressController
@@ -14,7 +14,7 @@ interface ControlsProps {
   onReset: () => void
 }
 
-export const stageTitle = (progress: number) => ['Часы собраны', 'Открываем корпус', 'Снимаем циферблат', 'Раскрываем передачу', 'Энергия и ритм', 'Механизм раскрыт'][storyStageIndex(progress)]
+export const stageTitle = (progress: number) => ['Знакомство с KARpOV', 'Корпус и отделка', 'Циферблат и стрелки', 'Открытый механизм', 'Все детали одного целого'][collectionStopIndex(progress)]
 
 export function ExplosionControls({ controller, progress, target, ready, labels, reducedMotion, onLabels, onReset }: ControlsProps) {
   const percent = Math.round(progress * 100)
@@ -23,11 +23,11 @@ export function ExplosionControls({ controller, progress, target, ready, labels,
       <div className="range-heading"><label htmlFor="explosion-range">Разборка часов</label><output htmlFor="explosion-range" className="percentage" aria-live="off">{percent}<span>%</span></output></div>
       <div className="range-wrap" style={{ '--progress': `${progress * 100}%` } as CSSProperties}>
         <div className="range-track" aria-hidden="true"><span /></div>
-        <input id="explosion-range" type="range" min="0" max="100" step="0.1" value={progress * 100} disabled={!ready} aria-valuetext={`Разобрано на ${(progress * 100).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} процентов`} aria-describedby="range-help" onChange={event => controller.set(Number(event.target.value) / 100)} />
+        <input id="explosion-range" type="range" min="0" max="100" step="0.1" value={progress * 100} disabled={!ready} aria-valuetext={`${collectionStops[collectionStopIndex(progress)].name}. Положение истории: ${(progress * 100).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} процентов`} aria-describedby="range-help" onChange={event => controller.set(Number(event.target.value) / 100)} />
         <div className="range-ticks" aria-hidden="true"><i /><i /><i /><i /><i /></div>
       </div>
       <div className="range-endpoints"><span>Собраны</span><span>Разобраны</span></div>
-      <p id="range-help" className="sr-only">Стрелки меняют разборку на 0,1 процента. Home собирает часы, End полностью разбирает. Можно остановиться в любом положении.</p>
+      <p id="range-help" className="sr-only">Стрелки перемещают по истории на 0,1 процента. На остановках часы неподвижны. Home возвращает начало, End открывает все слои.</p>
     </div>
     <div className="controls-actions">
       <div className="primary-actions">

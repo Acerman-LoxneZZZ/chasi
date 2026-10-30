@@ -1,0 +1,106 @@
+{
+  "modelSha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+  "source": "Original project GLB; transparent Three.js render, no stock or generated imagery",
+  "views": [
+    {
+      "name": "karpov-product",
+      "width": 1400,
+      "height": 1600,
+      "type": "product",
+      "finish": "brass",
+      "drawCalls": 136,
+      "triangles": 187898,
+      "camera": [
+        -2.753299906918064,
+        1.5113584424467608,
+        7.574070186010649
+      ],
+      "target": [
+        0.011701014128667182,
+        0.3751811003222905,
+        -0.02270740933647719
+      ],
+      "bytes": 185100
+    },
+    {
+      "name": "karpov-product-steel",
+      "width": 1400,
+      "height": 1600,
+      "type": "product",
+      "finish": "steel",
+      "drawCalls": 136,
+      "triangles": 187898,
+      "camera": [
+        -2.753299906918064,
+        1.5113584424467608,
+        7.574070186010649
+      ],
+      "target": [
+        0.011701014128667182,
+        0.3751811003222905,
+        -0.02270740933647719
+      ],
+      "bytes": 162004
+    },
+    {
+      "name": "karpov-product-graphite",
+      "width": 1400,
+      "height": 1600,
+      "type": "product",
+      "finish": "graphite",
+      "drawCalls": 136,
+      "triangles": 187898,
+      "camera": [
+        -2.753299906918064,
+        1.5113584424467608,
+        7.574070186010649
+      ],
+      "target": [
+        0.011701014128667182,
+        0.3751811003222905,
+        -0.02270740933647719
+      ],
+      "bytes": 168730
+    },
+    {
+      "name": "karpov-movement",
+      "width": 1400,
+      "height": 1200,
+      "type": "movement",
+      "finish": "brass",
+      "drawCalls": 96,
+      "triangles": 97244,
+      "camera": [
+        2.465404010186333,
+        1.3993904260043621,
+        5.4113880692455165
+      ],
+      "target": [
+        0.02072378632781488,
+        0.011763049000440517,
+        -0.07945361397710708
+      ],
+      "bytes": 154082
+    },
+    {
+      "name": "karpov-detail",
+      "width": 1200,
+      "height": 1200,
+      "type": "detail",
+      "finish": "brass",
+      "drawCalls": 115,
+      "triangles": 179030,
+      "camera": [
+        -1.5460505249966365,
+        1.5576210850109482,
+        4.580163229347861
+      ],
+      "target": [
+        0.03,
+        0.91,
+        0.25
+      ],
+      "bytes": 154038
+    }
+  ]
+}

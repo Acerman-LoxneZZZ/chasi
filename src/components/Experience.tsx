@@ -3,6 +3,7 @@ import type { ProgressController } from '../animation/progressController'
 import type { ViewMode } from '../animation/scrollCoordinator'
 import { WatchScene } from '../scene/WatchScene'
 import type { SceneStatus, WatchPart } from '../types'
+import type { WatchFinish } from '../data/collection'
 import { Icon } from './Icon'
 
 interface ExperienceProps {
@@ -13,6 +14,7 @@ interface ExperienceProps {
   labels: boolean
   selected: string | null
   resetKey: number
+  finish: WatchFinish
   onSelect: (id: string | null) => void
   onStatus: (status: SceneStatus) => void
 }
@@ -47,6 +49,7 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
         restored: () => { if (active) setGeneration(value => value + 1) },
       }, callbacks.current.mode, callbacks.current.reducedMotion)
       engine.current = scene
+      scene.setFinish(callbacks.current.finish)
       scene.load().then(() => {
         if (!active || contextLost) return
         scene!.setLabels(callbacks.current.labels)
@@ -69,6 +72,7 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
   }, [generation, props.parts, props.controller])
 
   useEffect(() => { engine.current?.setLabels(props.labels) }, [props.labels])
+  useEffect(() => { engine.current?.setFinish(props.finish) }, [props.finish])
   useLayoutEffect(() => { engine.current?.setMode(props.mode, props.reducedMotion) }, [props.mode, props.reducedMotion])
   useEffect(() => { engine.current?.select(props.selected) }, [props.selected])
   useEffect(() => { engine.current?.resetCamera() }, [props.resetKey])
@@ -81,11 +85,11 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
     <div ref={labelRoot} className="scene-labels" aria-hidden="true" />
     {status === 'loading' && <div className="loading-state" role="status">
       <div className="loading-dial" aria-hidden="true"><span /></div>
-      <p>Готовим экспозицию<span className="loading-percent">{loadingPercent === null ? '…' : ` ${loadingPercent}%`}</span></p>
-      <span>Загружаем модель часов</span>
+      <p>Открываем KARpOV<span className="loading-percent">{loadingPercent === null ? '…' : ` ${loadingPercent}%`}</span></p>
+      <span>Знакомство с коллекцией №01</span>
     </div>}
     {failed && <div className="fallback-state">
-      <img className="watch-fallback" src={`${import.meta.env.BASE_URL}images/watch-fallback.webp`} alt="Карманные часы с латунным корпусом, светлым циферблатом и синёными стрелками" />
+      <img className="watch-fallback" src={`${import.meta.env.BASE_URL}images/karpov-product.webp`} alt="Карманные часы KARpOV с латунным корпусом, светлым циферблатом и синёными стрелками" />
       <div className="scene-message" role="alert">
         <p>{status === 'context-lost' ? 'Отображение 3D приостановлено' : status === 'unsupported' ? 'Просмотр без 3D' : 'Модель не загрузилась'}</p>
         <span>{status === 'context-lost' ? 'Графический контекст потерян. Восстановите сцену, чтобы продолжить исследование.' : detail}</span>

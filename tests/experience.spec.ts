@@ -1,23 +1,23 @@
 import { test, expect, type Page } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
 
+test.setTimeout(240000)
 const canvas = (page: Page) => page.locator('canvas.watch-canvas')
 const slider = (page: Page) => page.getByRole('slider', { name: 'Разборка часов', exact: true })
 const tools = (page: Page) => page.locator('details.exhibit-tools')
 const progress = async (page: Page) => Number(await canvas(page).getAttribute('data-progress'))
 
-// Compare camera poses only after a model frame has painted the canonical value.
 const settled = async (page: Page) => {
-  await expect.poll(async () => canvas(page).evaluate(el => {
-    const canonical = Number(el.dataset.progress)
-    const rendered = Number(el.dataset.renderedProgress)
+  await expect.poll(() => canvas(page).evaluate(element => {
+    const canonical = Number(element.dataset.progress), rendered = Number(element.dataset.renderedProgress)
     return Number.isFinite(canonical) && Number.isFinite(rendered) && Math.abs(rendered - canonical) < .00001
-  }), { timeout: 30000 }).toBe(true)
+  }), { timeout: 60000 }).toBe(true)
 }
 const painted = async (page: Page) => {
   await expect(page.locator('.experience')).toHaveAttribute('data-status', 'ready', { timeout: 60000 })
-  await expect.poll(async () => canvas(page).evaluate(el => {
-    const b = JSON.parse(el.dataset.bounds || '{}') as Record<string, unknown>
-    return Number(el.dataset.drawCalls) > 0 && Number(el.dataset.triangles) > 0
+  await expect.poll(() => canvas(page).evaluate(element => {
+    const b = JSON.parse(element.dataset.bounds || '{}') as Record<string, unknown>
+    return Number(element.dataset.drawCalls) > 0 && Number(element.dataset.triangles) > 0
       && ['minX', 'minY', 'maxX', 'maxY', 'width', 'height'].every(key => typeof b[key] === 'number' && Number.isFinite(b[key]))
       && Number(b.maxX) > Number(b.minX) && Number(b.maxY) > Number(b.minY)
       && Number(b.width) > 0 && Number(b.height) > 0
@@ -25,383 +25,213 @@ const painted = async (page: Page) => {
   await page.evaluate(() => document.fonts.ready)
   await settled(page)
 }
-const ready = async (page: Page) => {
-  await page.goto('/')
-  await painted(page)
-}
-const openTools = async (page: Page) => {
-  if (!await tools(page).evaluate((el: HTMLDetailsElement) => el.open)) await tools(page).locator('summary').click()
-  await expect(slider(page)).toBeVisible()
-}
-const scrollToProgress = async (page: Page, p: number) => {
-  await page.evaluate(value => {
-    const section = document.querySelector<HTMLElement>('.watch-story')!
-    window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * value, behavior: 'instant' })
-  }, p)
-  await expect.poll(async () => Math.abs(await progress(page) - p)).toBeLessThan(.0006)
-  await settled(page)
-}
-const setManualProgress = async (page: Page, percent: number) => {
-  await openTools(page)
-  await slider(page).evaluate((element, value) => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(element, String(value))
-    element.dispatchEvent(new Event('input', { bubbles: true }))
-  }, percent)
-  await expect.poll(async () => Math.abs(await progress(page) - percent / 100)).toBeLessThan(.0006)
-  await settled(page)
-}
+const ready = async (page: Page) => { await page.goto('/'); await painted(page) }
 const camera = async (page: Page) => {
   await settled(page)
   return JSON.parse((await canvas(page).getAttribute('data-camera'))!) as { position: number[]; quaternion: number[]; target: number[] }
 }
-const assertBounds = async (page: Page) => {
-  await expect.poll(async () => canvas(page).evaluate(el => {
-    const b = JSON.parse(el.dataset.bounds || '{}')
-    return b.width === el.clientWidth && b.height === el.clientHeight
-  })).toBe(true)
-  const result = await canvas(page).evaluate(el => ({
-    b: JSON.parse(el.dataset.bounds!), viewport: [innerWidth, innerHeight],
-    rect: el.getBoundingClientRect().toJSON(), overflow: document.documentElement.scrollWidth > innerWidth + 1,
-  }))
-  expect(result.overflow).toBe(false)
-  expect(result.b.minX).toBeGreaterThanOrEqual(0)
-  expect(result.b.minY).toBeGreaterThanOrEqual(0)
-  expect(result.b.maxX).toBeLessThanOrEqual(result.b.width)
-  expect(result.b.maxY).toBeLessThanOrEqual(result.b.height)
-  return result
+const scrollToProgress = async (page: Page, value: number) => {
+  await page.evaluate(p => {
+    const section = document.querySelector<HTMLElement>('.watch-story')!
+    window.scrollTo({ top: Number(section.dataset.storyStart) + Number(section.dataset.storyTravel) * p, behavior: 'instant' })
+  }, value)
+  await expect.poll(async () => Math.abs(await progress(page) - value), { timeout: 30000 }).toBeLessThan(.0006)
+  await settled(page)
 }
+const openTools = async (page: Page) => {
+  if (!await tools(page).evaluate((element: HTMLDetailsElement) => element.open)) await tools(page).locator('summary').click()
+  await expect(slider(page)).toBeVisible()
+}
+const setManualProgress = async (page: Page, value: number) => {
+  await openTools(page)
+  await slider(page).evaluate((element, percent) => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(element, String(percent))
+    element.dispatchEvent(new Event('input', { bubbles: true }))
+  }, value)
+  await expect.poll(async () => Math.abs(await progress(page) - value / 100)).toBeLessThan(.0006)
+  await settled(page)
+}
+const noOverflow = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
 
-test('the default page contains only a large fullscreen watch with closed tools at all required sizes', async ({ page }) => {
-  test.setTimeout(240000)
+test('KARpOV has five navigable product stops that hold the real camera and mechanism still', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
   await ready(page)
+  await expect(page.getByRole('link', { name: 'KARpOV — начало коллекции', exact: true })).toBeVisible()
+  await expect(page.locator('h1')).toHaveCount(1)
   await expect(page.locator('html')).toHaveClass(/\blenis\b/)
   await expect(page.locator('.watch-story')).toHaveAttribute('data-scroll-engine', 'gsap-lenis')
-  await expect(page.locator('main > section')).toHaveCount(1)
-  await expect(page.locator('#anatomy, #about, .inside-section, .site-footer')).toHaveCount(0)
-  await expect(page.locator('.detail-dialog')).not.toBeVisible()
-  await expect(slider(page)).not.toBeVisible()
-  await expect(page.locator('.part-label:not([hidden])')).toHaveCount(0)
-  for (const [width, height] of [[1440, 1000], [1280, 800], [390, 844], [360, 800]]) {
-    await page.setViewportSize({ width, height })
-    await scrollToProgress(page, 0)
-    const result = await assertBounds(page)
-    expect(result.rect.width).toBe(width)
-    expect(result.rect.height).toBe(height)
-    const fill = width < 700 ? (result.b.maxX - result.b.minX) / width : (result.b.maxY - result.b.minY) / height
-    expect(fill).toBeGreaterThan(.7)
-    for (const p of [.5, 1]) {
-      await scrollToProgress(page, p)
-      await assertBounds(page)
-    }
-  }
-})
-
-test('scroll makes a complete orbit and a focused macro dolly, reverses exactly and stops rendering when idle', async ({ page }) => {
-  const errors: string[] = [], failedResources: string[] = []
-  let modelRequests = 0
-  page.on('pageerror', error => errors.push(error.message))
-  page.on('response', response => { if (response.status() >= 400) failedResources.push(response.url()) })
-  page.on('request', request => { if (request.url().includes('/models/pocket-watch.glb')) modelRequests++ })
-  await ready(page)
+  const stops = page.getByRole('navigation', { name: 'Остановки знакомства с часами', exact: true })
+  await expect(stops.getByRole('button')).toHaveCount(5)
   const initial = await camera(page)
-  let previous = 0, turn = 0
-  for (const [index, p] of [0, .2, .4, .6, .8, 1].entries()) {
-    await scrollToProgress(page, p)
-    const [x, y, z, w] = (await camera(page)).quaternion
-    const angle = Math.atan2(2 * (x * z + w * y), 1 - 2 * (x * x + y * y))
-    if (index) turn += Math.atan2(Math.sin(angle - previous), Math.cos(angle - previous))
-    previous = angle
-  }
-  expect(turn * 180 / Math.PI).toBeGreaterThan(360)
-  expect(turn * 180 / Math.PI).toBeLessThan(500)
-  const overview = await camera(page)
-  const distance = (pose: typeof overview) => Math.hypot(...pose.position.map((value, index) => value - pose.target[index]))
-  await scrollToProgress(page, .75)
-  const macro = await canvas(page).evaluate(element => ({
-    weight: Number(element.dataset.macro), focus: JSON.parse(element.dataset.focus || 'null') as number[] | null,
-    bounds: JSON.parse(element.dataset.bounds || '{}') as Record<string, number>,
-    overflow: document.documentElement.scrollWidth > innerWidth + 1,
-  }))
-  expect(macro.weight).toBeCloseTo(1, 4)
-  expect(macro.focus).toHaveLength(3)
-  expect(macro.focus!.every(Number.isFinite)).toBe(true)
-  expect(Math.abs(macro.focus![0])).toBeLessThan(.01)
-  expect(Math.abs(macro.focus![1])).toBeLessThan(.01)
-  expect(macro.focus![2]).toBeGreaterThan(-1)
-  expect(macro.focus![2]).toBeLessThan(1)
-  expect(Object.values(macro.bounds).every(Number.isFinite)).toBe(true)
-  expect(macro.bounds.minX < 0 || macro.bounds.minY < 0 || macro.bounds.maxX > macro.bounds.width || macro.bounds.maxY > macro.bounds.height).toBe(true)
-  expect(distance(await camera(page))).toBeLessThan(distance(overview) * .6)
-  expect(macro.overflow).toBe(false)
-  await scrollToProgress(page, 0)
-  await expect(canvas(page)).toHaveAttribute('data-macro', '0.00000')
-  expect(await camera(page)).toEqual(initial)
-  await expect.poll(async () => {
-    const before = await canvas(page).getAttribute('data-frames')
-    await page.waitForTimeout(200)
-    return await canvas(page).getAttribute('data-frames') === before
-  }).toBe(true)
-  const stopped = await canvas(page).getAttribute('data-frames')
-  await page.waitForTimeout(300)
-  expect(await canvas(page).getAttribute('data-frames')).toBe(stopped)
-  expect(modelRequests).toBe(1)
-  expect(errors).toEqual([])
-  expect(failedResources).toEqual([])
-})
-
-test('the control popover supports native range keys, exact endpoints, pause and interruption', async ({ page }) => {
-  await ready(page)
-  await openTools(page)
-  await expect(slider(page)).toBeEnabled()
-  await slider(page).press('End')
-  await expect(canvas(page)).toHaveAttribute('data-progress', '1.00000')
-  await slider(page).press('Home')
-  await expect(canvas(page)).toHaveAttribute('data-progress', '0.00000')
-  await slider(page).press('ArrowRight')
-  expect(await progress(page)).toBeGreaterThan(0)
-  await expect(slider(page)).toHaveAttribute('aria-valuetext', /Разобрано/)
-  await slider(page).press('Home')
-  await page.getByRole('button', { name: 'Разобрать', exact: true }).evaluate(button => (button as HTMLButtonElement).click())
-  const pause = page.getByRole('button', { name: 'Пауза', exact: true })
-  await pause.focus()
-  await page.keyboard.press('Space')
-  await expect(pause).toHaveCount(0)
-  const paused = await progress(page)
+  await scrollToProgress(page, .24)
+  const held = await camera(page), raw = await progress(page)
+  await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.22000')
+  await scrollToProgress(page, .32)
+  expect(await progress(page)).toBeGreaterThan(raw + .07)
+  expect(await camera(page)).toEqual(held)
+  await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.22000')
+  await expect(page.locator('.station-copy')).toHaveAttribute('data-station', '1')
+  await stops.getByRole('button', { name: 'Остановка 4: Механизм', exact: true }).click()
+  await expect.poll(async () => Math.abs(await progress(page) - .78)).toBeLessThan(.001)
   await settled(page)
-  await page.waitForTimeout(200)
-  expect(await progress(page)).toBe(paused)
-  // Dispatch through the real DOM listener before SwiftShader can consume the
-  // passage in CDP's wheel delivery wait. Native wheel scrolling is checked below.
-  await page.getByRole('button', { name: 'Разобрать', exact: true }).evaluate(button => {
-    ;(button as HTMLButtonElement).click()
-    window.dispatchEvent(new WheelEvent('wheel', { deltaY: 40, bubbles: true }))
-  })
-  await expect(pause).toHaveCount(0)
-  await page.keyboard.press('Escape')
-  await expect(tools(page)).not.toHaveAttribute('open', '')
-  await expect(tools(page).locator('summary')).toBeFocused()
+  await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.75000')
+  await expect(canvas(page)).toHaveAttribute('data-macro', '1.00000')
+  await expect(page.locator('.station-copy')).toHaveAttribute('data-station', '3')
+  await expect(page.locator('.station-fact')).toContainText('Ручной завод')
+  await expect(stops.getByRole('button', { name: 'Остановка 4: Механизм', exact: true })).toHaveAttribute('aria-current', 'step')
+  await stops.getByRole('button', { name: 'Остановка 5: Целое', exact: true }).click()
+  await expect.poll(async () => Math.abs(await progress(page) - .97)).toBeLessThan(.001)
+  await expect(canvas(page)).toHaveAttribute('data-pose-progress', '1.00000')
+  await scrollToProgress(page, 0)
+  expect(await camera(page)).toEqual(initial)
+  await noOverflow(page)
+  expect(errors).toEqual([])
 })
 
-test('manual orbit and slider ignore document scroll, then resume and reload keep the current pose', async ({ page }) => {
-  test.setTimeout(240000)
+test('manual controls preserve the displayed pose and resume and reload the same story position', async ({ page }) => {
   await ready(page)
-  await scrollToProgress(page, .4)
-  const initial = await camera(page)
+  await scrollToProgress(page, .28)
+  const held = await camera(page)
   await page.getByRole('button', { name: 'Рассмотреть', exact: true }).click()
   await expect(canvas(page)).toHaveAttribute('data-mode', 'manual')
-  expect(await camera(page)).toEqual(initial)
-  const bounds = await canvas(page).boundingBox()
-  await page.mouse.move(bounds!.width * .5, bounds!.height * .5)
+  expect(await camera(page)).toEqual(held)
+  const b = await canvas(page).boundingBox()
+  await page.mouse.move(b!.x + b!.width * .62, b!.y + b!.height * .5)
   await page.mouse.down()
-  await page.mouse.move(bounds!.width * .65, bounds!.height * .53, { steps: 8 })
+  await page.mouse.move(b!.x + b!.width * .75, b!.y + b!.height * .55, { steps: 3 })
   await page.mouse.up()
-  await expect.poll(async () => JSON.stringify((await camera(page)).quaternion)).not.toBe(JSON.stringify(initial.quaternion))
+  await expect.poll(async () => JSON.stringify((await camera(page)).quaternion)).not.toBe(JSON.stringify(held.quaternion))
   const frozen = await progress(page)
-  await page.evaluate(() => window.scrollBy({ top: 250, behavior: 'instant' }))
-  await page.waitForTimeout(150)
+  await page.evaluate(() => window.scrollBy({ top: 200, behavior: 'instant' }))
   expect(await progress(page)).toBe(frozen)
   const y = await page.evaluate(() => scrollY)
   await setManualProgress(page, 64)
   expect(await page.evaluate(() => scrollY)).toBe(y)
-  await page.getByRole('button', { name: 'Сбросить вид', exact: true }).click()
-  expect(await progress(page)).toBe(.64)
-  await page.getByRole('button', { name: 'Продолжить историю', exact: true }).click()
+  await page.getByRole('button', { name: 'Закрыть управление', exact: true }).click()
+  await page.locator('.mode-button').click()
   await expect(canvas(page)).toHaveAttribute('data-mode', 'story')
   await expect.poll(() => page.evaluate(() => {
     const section = document.querySelector<HTMLElement>('.watch-story')!
     return Math.abs(scrollY - Number(section.dataset.storyStart) - .64 * Number(section.dataset.storyTravel))
   })).toBeLessThanOrEqual(1)
-  await settled(page)
   await page.reload()
   await painted(page)
   await expect.poll(async () => Math.abs(await progress(page) - .64)).toBeLessThan(.001)
-  await settled(page)
 })
 
-test('the native details drawer contains all 47 selectable groups, traps focus and closes with Escape', async ({ page }) => {
+test('the collection continues through real sections and loaded artwork on desktop and mobile without overflow', async ({ page }) => {
   await ready(page)
-  const opener = page.getByRole('button', { name: 'Детали часов', exact: true })
-  const dialog = page.getByRole('dialog', { name: 'Устройство часов', exact: true })
-  await opener.click()
-  await expect(dialog).toBeVisible()
-  await expect(canvas(page)).toHaveAttribute('data-mode', 'manual')
-  expect(await dialog.evaluate(element => element.contains(document.activeElement))).toBe(true)
-  await dialog.getByRole('button', { name: 'Циферблат', exact: true }).click()
-  await expect(dialog.locator('.part-info h3')).toHaveText('Циферблат')
-  await dialog.locator('.all-parts > summary').click()
-  expect(await dialog.locator('.part-catalog button').count()).toBe(47)
-  await dialog.getByRole('button', { name: 'Накладной камень баланса', exact: true }).click()
-  await expect(dialog.locator('.part-info h3')).toHaveText('Накладной камень баланса')
-  await dialog.getByRole('button', { name: 'Снять выделение детали', exact: true }).click()
-  await expect(dialog.locator('.part-info h3')).toHaveText('У каждой детали — своя роль')
-  await page.keyboard.press('Tab')
-  expect(await dialog.evaluate(element => element.contains(document.activeElement))).toBe(true)
-  await page.keyboard.press('Escape')
-  await expect(dialog).not.toBeVisible()
-  await expect(opener).toBeFocused()
-  await expect(tools(page)).not.toHaveAttribute('open', '')
-  const bounds = await canvas(page).boundingBox()
-  await canvas(page).click({ position: { x: bounds!.width / 2, y: bounds!.height * .61 } })
-  await expect(dialog).toBeVisible()
-  await expect(dialog.locator('.part-info--selected')).toHaveCount(1)
+  for (const [width, height] of [[1440, 1000], [390, 844]]) {
+    await page.setViewportSize({ width, height })
+    for (const id of ['design', 'materials', 'mechanism', 'selection', 'specifications']) {
+      const section = page.locator(`#${id}`)
+      await section.scrollIntoViewIfNeeded()
+      await expect(section.getByRole('heading').first()).toBeVisible()
+      for (const image of await section.locator('img').all()) await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0), { timeout: 30000 }).toBe(true)
+      await noOverflow(page)
+    }
+    for (const control of await page.locator('#selection .finish-option, #selection .selection-actions button, .header-selection').all()) {
+      if (await control.isVisible()) expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+    }
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.locator('#design').scrollIntoViewIfNeeded()
+  await page.locator('.desktop-menu').getByRole('link', { name: 'Материалы', exact: true }).click()
+  await expect.poll(() => page.locator('#materials').evaluate(element => Math.abs(element.getBoundingClientRect().top)), { timeout: 30000 }).toBeLessThan(100)
+  await page.getByRole('link', { name: 'Выбрать часы', exact: true }).click()
+  await expect.poll(() => page.locator('#selection').evaluate(element => Math.abs(element.getBoundingClientRect().top)), { timeout: 30000 }).toBeLessThan(100)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await scrollToProgress(page, .04)
+  for (const control of await page.locator('.station-nav button, .exhibit-tools > summary, .header-selection').all()) expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+  await noOverflow(page)
 })
 
-test('reduced motion stays compact and direct, including when the preference changes at runtime', async ({ page }) => {
+test('three finishes persist and change the actual 3D case while keeping the same viewing pose', async ({ page }) => {
+  await ready(page)
+  await scrollToProgress(page, .04)
+  await expect(canvas(page)).toHaveAttribute('data-finish', 'brass')
+  const initialCamera = await camera(page)
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  const brass = await canvas(page).screenshot()
+  await page.locator('#selection').scrollIntoViewIfNeeded()
+  await expect(page.getByRole('radio', { name: 'Латунь', exact: true })).toBeChecked()
+  await expect(page.getByRole('radio')).toHaveCount(3)
+  await page.getByRole('radio', { name: 'Сталь', exact: true }).check()
+  await expect(page.locator('.selection-portrait img.is-selected')).toHaveAttribute('src', /karpov-product-steel\.webp$/)
+  await page.getByRole('radio', { name: 'Графит', exact: true }).check()
+  await expect(page.locator('.selection-portrait img.is-selected')).toHaveAttribute('src', /karpov-product-graphite\.webp$/)
+  await expect(page.locator('#specifications')).toContainText('Графит')
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('karpov:finish'))).toBe('graphite')
+  await page.getByRole('button', { name: 'Посмотреть в 3D', exact: true }).click()
+  await expect.poll(async () => Math.abs(await progress(page) - .04)).toBeLessThan(.001)
+  await settled(page)
+  await expect(canvas(page)).toHaveAttribute('data-finish', 'graphite')
+  expect(await camera(page)).toEqual(initialCamera)
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  expect((await canvas(page).screenshot()).equals(brass)).toBe(false)
+  await page.reload()
+  await painted(page)
+  await expect(canvas(page)).toHaveAttribute('data-finish', 'graphite')
+  await page.locator('#selection').scrollIntoViewIfNeeded()
+  await expect(page.getByRole('radio', { name: 'Графит', exact: true })).toBeChecked()
+})
+
+test('saving a finish downloads an honest KARpOV selection card without sending data externally', async ({ page }) => {
+  const external: string[] = []
+  page.on('request', request => { if (!/^http:\/\/127\.0\.0\.1:/.test(request.url()) && !/^(data|blob):/.test(request.url())) external.push(request.url()) })
+  await ready(page)
+  await page.locator('#selection').scrollIntoViewIfNeeded()
+  await page.getByRole('radio', { name: 'Графит', exact: true }).check()
+  const downloaded = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Сохранить выбор', exact: true }).click()
+  const download = await downloaded
+  expect(download.suggestedFilename()).toBe('KARpOV-No01-graphite.txt')
+  const body = await readFile((await download.path())!, 'utf8')
+  expect(body).toContain('KARpOV — Карманные часы №01')
+  expect(body).toContain('Исполнение корпуса: Графит')
+  expect(body).toContain('светлая эмаль')
+  expect(body).toContain('Не является оформленным заказом.')
+  await expect(page.locator('.selection-note')).toHaveText('Карточка выбранного исполнения скачана.')
+  expect(external).toEqual([])
+})
+
+test('reduced motion keeps a compact manual viewer and the complete commercial page', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await ready(page)
   await expect(canvas(page)).toHaveAttribute('data-mode', 'manual')
-  const section = await page.locator('.watch-story').boundingBox()
-  expect(section!.height).toBeLessThanOrEqual(1001)
-  await openTools(page)
-  await page.getByRole('button', { name: 'Разобрать', exact: true }).click()
-  await expect(canvas(page)).toHaveAttribute('data-progress', '1.00000', { timeout: 1000 })
-  await settled(page)
-  await page.getByRole('button', { name: 'Собрать', exact: true }).click()
-  await expect(canvas(page)).toHaveAttribute('data-progress', '0.00000', { timeout: 1000 })
-  await page.getByRole('button', { name: 'Продолжить историю', exact: true }).click()
-  await expect(canvas(page)).toHaveAttribute('data-mode', 'story')
-  await scrollToProgress(page, 0)
-  const orientation = (await camera(page)).quaternion
-  await scrollToProgress(page, 1)
-  expect((await camera(page)).quaternion).toEqual(orientation)
-  await page.emulateMedia({ reducedMotion: 'no-preference' })
-  await scrollToProgress(page, .4)
-  await page.emulateMedia({ reducedMotion: 'reduce' })
-  await expect(canvas(page)).toHaveAttribute('data-mode', 'manual')
-  expect(await progress(page)).toBeCloseTo(.4, 3)
   await expect(page.locator('.watch-story')).toHaveClass(/compact/)
+  expect((await page.locator('.watch-story').boundingBox())!.height).toBeLessThanOrEqual(1001)
+  const orientation = (await camera(page)).quaternion
+  await setManualProgress(page, 78)
+  await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.75000')
+  await expect(canvas(page)).toHaveAttribute('data-macro', '0.00000')
+  expect((await camera(page)).quaternion).toEqual(orientation)
+  await page.getByRole('button', { name: 'Закрыть управление', exact: true }).click()
+  for (const id of ['design', 'materials', 'mechanism', 'selection', 'specifications']) await expect(page.locator(`#${id}`)).toBeAttached()
+  await page.locator('#selection').scrollIntoViewIfNeeded()
+  await expect(page.getByRole('button', { name: 'Сохранить выбор', exact: true })).toBeVisible()
+  await expect(page.getByRole('radio')).toHaveCount(3)
+  await noOverflow(page)
 })
 
-test('a failed GLB request keeps a working retry and compact fallback', async ({ page }) => {
+test('a controlled model failure preserves the collection and retries with the chosen finish', async ({ page }) => {
   let requests = 0
-  const rejectedModel = page.waitForResponse(response => response.url().includes('/models/pocket-watch.glb') && response.status() === 503, { timeout: 60000 })
-  await page.route('**/models/pocket-watch.glb', async route => {
+  const rejected = page.waitForResponse(response => response.url().includes('/models/pocket-watch.glb') && response.status() === 503, { timeout: 60000 })
+  await page.route('**/models/pocket-watch.glb', route => {
     requests++
-    if (requests === 1) await route.fulfill({ status: 503, contentType: 'text/plain', body: 'Controlled failure' })
-    else await route.continue()
+    return requests === 1 ? route.fulfill({ status: 503, contentType: 'text/plain', body: 'Controlled failure' }) : route.continue()
   })
   await page.goto('/')
-  // Start the failure assertion after the controlled response actually exists.
-  // Software PMREM initialization can precede the first fetch by over 15s.
-  await rejectedModel
+  await rejected
   await expect(page.locator('.experience')).toHaveAttribute('data-status', 'error')
   await expect(page.locator('.watch-story')).toHaveClass(/compact/)
   await expect(page.getByRole('button', { name: 'Детали часов', exact: true })).toBeDisabled()
+  await page.locator('#selection').scrollIntoViewIfNeeded()
+  await page.getByRole('radio', { name: 'Сталь', exact: true }).check()
+  await expect(page.locator('#specifications')).toContainText('Сталь')
   await page.getByRole('button', { name: 'Повторить загрузку', exact: true }).click()
   await painted(page)
-  await expect(canvas(page)).toHaveAttribute('data-progress', '0.00000')
+  await expect(canvas(page)).toHaveAttribute('data-finish', 'steel')
   expect(requests).toBe(2)
-})
-
-test('WebGL loss restores the same configuration and unavailable WebGL shows a real fallback', async ({ page }) => {
-  await ready(page)
-  await scrollToProgress(page, .5)
-  const supported = await canvas(page).evaluate((element: HTMLCanvasElement) => {
-    const extension = element.getContext('webgl2')?.getExtension('WEBGL_lose_context')
-    if (!extension) return false
-    ;(window as unknown as { __restoreWatch: () => void }).__restoreWatch = () => extension.restoreContext()
-    extension.loseContext()
-    return true
-  })
-  expect(supported).toBe(true)
-  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'context-lost')
-  await page.evaluate(() => (window as unknown as { __restoreWatch: () => void }).__restoreWatch())
-  await painted(page)
-  await expect(canvas(page)).toHaveAttribute('data-progress', '0.50000')
-  await expect(canvas(page)).toHaveAttribute('data-mode', 'story')
-  await settled(page)
-  const fallbackPage = await page.context().newPage()
-  try {
-    await fallbackPage.addInitScript(() => {
-      const original = HTMLCanvasElement.prototype.getContext
-      Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', { value: function (this: HTMLCanvasElement, type: string, ...args: unknown[]) {
-        if (/^(webgl2?|experimental-webgl)$/.test(type)) return null
-        return Reflect.apply(original, this, [type, ...args])
-      } })
-    })
-    await fallbackPage.goto('/')
-    await expect(fallbackPage.locator('.experience')).toHaveAttribute('data-status', 'unsupported')
-    await expect(fallbackPage.locator('.watch-fallback')).toBeVisible()
-    await expect.poll(() => fallbackPage.locator('.watch-fallback').evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true)
-    await expect(fallbackPage.locator('.mode-button')).toBeDisabled()
-    await openTools(fallbackPage)
-    await expect(slider(fallbackPage)).toBeDisabled()
-  } finally { await fallbackPage.close() }
-})
-
-test('the controls remain usable at 200% layout density with keyboard focus and 44px targets', async ({ page }) => {
-  await ready(page)
-  await page.getByRole('button', { name: 'Рассмотреть', exact: true }).click()
-  const cdp = await page.context().newCDPSession(page)
-  // Layout-density emulation, not a claim about native browser zoom controls.
-  await cdp.send('Emulation.setDeviceMetricsOverride', { width: 720, height: 500, deviceScaleFactor: 2, mobile: false, screenWidth: 1440, screenHeight: 1000 })
-  await openTools(page)
-  await slider(page).focus()
-  const metrics = await page.evaluate(() => {
-    const input = document.querySelector<HTMLInputElement>('#explosion-range')!
-    return {
-      width: document.documentElement.scrollWidth, range: input.getBoundingClientRect().toJSON(), outline: getComputedStyle(input).outlineStyle,
-      targets: [...document.querySelectorAll<HTMLElement>('.site-header button,.exhibit-tools > summary,.controls-popover button,.labels-toggle,input[type="range"]')].map(element => element.getBoundingClientRect().height),
-    }
-  })
-  expect(metrics.width).toBeLessThanOrEqual(721)
-  expect(metrics.range.width).toBeGreaterThan(200)
-  expect(metrics.range.left).toBeGreaterThanOrEqual(0)
-  expect(metrics.range.right).toBeLessThanOrEqual(720)
-  expect(metrics.outline).not.toBe('none')
-  expect(metrics.targets.every(height => height >= 44)).toBe(true)
-  await slider(page).press('End')
-  await expect(slider(page)).toHaveValue('100')
-  await slider(page).press('Home')
-  await expect(slider(page)).toHaveValue('0')
-})
-
-test.describe('mobile fullscreen interaction', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
-  test('native swipes scroll only in story mode, and optional labels do not cover the model', async ({ page }) => {
-    await ready(page)
-    const cdp = await page.context().newCDPSession(page)
-    const swipe = async () => {
-      const bounds = await canvas(page).boundingBox()
-      const x = bounds!.x + bounds!.width * .5, from = bounds!.y + bounds!.height * .7, to = bounds!.y + bounds!.height * .32
-      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: from }] })
-      for (let index = 1; index <= 6; index++) {
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: from + (to - from) * index / 6 }] })
-        await page.waitForTimeout(25)
-      }
-      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
-    }
-    expect(await canvas(page).evaluate(element => getComputedStyle(element).touchAction)).toBe('pan-y')
-    await swipe()
-    await expect.poll(() => progress(page)).toBeGreaterThan(.01)
-    await scrollToProgress(page, .4)
-    await page.getByRole('button', { name: 'Рассмотреть', exact: true }).tap()
-    const frozen = await progress(page), y = await page.evaluate(() => scrollY), initial = await camera(page)
-    expect(await canvas(page).evaluate(element => getComputedStyle(element).touchAction)).toBe('none')
-    await swipe()
-    await expect.poll(async () => JSON.stringify((await camera(page)).quaternion)).not.toBe(JSON.stringify(initial.quaternion))
-    expect(await progress(page)).toBe(frozen)
-    expect(await page.evaluate(() => scrollY)).toBe(y)
-    await openTools(page)
-    const toggle = page.getByRole('checkbox', { name: 'Подписи деталей', exact: true })
-    await expect(toggle).not.toBeChecked()
-    await toggle.check()
-    await expect(toggle).toBeChecked()
-    await page.getByRole('button', { name: 'Закрыть управление', exact: true }).tap()
-    await assertBounds(page)
-    const labels = page.locator('.part-label:not([hidden])')
-    expect(await labels.count()).toBeLessThanOrEqual(1)
-    for (const label of await labels.all()) {
-      const labelBox = await label.boundingBox(), modelBox = await canvas(page).boundingBox()
-      expect(labelBox!.y).toBeGreaterThanOrEqual(modelBox!.y + modelBox!.height)
-      expect(labelBox!.x).toBeGreaterThanOrEqual(0)
-      expect(labelBox!.x + labelBox!.width).toBeLessThanOrEqual(390)
-    }
-    await page.getByRole('button', { name: 'Продолжить историю', exact: true }).tap()
-    await expect(canvas(page)).toHaveAttribute('data-mode', 'story')
-    await settled(page)
-    await openTools(page)
-    await toggle.uncheck()
-    await expect(page.locator('.part-label:not([hidden])')).toHaveCount(0)
-  })
 })

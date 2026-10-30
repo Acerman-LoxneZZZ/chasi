@@ -28,14 +28,14 @@ app_html=''
 if command -v curl >/dev/null 2>&1; then
   app_html="$(curl --silent --fail --max-time 1 "$app_url" || true)"
 fi
-if [[ "$app_html" == *'<title>Ход времени'* ]]; then
+if [[ "$app_html" == *'<title>KARpOV'* || "$app_html" == *'<title>Ход времени'* ]]; then
   printf '\nПриложение уже запущено: %s\n' "$app_url"
   if [ "${WATCH_NO_OPEN:-0}" != 1 ] && command -v xdg-open >/dev/null 2>&1; then
     xdg-open "$app_url" >/dev/null 2>&1 || true
   fi
   exit 0
 fi
-printf '\nХод времени — http://127.0.0.1:%s\nДля остановки нажмите Ctrl+C.\n\n' "$app_port"
+printf '\nKARpOV — http://127.0.0.1:%s\nДля остановки нажмите Ctrl+C.\n\n' "$app_port"
 if [ "${WATCH_NO_OPEN:-0}" != 1 ] && command -v xdg-open >/dev/null 2>&1 && command -v curl >/dev/null 2>&1; then
   (
     for attempt in {1..60}; do

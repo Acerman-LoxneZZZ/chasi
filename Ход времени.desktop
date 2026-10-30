@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Ход времени
-Comment=Интерактивная 3D-экспозиция карманных часов
+Name=KARpOV
+Comment=KARpOV — Интерактивная 3D-экспозиция карманных часов
 Exec="/home/nolimetrus/Рабочий стол/3DD/start.sh"
 Path=/home/nolimetrus/Рабочий стол/3DD
 Icon=/home/nolimetrus/Рабочий стол/3DD/public/favicon.svg

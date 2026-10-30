@@ -1,0 +1,16 @@
+{
+  "brand": "KARpOV",
+  "manifestByteIdentical": true,
+  "carrierRestTrsPreserved": 47,
+  "changedMeshes": [
+    "back_cover_geometry",
+    "dial_face_geometry",
+    "movement_mainplate_geometry"
+  ],
+  "unchangedGeometryAndPbrMeshes": 44,
+  "comparison": "Binary accessor POSITION/NORMAL/indices and full PBR definition. Normalizes Blender material-name collision suffix .001 only.",
+  "modelSha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+  "manifestSha256": "51dbbff90f9162d4dd115d08ffbdeb57737dbf7c03e6b124777cfdf9c989d658",
+  "oldBytes": 5345484,
+  "newBytes": 5324520
+}

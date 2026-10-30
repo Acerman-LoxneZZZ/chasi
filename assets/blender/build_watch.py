@@ -1,4 +1,4 @@
-"""Авторская процедурная модель «Ход времени»; Blender 4.5 LTS.
+"""Авторская процедурная модель часов KARpOV; Blender 4.5 LTS.
 
 Запуск: blender --background --python assets/blender/build_watch.py
 Вся геометрия задаётся в системе сайта (X вправо, Y к головке, +Z вперёд),
@@ -18,6 +18,7 @@ BASE = Path(__file__).resolve().parents[2]
 OUT = BASE / 'public/models/pocket-watch.glb'
 BLEND = BASE / 'assets/blender/pocket-watch.blend'
 COLLECTION_NAME = 'PocketWatch_Exhibit'
+BRAND = 'KARpOV'
 TAU = math.tau
 CURRENT = None
 PARTS = []
@@ -37,6 +38,7 @@ if bpy.context.window:
 collection = bpy.data.collections.new(COLLECTION_NAME)
 scene.collection.children.link(collection)
 scene['pocket_watch_project'] = 'hod-vremeni-scroll-v2'
+scene['watch_brand'] = BRAND
 root = bpy.data.objects.new('watch_root', None)
 collection.objects.link(root)
 MATERIAL_OWNER_KEY = 'hod_vremeni_owner'
@@ -390,7 +392,7 @@ for r in [.26,.43,.61,.79,.96,1.11,1.23]:
     line_ring('cover_concentric_turning',r,.004,BRONZE,(0,0,-.072),segments=96,back=True)
 ring('cover_inner_lip',1.22,1.17,.035,BRONZE,(0,0,.046))
 # Inside decoration is visible after turning the camera.
-text('cover_inside_mark','ХОД ВРЕМЕНИ',.095,(0,.16,.067),BRONZE,font=SANS)
+text('cover_inside_mark',BRAND,.12,(0,.16,.067),BRONZE,font=SANS,spacing=1.12)
 text('cover_inside_model','МЕХАНИЧЕСКИЕ ЧАСЫ',.047,(0,-.07,.067),BRONZE,font=SANS)
 
 # 3. Bow: oval metal loop, mounted on its own shaft.
@@ -480,7 +482,7 @@ for i,label in enumerate(roman):
     a=TAU*i/12
     size=.182 if i in [0,3,6,9] else .166
     text('hour_'+label,label,size,(.914*math.sin(a),.914*math.cos(a),.0295),INK)
-text('dial_signature','ХОД ВРЕМЕНИ',.071,(0,.365,.0298),INK,font=SANS,spacing=1.06)
+text('dial_signature',BRAND,.09,(0,.365,.0298),INK,font=SANS,spacing=1.16)
 text('dial_subtitle','МЕХАНИЧЕСКИЕ ЧАСЫ',.032,(0,.258,.0300),INK,font=SANS,spacing=1.03)
 # Small seconds, inset enamel with 60 subtle ticks and concentric finishing.
 disk('small_seconds_recess',.276,.004,SUBDIAL,(0,-.534,.009),segments=96,bevel=.001)
@@ -560,7 +562,7 @@ for r in [.20,.28,.36,.44,.52,.60,.68,.76,.84,.92,1.0]:
     line_ring('plate_concentric_finish',r,.0022,BRONZE,(0,0,.033),segments=80)
 for x,y in [(-.88,.37),(.78,.62),(.91,-.30),(-.62,-.79),(-.14,.85)]:
     ring('mainplate_screw_seat',.057,.025,.009,STEEL,(x,y,.038),segments=32,bevel=.001)
-text('plate_engraving','ХОД ВРЕМЕНИ',.049,(.04,-.94,.035),BRONZE,font=SANS)
+text('plate_engraving',BRAND,.064,(.04,-.94,.035),BRONZE,font=SANS,spacing=1.08)
 
 # 14–18. A visibly connected train, each wheel with true teeth and five open spokes.
 wheel_data=[

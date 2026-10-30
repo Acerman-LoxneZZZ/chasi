@@ -9,6 +9,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { createPose, evaluatePartTransform, validateParts } from '../animation/evaluatePartTransform'
 import type { ProgressController } from '../animation/progressController'
 import type { ViewMode } from '../animation/scrollCoordinator'
+import { evaluateStoryPose } from '../animation/storyTimeline'
 import { shortFunctions, storyStageIndex, storyStages } from '../data/story'
 import type { WatchPart } from '../types'
 import { CameraRig } from './CameraRig'
@@ -20,6 +21,10 @@ type Hooks = {
   restored: () => void
   loading: (percent: number | null) => void
 }
+
+export type WatchFinish = 'brass' | 'steel' | 'graphite'
+
+const CASE_BRASS_MATERIAL = /Satin brass|Polished brass edges|Warm aged case/
 
 interface BoundPart {
   part: WatchPart
@@ -41,6 +46,8 @@ export class WatchScene {
   private byId = new Map<string, BoundPart>()
   private pickable: Mesh[] = []
   private allMaterials = new Set<Material>()
+  private finish: WatchFinish = 'brass'
+  private finishMaterials = new Map<MeshStandardMaterial, { color: Color; roughness: number }>()
   private resizeObserver: ResizeObserver
   private unsubscribe: () => void
   private abort = new AbortController()
@@ -195,6 +202,9 @@ export class WatchScene {
                 clone.roughness = 0.8
                 clone.envMapIntensity = 0.2
               }
+              if (part.category === 'case' && clone instanceof MeshStandardMaterial && CASE_BRASS_MATERIAL.test(clone.name)) {
+                this.finishMaterials.set(clone, { color: clone.color.clone(), roughness: clone.roughness })
+              }
               this.allMaterials.add(clone)
               return clone
             })
@@ -220,6 +230,7 @@ export class WatchScene {
         this.byId.set(part.id, entry)
       }
       this.scene.add(this.model)
+      this.setFinish(this.finish)
       this.updatePose()
       this.renderer.compile(this.scene, this.camera)
       // Loading is complete only after the populated scene has been painted.
@@ -231,6 +242,21 @@ export class WatchScene {
   }
 
   setLabels(value: boolean) { this.labels = value; this.invalidate() }
+
+  setFinish(finish: WatchFinish) {
+    this.finish = finish
+    for (const [material, original] of this.finishMaterials) {
+      if (finish === 'brass') {
+        material.color.copy(original.color)
+        material.roughness = original.roughness
+      } else {
+        material.color.set(finish === 'steel' ? '#bfc6cc' : '#424c59')
+        material.roughness = finish === 'steel' ? .3 : .32
+      }
+    }
+    this.canvas.dataset.finish = finish
+    this.invalidate()
+  }
 
   setMode(mode: ViewMode, reducedMotion: boolean) {
     const changed = mode !== this.mode
@@ -292,8 +318,9 @@ export class WatchScene {
   }
 
   private applyPose(p: number, frameCamera = true, resetCamera = false) {
+    const visualPose = evaluateStoryPose(p)
     for (const { part, object } of this.bound) {
-      const pose = evaluatePartTransform(part, p, this.pose, this.width < 700)
+      const pose = evaluatePartTransform(part, visualPose, this.pose, this.width < 700)
       object.position.fromArray(pose.position)
       object.quaternion.fromArray(pose.quaternion)
       object.scale.fromArray(pose.scale)
@@ -302,7 +329,7 @@ export class WatchScene {
     for (const entry of this.boundsCache) entry.world.copy(entry.local).applyMatrix4(entry.mesh.matrixWorld)
     const gear = this.byId.get('gear_center')
     if (gear) this.macroFocus.set(0, 0, .06).applyMatrix4(gear.object.matrixWorld)
-    if (frameCamera) this.rig.frame(p, this.width, this.height, this.boundsPoints, this.initialFrame || resetCamera, gear ? this.macroFocus : undefined)
+    if (frameCamera) this.rig.frame(visualPose, this.width, this.height, this.boundsPoints, this.initialFrame || resetCamera, gear ? this.macroFocus : undefined)
     if (this.model) this.initialFrame = false
     this.poseProgress = p
   }
@@ -347,12 +374,14 @@ export class WatchScene {
     this.displayedCameraPosition.copy(this.camera.position)
     this.displayedCameraQuaternion.copy(this.camera.quaternion)
     this.displayedCameraTarget.copy(this.controls.target)
-    this.updateLabels(p)
+    const visualPose = evaluateStoryPose(p)
+    this.updateLabels(visualPose)
     this.canvas.dataset.drawCalls = String(this.renderer.info.render.calls)
     this.canvas.dataset.triangles = String(this.renderer.info.render.triangles)
     this.canvas.dataset.frames = String(++this.renderedFrames)
     this.canvas.dataset.dpr = String(this.renderer.getPixelRatio())
     this.canvas.dataset.renderedProgress = p.toFixed(5)
+    this.canvas.dataset.poseProgress = visualPose.toFixed(5)
     this.canvas.dataset.macro = this.rig.macro.toFixed(5)
     this.projected.copy(this.macroFocus).project(this.camera)
     this.canvas.dataset.focus = JSON.stringify(this.projected.toArray())
@@ -512,6 +541,7 @@ export class WatchScene {
     this.controls.dispose()
     if (this.model) this.disposeObject(this.model)
     this.allMaterials.forEach(material => material.dispose())
+    this.finishMaterials.clear()
     this.environment.dispose()
     this.renderer.dispose()
     this.labelRoot.replaceChildren()
