@@ -1,0 +1,80 @@
+{
+  "status": "passed",
+  "scenarios": 10,
+  "productionEntry": "./assets/index-BKcFNLGu.js",
+  "fullRun": {
+    "source": "docs/browser-v4-full.json",
+    "stats": {
+      "startTime": "2026-10-30T13:39:20.291Z",
+      "duration": 457122.20399999997,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    }
+  },
+  "focusedRepeat": {
+    "source": "docs/browser-v4-targeted.json",
+    "stats": {
+      "startTime": "2026-10-30T13:45:49.447Z",
+      "duration": 60665.666,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "note": "Nine scenarios passed in the full two-worker run. The controlled-503 scenario initially asserted before software PMREM initialization had started its fetch. Its test now awaits the actual 503 response before asserting the error and retry. Application code and production build did not change for the focused repeat. This is not one entirely green full run.",
+  "results": [
+    {
+      "title": "the default page contains only a large fullscreen watch with closed tools at all required sizes",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "scroll makes a complete orbit and a focused macro dolly, reverses exactly and stops rendering when idle",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "the control popover supports native range keys, exact endpoints, pause and interruption",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "manual orbit and slider ignore document scroll, then resume and reload keep the current pose",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "the native details drawer contains all 47 selectable groups, traps focus and closes with Escape",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "reduced motion stays compact and direct, including when the preference changes at runtime",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "a failed GLB request keeps a working retry and compact fallback",
+      "status": "passed",
+      "source": "docs/browser-v4-targeted.json"
+    },
+    {
+      "title": "WebGL loss restores the same configuration and unavailable WebGL shows a real fallback",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "the controls remain usable at 200% layout density with keyboard focus and 44px targets",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    },
+    {
+      "title": "native swipes scroll only in story mode, and optional labels do not cover the model",
+      "status": "passed",
+      "source": "docs/browser-v4-full.json"
+    }
+  ]
+}

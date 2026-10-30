@@ -274,12 +274,16 @@ test('reduced motion stays compact and direct, including when the preference cha
 
 test('a failed GLB request keeps a working retry and compact fallback', async ({ page }) => {
   let requests = 0
+  const rejectedModel = page.waitForResponse(response => response.url().includes('/models/pocket-watch.glb') && response.status() === 503, { timeout: 60000 })
   await page.route('**/models/pocket-watch.glb', async route => {
     requests++
     if (requests === 1) await route.fulfill({ status: 503, contentType: 'text/plain', body: 'Controlled failure' })
     else await route.continue()
   })
   await page.goto('/')
+  // Start the failure assertion after the controlled response actually exists.
+  // Software PMREM initialization can precede the first fetch by over 15s.
+  await rejectedModel
   await expect(page.locator('.experience')).toHaveAttribute('data-status', 'error')
   await expect(page.locator('.watch-story')).toHaveClass(/compact/)
   await expect(page.getByRole('button', { name: 'Детали часов', exact: true })).toBeDisabled()
