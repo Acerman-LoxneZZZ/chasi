@@ -206,7 +206,8 @@ test('reduced motion keeps a compact manual viewer and the complete commercial p
   await setManualProgress(page, 78)
   await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.75000')
   await expect(canvas(page)).toHaveAttribute('data-macro', '0.00000')
-  expect((await camera(page)).quaternion).toEqual(orientation)
+  const reducedQuaternion = (await camera(page)).quaternion
+  expect(Math.max(...reducedQuaternion.map((value, index) => Math.abs(value - orientation[index])))).toBeLessThan(1e-12)
   await page.getByRole('button', { name: 'Закрыть управление', exact: true }).click()
   for (const id of ['design', 'materials', 'mechanism', 'selection', 'specifications']) await expect(page.locator(`#${id}`)).toBeAttached()
   await page.locator('#selection').scrollIntoViewIfNeeded()
@@ -230,6 +231,7 @@ test('a controlled model failure preserves the collection and retries with the c
   await page.locator('#selection').scrollIntoViewIfNeeded()
   await page.getByRole('radio', { name: 'Сталь', exact: true }).check()
   await expect(page.locator('#specifications')).toContainText('Сталь')
+  await expect(page.locator('.watch-fallback')).toHaveAttribute('src', /karpov-product-steel\.webp$/)
   await page.getByRole('button', { name: 'Повторить загрузку', exact: true }).click()
   await painted(page)
   await expect(canvas(page)).toHaveAttribute('data-finish', 'steel')

@@ -4,6 +4,7 @@ import type { ViewMode } from '../animation/scrollCoordinator'
 import { WatchScene } from '../scene/WatchScene'
 import type { SceneStatus, WatchPart } from '../types'
 import type { WatchFinish } from '../data/collection'
+import { finishes } from '../data/collection'
 import { Icon } from './Icon'
 
 interface ExperienceProps {
@@ -89,7 +90,7 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
       <span>Знакомство с коллекцией №01</span>
     </div>}
     {failed && <div className="fallback-state">
-      <img className="watch-fallback" src={`${import.meta.env.BASE_URL}images/karpov-product.webp`} alt="Карманные часы KARpOV с латунным корпусом, светлым циферблатом и синёными стрелками" />
+      <img className="watch-fallback" src={`${import.meta.env.BASE_URL}images/${finishes.find(item => item.id === props.finish)!.image}`} alt={`Карманные часы KARpOV. Исполнение корпуса: ${finishes.find(item => item.id === props.finish)!.title}. Светлый циферблат и синёные стрелки.`} />
       <div className="scene-message" role="alert">
         <p>{status === 'context-lost' ? 'Отображение 3D приостановлено' : status === 'unsupported' ? 'Просмотр без 3D' : 'Модель не загрузилась'}</p>
         <span>{status === 'context-lost' ? 'Графический контекст потерян. Восстановите сцену, чтобы продолжить исследование.' : detail}</span>

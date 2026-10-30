@@ -59,7 +59,7 @@
 .collection-portrait figcaption { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 27px; align-items: center; white-space: nowrap; font-family: var(--font-display); font-size: 28px; }
 .collection-portrait figcaption span { font-family: 'Manrope Variable', sans-serif; font-size: 10px; color: var(--paper-muted); }
 .materials-section { padding-top: 15px; padding-bottom: 145px; }
-.material-rule { height: 1px; background: #9c947d70; }
+.material-rule { height: 1px; background: #9c947d70; transform-origin: 0 0; }
 .materials-heading { padding-top: 76px; display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
 .materials-heading .small-label { padding-top: 14px; }
 .materials-heading h2 { font-size: clamp(58px, 5.3vw, 95px); }

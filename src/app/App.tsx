@@ -4,6 +4,7 @@ import { ScrollCoordinator } from '../animation/scrollCoordinator'
 import { gsap } from 'gsap'
 import { collectionStops, collectionStopIndex, finishes, type WatchFinish } from '../data/collection'
 import { CollectionPage } from '../components/CollectionPage'
+import { evaluateStoryPose } from '../animation/storyTimeline'
 import { Experience } from '../components/Experience'
 import { ExplosionControls, stageTitle } from '../components/ExplosionControls'
 import { Icon } from '../components/Icon'
@@ -180,7 +181,7 @@ export function App() {
     <dialog ref={detailDialog} className="detail-dialog" data-lenis-prevent aria-labelledby="parts-title" onClick={event => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
       <div className="drawer-content">
         <div className="drawer-heading"><div><span className="section-kicker">47 частей одного целого</span><h2 id="parts-title">Устройство часов</h2></div><button className="icon-button" aria-label="Закрыть детали" onClick={() => detailDialog.current?.close()}><Icon name="close" size={20} /></button></div>
-        <div className="drawer-info"><PartInfo part={displayedPart} progress={progress} onClose={() => setSelected(null)} /></div>
+        <div className="drawer-info"><PartInfo part={displayedPart} progress={evaluateStoryPose(progress)} onClose={() => setSelected(null)} /></div>
         <PartList parts={parts} selected={selected} ready={ready} onSelect={choosePart} />
       </div>
     </dialog>

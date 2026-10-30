@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "entry": "./assets/index-CNBY7Zpe.js",
+  "css": "./assets/index-ZchmsDhd.css",
+  "command": "npm run build",
+  "sourceGlbSha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+  "distGlbSha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+  "manifestSha256": "51dbbff90f9162d4dd115d08ffbdeb57737dbf7c03e6b124777cfdf9c989d658",
+  "modelBytes": 5324520,
+  "stills": {
+    "karpov-movement.webp": 154082,
+    "karpov-product-steel.webp": 162004,
+    "karpov-product-graphite.webp": 168730,
+    "karpov-product.webp": 185100,
+    "karpov-detail.webp": 154038
+  }
+}

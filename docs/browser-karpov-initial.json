@@ -1,0 +1,434 @@
+{
+  "config": {
+    "argv": [
+      "/home/nolimetrus/.nvm/versions/node/v22.23.3/bin/node",
+      "/home/nolimetrus/Рабочий стол/3DD/node_modules/.bin/playwright",
+      "test",
+      "--fully-parallel",
+      "--workers=2"
+    ],
+    "configFile": "/home/nolimetrus/Рабочий стол/3DD/playwright.config.ts",
+    "rootDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/nolimetrus/Рабочий стол/3DD/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/nolimetrus/Рабочий стол/3DD/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "snapshotDir": "/home/nolimetrus/Рабочий стол/3DD/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "locale": "ru-RU",
+          "colorScheme": "dark",
+          "headless": true,
+          "launchOptions": {
+            "executablePath": "/usr/bin/google-chrome",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/browser-test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "experience.spec.ts",
+      "file": "experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 25843,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:12:46.997Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-e5e89ba591da672fe690",
+          "file": "experience.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 45808,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:12:46.975Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-bd7d0c411939cc7628d0",
+          "file": "experience.spec.ts",
+          "line": 92,
+          "column": 1
+        },
+        {
+          "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 25873,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at noOverflow (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:54:132)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:132:7",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 132,
+                      "line": 54
+                    },
+                    "snippet": "  52 |   await settled(page)\n  53 | }\n> 54 | const noOverflow = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)\n     |                                                                                                                                    ^\n  55 |\n  56 | test('KARpOV has five navigable product stops that hold the real camera and mechanism still', async ({ page }) => {\n  57 |   const errors: string[] = []"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 132,
+                        "line": 54
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  52 |   await settled(page)\n  53 | }\n> 54 | const noOverflow = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)\n     |                                                                                                                                    ^\n  55 |\n  56 | test('KARpOV has five navigable product stops that hold the real camera and mechanism still', async ({ page }) => {\n  57 |   const errors: string[] = []\n    at noOverflow (/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:54:132)\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:132:7"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:13:13.105Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-the-collection--0bbeb-and-mobile-without-overflow/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-the-collection--0bbeb-and-mobile-without-overflow/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 132,
+                    "line": 54
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-f5e5bef52981f68520aa",
+          "file": "experience.spec.ts",
+          "line": 123,
+          "column": 1
+        },
+        {
+          "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 39332,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:13:33.017Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7f266ab5918682e3f277",
+          "file": "experience.spec.ts",
+          "line": 150,
+          "column": 1
+        },
+        {
+          "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14732,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:13:41.602Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-a84157c065a588e7341f",
+          "file": "experience.spec.ts",
+          "line": 180,
+          "column": 1
+        },
+        {
+          "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 13097,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   -0.0688976557981034,\u001b[39m\n\u001b[32m-   -0.15605339854576153,\u001b[39m\n\u001b[32m-   -0.010912316653255146,\u001b[39m\n\u001b[32m-   0.9852823814384906,\u001b[39m\n\u001b[31m+   -0.06889765579810343,\u001b[39m\n\u001b[31m+   -0.15605339854576156,\u001b[39m\n\u001b[31m+   -0.010912316653255151,\u001b[39m\n\u001b[31m+   0.9852823814384903,\u001b[39m\n\u001b[2m  ]\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   -0.0688976557981034,\u001b[39m\n\u001b[32m-   -0.15605339854576153,\u001b[39m\n\u001b[32m-   -0.010912316653255146,\u001b[39m\n\u001b[32m-   0.9852823814384906,\u001b[39m\n\u001b[31m+   -0.06889765579810343,\u001b[39m\n\u001b[31m+   -0.15605339854576156,\u001b[39m\n\u001b[31m+   -0.010912316653255151,\u001b[39m\n\u001b[31m+   0.9852823814384903,\u001b[39m\n\u001b[2m  ]\u001b[22m\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:209:43",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                      "column": 43,
+                      "line": 209
+                    },
+                    "snippet": "  207 |   await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.75000')\n  208 |   await expect(canvas(page)).toHaveAttribute('data-macro', '0.00000')\n> 209 |   expect((await camera(page)).quaternion).toEqual(orientation)\n      |                                           ^\n  210 |   await page.getByRole('button', { name: 'Закрыть управление', exact: true }).click()\n  211 |   for (const id of ['design', 'materials', 'mechanism', 'selection', 'specifications']) await expect(page.locator(`#${id}`)).toBeAttached()\n  212 |   await page.locator('#selection').scrollIntoViewIfNeeded()"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                        "column": 43,
+                        "line": 209
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 4\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   -0.0688976557981034,\u001b[39m\n\u001b[32m-   -0.15605339854576153,\u001b[39m\n\u001b[32m-   -0.010912316653255146,\u001b[39m\n\u001b[32m-   0.9852823814384906,\u001b[39m\n\u001b[31m+   -0.06889765579810343,\u001b[39m\n\u001b[31m+   -0.15605339854576156,\u001b[39m\n\u001b[31m+   -0.010912316653255151,\u001b[39m\n\u001b[31m+   0.9852823814384903,\u001b[39m\n\u001b[2m  ]\u001b[22m\n\n  207 |   await expect(canvas(page)).toHaveAttribute('data-pose-progress', '0.75000')\n  208 |   await expect(canvas(page)).toHaveAttribute('data-macro', '0.00000')\n> 209 |   expect((await camera(page)).quaternion).toEqual(orientation)\n      |                                           ^\n  210 |   await page.getByRole('button', { name: 'Закрыть управление', exact: true }).click()\n  211 |   for (const id of ['design', 'materials', 'mechanism', 'selection', 'specifications']) await expect(page.locator(`#${id}`)).toBeAttached()\n  212 |   await page.locator('#selection').scrollIntoViewIfNeeded()\n    at /home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts:209:43"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:13:56.695Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-reduced-motion--43676-he-complete-commercial-page/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/3DD/test-results/experience-reduced-motion--43676-he-complete-commercial-page/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/3DD/tests/experience.spec.ts",
+                    "column": 43,
+                    "line": 209
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-6eb07f7c507a6a140003",
+          "file": "experience.spec.ts",
+          "line": 199,
+          "column": 1
+        },
+        {
+          "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T14:14:12.570Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-3e2146b61682cf4c0885",
+          "file": "experience.spec.ts",
+          "line": 218,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-30T14:12:46.523Z",
+    "duration": 99021.591,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

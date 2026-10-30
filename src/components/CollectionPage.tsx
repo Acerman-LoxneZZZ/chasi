@@ -36,7 +36,7 @@ export const CollectionPage = memo(function CollectionPage({ finish, onFinish, o
         gsap.fromTo('.movement-portrait img', { yPercent: 8 }, { yPercent: -7, ease: 'none', scrollTrigger: { trigger: '.mechanism-section', start: 'top bottom', end: 'bottom top', scrub: true } })
         gsap.to('.drawing-wheel', { rotation: 100, transformOrigin: '0px 0px', ease: 'none', scrollTrigger: { trigger: '.mechanism-section', start: 'top bottom', end: 'bottom top', scrub: true } })
         gsap.to('.drawing-pinion', { rotation: -150, transformOrigin: '0px 0px', ease: 'none', scrollTrigger: { trigger: '.mechanism-section', start: 'top bottom', end: 'bottom top', scrub: true } })
-        gsap.fromTo('.material-rule', { scaleX: .1 }, { scaleX: 1, transformOrigin: 'left center', ease: 'none', scrollTrigger: { trigger: '.materials-section', start: 'top 85%', end: 'center center', scrub: true } })
+        gsap.fromTo('.material-rule', { scaleX: .1, transformOrigin: '0px 0px' }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.materials-section', start: 'top 85%', end: 'center center', scrub: true } })
       }, root)
       return () => context.revert()
     })
