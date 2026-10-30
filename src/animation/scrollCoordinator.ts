@@ -25,6 +25,7 @@ export class ScrollCoordinator implements ProgressOwner {
   private measureFrame = 0
   private resumeFrame = 0
   private target: 0 | 1 | null = null
+  private navigating = false
   private passage = 0
   private initialized = false
   private measuring = false
@@ -94,7 +95,7 @@ export class ScrollCoordinator implements ProgressOwner {
       autoResize: false,
       smoothWheel: true,
       syncTouch: false,
-      lerp: .14,
+      lerp: .085,
       anchors: true,
       stopInertiaOnNavigate: true,
       prevent: node => node.hasAttribute('data-lenis-prevent') || node.tagName === 'DIALOG' || node.hasAttribute('popover'),
@@ -182,6 +183,7 @@ export class ScrollCoordinator implements ProgressOwner {
     // passage too; otherwise its next tick would pull the document backwards.
     if (this.lenis?.isScrolling === 'smooth' && Math.abs(window.scrollY - this.lenis.scroll) > 2) {
       this.target = null
+      this.navigating = false
       this.passage++
       this.stopLenisMotion()
     }
@@ -222,8 +224,34 @@ export class ScrollCoordinator implements ProgressOwner {
   seek = (value: number) => {
     this.pause()
     if (!this.section) return
+    this.measure()
     this.jumpTo(scrollFromProgress(value, this.bounds))
     this.syncProgress()
+  }
+  /** Smoothly visit a product stop. Manual mode must be resumed explicitly. */
+  navigateTo = (value: number): boolean => {
+    if (!this.section || this.snapshot.mode !== 'story') return false
+    this.pause()
+    this.measure()
+    const destination = clampProgress(value)
+    if (this.reducedMotion) { this.seek(destination); return true }
+    this.startSmoothScroll()
+    const from = window.scrollY
+    const to = scrollFromProgress(destination, this.bounds)
+    if (!this.lenis || Math.abs(to - from) < 1) { this.seek(destination); return true }
+    this.navigating = true
+    const passage = ++this.passage
+    this.lenis.scrollTo(to, {
+      duration: Math.max(1.5, Math.min(2.4, Math.abs(to - from) / this.bounds.travel * 2.4)),
+      easing: smootherStep,
+      lock: false,
+      onComplete: () => {
+        if (passage !== this.passage) return
+        this.navigating = false
+        this.syncProgress()
+      },
+    })
+    return true
   }
   animate = (target: 0 | 1, reducedMotion: boolean) => {
     this.pause()
@@ -250,6 +278,7 @@ export class ScrollCoordinator implements ProgressOwner {
   pause = () => {
     this.passage++
     this.target = null
+    this.navigating = false
     this.stopLenisMotion()
     this.progress.commit(this.progress.getSnapshot().progress, null)
   }
@@ -291,7 +320,7 @@ export class ScrollCoordinator implements ProgressOwner {
     this.emit('manual', true)
   }
   private onManualInput = (event: Event) => {
-    if (this.snapshot.mode === 'story' && (this.target !== null || event.type === 'touchstart')) this.pause()
+    if (this.snapshot.mode === 'story' && (this.target !== null || this.navigating || event.type === 'touchstart')) this.pause()
   }
   private onKeyDown = (event: KeyboardEvent) => {
     if (this.snapshot.mode === 'story') {

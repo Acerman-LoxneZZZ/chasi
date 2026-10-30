@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "results": [
+    {
+      "kind": "balance",
+      "calls": 17,
+      "triangles": 11128,
+      "finite": true,
+      "reversible": true,
+      "reducedStatic": true,
+      "disposed": true
+    },
+    {
+      "kind": "crown",
+      "calls": 16,
+      "triangles": 12420,
+      "finite": true,
+      "reversible": true,
+      "reducedStatic": true,
+      "disposed": true
+    },
+    {
+      "kind": "geartrain",
+      "calls": 38,
+      "triangles": 15344,
+      "finite": true,
+      "reversible": true,
+      "reducedStatic": true,
+      "disposed": true
+    }
+  ]
+}

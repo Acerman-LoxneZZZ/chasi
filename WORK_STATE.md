@@ -1,3 +1,21 @@
+# В работе: крупнее часы, плавнее движение, три живые 3D-сцены
+
+Последний запрос реализован в коде, выполняется финальный QA. База до изменения: Git53ffa43 и artifacts/checkpoints/before-live-scenes.zip. Не начинать проект заново и не переносить старые55/7результаты.
+
+- Biggerintro1.04desktop/1.0mobile, canvasleft26%, +20.35%projectedheightdesktop1440 относительноv5. Phoneintroduplicatefactскрыт, часы сохраняютчитаемость.
+- Holds raw0–.06,.25–.30,.51–.56,.75–.80,.96–1; transitionquintic + LINEARcameraYawperpose убираютdouble-acceleration. Full423°/407°сохранён; Lenis.085. PublicnavigateTo плавно1.5–2.4s, отменяетсявводом/новойнавигацией. Appподключён.
+- WatchScene повторноневычисляет47TRS/не рисует187k треугольников внутриhold, еслиposeиcameraужеpainted иничегонепереходит/неinvalidated. Обновляеттолькоrawmetadata. LabelsdefaultoffнеполучаютлишнихDOMwrites.
+- Триживыеoriginalproceduralmodels balance/crown/geartrain вCollectionPage. ОдинижнийsharedWebGLRenderer/canvas, lazyIO+GSAPticker, stopoffscreen/hidden, reducedstatic,contextrestore. Budgets11128/12420/15344tri,17/16/38calls. Canvasпереноситсямеждуhost,matchingWebPfallbackизтехжемоделей.
+- ГлавныйGLBнеизменён:5324520B/187898tri/47groups/restTRS. Исходник+distSHAодинаковые.
+- Unit60/60:docs/evidence/unit-live-scenes.json. Buildpassed:./assets/index-l-D7L3YA.js. Proofbuild-live-scenes.json.
+- ИзолированныйbrowserQAнижнегоменеджерапрошёл, включаядвижение/idle/offscreen/reduced/contextlossrestore/unregister: docs/evidence/detail-manager.json. Geometryproof:detail-models.json;posterrecipe:detail-renders.json.
+- Rootосмотрел8previewdesktop/mobileкадров в.cache/live-preview (неfinaldeliveryevidence). Главныечасыбольшие,3Dмоделиреальнорендерятся.
+
+Выполняетсяобщийbrowserнабор9сценариев, durablelog.cache/live-browser.log. Первые3passed; итогещёнеизвестен. Нужно завершить этотпрогон, создать26финальныхскриншотов scripts/inspect-commerce.mjs (newoutputdocs/screenshots/live-scenes), обновитьVERIFICATION/этотфайл,упаковать/commit/checkpoint. README/DESIGNпишетsmooth_primary,MODEL/ASSET_SOURCESпишетlive_detail_scenes — rootнеперетиратьдоdone.
+
+Ниже сохранён контекст предыдущей завершённой версии для восстановления.
+
+---
 # KARpOV — сайт готов
 
 Последний запрос выполнен: коммерческая презентация карманных часов **KARpOV №01**, пять остановок с характеристиками и дальнейшие разделы с анимацией. Пользователь просит самостоятельную работу без подтверждений и сохранение после выключения.

@@ -56,16 +56,26 @@ export function App() {
   useEffect(() => { try { localStorage.setItem('karpov:finish', finish) } catch { /* Selection remains usable. */ } }, [finish])
   useLayoutEffect(() => {
     if (reducedMotion) return
-    const tween = gsap.fromTo(stationCopy.current, { opacity: .35, y: 12 }, { opacity: 1, y: 0, duration: .55, ease: 'power2.out', clearProps: 'transform,opacity' })
+    const tween = gsap.fromTo(stationCopy.current, { opacity: .65, y: 8 }, { opacity: 1, y: 0, duration: .8, ease: 'power2.out', clearProps: 'transform,opacity' })
     return () => { tween.kill() }
   }, [chapter, reducedMotion])
   const viewIn3D = useCallback((value: number) => {
+    const focusStop = () => {
+      const index = collectionStops.findIndex(stop => Math.abs(stop.at - value) < .001)
+      document.querySelectorAll<HTMLButtonElement>('.station-nav button')[index]?.focus({ preventScroll: true })
+    }
+    if (ready && !reducedMotion) {
+      if (coordinator.getSnapshot().mode === 'manual') {
+        coordinator.resume()
+        requestAnimationFrame(() => { coordinator.navigateTo(value); focusStop() })
+      } else { coordinator.navigateTo(value); focusStop() }
+      return
+    }
     controller.set(value)
-    if (ready && !reducedMotion && coordinator.getSnapshot().mode === 'manual') coordinator.resume()
     requestAnimationFrame(() => {
       const section = storySection.current
-      if (section) window.scrollTo({ top: Number(section.dataset.storyStart) + (reducedMotion || !ready ? 0 : Number(section.dataset.storyTravel) * value), behavior: 'instant' })
-      document.querySelector<HTMLButtonElement>('.station-nav button[aria-current="step"]')?.focus({ preventScroll: true })
+      if (section) window.scrollTo({ top: Number(section.dataset.storyStart), behavior: 'instant' })
+      focusStop()
     })
   }, [controller, coordinator, ready, reducedMotion])
 

@@ -74,18 +74,34 @@ describe('scenario camera and measured framing', () => {
       expect(evaluateStoryCameraAngles(5, mobile)).toEqual(evaluateStoryCameraAngles(1, mobile))
     }
   })
-  it('keeps all bounds inside the viewport at required desktop and phone sizes', () => {
+  it('permits a larger opening close-up and fits all later overview bounds', () => {
     const { camera, rig, points } = setup()
     for (const [width, height] of [[1440, 620], [1280, 430], [390, 350], [360, 330]]) {
       for (const p of Array.from({ length: 41 }, (_, index) => index / 40)) {
         rig.frame(p, width, height, points)
         for (const point of points) {
           const projected = point.clone().project(camera)
-          expect(Math.abs(projected.x)).toBeLessThan(1)
-          expect(Math.abs(projected.y)).toBeLessThan(1)
+          const edge = p < .22 ? 1.05 : 1
+          expect(Math.abs(projected.x)).toBeLessThan(edge)
+          expect(Math.abs(projected.y)).toBeLessThan(edge)
         }
         expect(camera.quaternion.length()).toBeCloseTo(1, 12)
       }
+    }
+  })
+  it('opens large on desktop and phone then withdraws to the first measured detail stop', () => {
+    const { camera, rig, points } = setup()
+    for (const [width, height, minimum] of [[1440, 1000, 1.02], [390, 844, .98]]) {
+      const edges = (p: number) => {
+        rig.frame(p, width, height, points)
+        return Math.max(...points.flatMap(point => {
+          const projected = point.clone().project(camera)
+          return [Math.abs(projected.x), Math.abs(projected.y)]
+        }))
+      }
+      expect(edges(0)).toBeGreaterThan(minimum)
+      expect(edges(0)).toBeLessThan(1.05)
+      expect(edges(.22)).toBeLessThan(.95)
     }
   })
   it('returns to the same absolute camera pose after a reversed trajectory', () => {

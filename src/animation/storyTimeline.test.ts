@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { PerspectiveCamera, Vector3 } from 'three'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { CameraRig } from '../scene/CameraRig'
+import { CameraRig, evaluateStoryCameraAngles } from '../scene/CameraRig'
 import rawParts from '../data/watch-parts.json'
 import type { WatchPart } from '../types'
 import { createPose, evaluatePartTransform } from './evaluatePartTransform'
@@ -46,6 +46,22 @@ describe('product story stops', () => {
     for (let index = 1000; index >= 0; index--) expect(evaluateStoryPose(index / 1000)).toBe(forward[index])
     expect(evaluateStoryPose(0)).toBe(0)
     expect(evaluateStoryPose(1)).toBe(1)
+  })
+
+  it('spreads the complete camera turn without a compound-easing angular-speed spike', () => {
+    const samples = 10000
+    for (const mobile of [false, true]) {
+      let previous = evaluateStoryCameraAngles(evaluateStoryPose(0), mobile).yaw
+      let peakDegreesPerProgress = 0
+      for (let index = 1; index <= samples; index++) {
+        const angle = evaluateStoryCameraAngles(evaluateStoryPose(index / samples), mobile).yaw
+        peakDegreesPerProgress = Math.max(peakDegreesPerProgress, (angle - previous) * samples * 180 / Math.PI)
+        previous = angle
+      }
+      // A 1%-of-story movement stays below 28°, versus about 80° with the old
+      // double-quintic, short transition. The 423°/407° orbit is tested separately.
+      expect(peakDegreesPerProgress).toBeLessThan(2800)
+    }
   })
 
   it('eases velocity and acceleration into both edges of every held pose', () => {

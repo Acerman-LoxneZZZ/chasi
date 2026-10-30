@@ -1,6 +1,6 @@
 import {chromium} from '@playwright/test'
 import {mkdirSync,writeFileSync} from 'node:fs'
-const out=process.argv[2] || 'docs/screenshots/karpov';mkdirSync(out,{recursive:true})
+const out=process.argv[2] || 'docs/screenshots/live-scenes';mkdirSync(out,{recursive:true})
 const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']})
 const page=await browser.newPage({viewport:{width:1440,height:1000},locale:'ru-RU'})
 const errors=[],consoleProblems=[],externalRequests=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(['error','warning'].includes(m.type()))consoleProblems.push(m.text())});page.on('request',r=>{if(!r.url().startsWith('http://127.0.0.1:')&&!r.url().startsWith('data:'))externalRequests.push(r.url())});const results=[]
@@ -22,6 +22,17 @@ for(const[w,h]of[[1440,1000],[390,844]]){
   await page.waitForTimeout(350);await page.locator(`#${id} img`).evaluateAll(async imgs=>{await Promise.all(imgs.map(im=>im.decode().catch(()=>{})))})
   await page.screenshot({path:`${out}/${w}-${id}.png`})
   results.push(await page.evaluate(id=>({kind:id,w:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth+1,images:[...document.querySelectorAll(`#${id} img`)].map(im=>({src:im.getAttribute('src'),loaded:im.naturalWidth>0}))}),id))
+ }
+}
+// Capture each actual active WebGL object, not only its static fallback.
+for (const [w,h] of [[1440,1000],[390,844]]) {
+ await page.setViewportSize({width:w,height:h});await page.waitForTimeout(200)
+ for(const kind of ['balance','crown','geartrain']) {
+  const host=page.locator(`.detail-scene[data-scene-kind="${kind}"]`)
+  await host.scrollIntoViewIfNeeded()
+  await page.waitForFunction(kind=>document.querySelector(`.detail-scene[data-scene-kind="${kind}"]`).dataset.sceneStatus==='ready',kind,{timeout:60000})
+  await page.screenshot({path:`${out}/${w}-live-${kind}.png`})
+  results.push(await host.evaluate(el=>({kind:'live-'+el.dataset.sceneKind,w:innerWidth,progress:el.dataset.progress,pose:el.dataset.poseProgress,triangles:el.dataset.modelTriangles,calls:el.dataset.drawCalls,frames:el.dataset.frames,active:el.dataset.active,canvas:!!el.querySelector('canvas.detail-canvas'),overflow:document.documentElement.scrollWidth>innerWidth+1})))
  }
 }
 writeFileSync(`${out}/metrics.json`,JSON.stringify({environment,errors,consoleProblems,externalRequests,results},null,2));console.log(JSON.stringify({errors,consoleProblems,externalRequests,shots:results.length,overflow:results.filter(r=>r.overflow)}))

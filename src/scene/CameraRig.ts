@@ -31,7 +31,9 @@ export function evaluateStoryCameraAngles(progress: number, mobile = false, out:
   for (let index = 1; index < CAMERA_POSES.length; index++) {
     if (p > CAMERA_POSES[index]) continue
     const u = clampProgress((p - CAMERA_POSES[index - 1]) / (CAMERA_POSES[index] - CAMERA_POSES[index - 1]))
-    yaw = yawStops[index - 1] + (yawStops[index] - yawStops[index - 1]) * smootherStep(u)
+    // The raw→pose timeline already eases into every stop. Easing this angle
+    // again compresses the large turn into a short, high-speed middle burst.
+    yaw = yawStops[index - 1] + (yawStops[index] - yawStops[index - 1]) * u
     break
   }
   out.yaw = yaw * RADIANS
@@ -66,6 +68,7 @@ export class CameraRig {
   private macroWeight = 0
 
   get macro() { return this.macroWeight }
+  get transitioning() { return this.transitionStart !== null }
 
   constructor(readonly camera: PerspectiveCamera, readonly controls: OrbitControls) {
     controls.enablePan = false
@@ -125,10 +128,10 @@ export class CameraRig {
       this.low.min(this.point); this.high.max(this.point)
     }
     this.center.copy(this.low).add(this.high).multiplyScalar(.5)
-    // Small perspective margins keep the bow and separated parts within the
-    // viewport while the freed full-screen stage presents a much larger object.
-    const closeup = Math.min(1, clampProgress(progress) / .24)
-    const fill = width < 700 ? .925 : .86 + .075 * smootherStep(closeup)
+    // A generous opening close-up gradually withdraws before the first detail
+    // stop. The desktop hero may slightly cross the frame by design.
+    const opening = 1 - smootherStep(clampProgress(progress / .22))
+    const fill = width < 700 ? .925 + .075 * opening : .935 + .105 * opening
     const tanY = Math.tan(this.camera.fov * Math.PI / 360) * fill
     const tanX = tanY * this.camera.aspect
     let distance = 0

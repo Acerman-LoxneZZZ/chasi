@@ -13,8 +13,8 @@
 .karpov-site .watch-story--compact { height: 100svh; }
 .karpov-site .story-pin { background: radial-gradient(ellipse at 70% 43%, #243344, #111c29 43%, #0a131d 80%); }
 .karpov-site .story-pin::after { background: linear-gradient(90deg, #0a131df5 0%, #0a131de0 21%, transparent 48%), linear-gradient(to bottom, #07101b80, transparent 140px, transparent calc(100% - 150px), #07101bcc); }
-.karpov-site .canvas-wrap { left: 30%; }
-.station-copy { position: absolute; left: 6vw; top: 47%; transform: translateY(-50%); z-index: 4; width: 34vw; max-width: 490px; pointer-events: none; }
+.karpov-site .canvas-wrap { left: 26%; }
+.station-copy { position: absolute; left: 6vw; top: 47%; transform: translateY(-50%); z-index: 4; width: 32vw; max-width: 460px; pointer-events: none; }
 .station-kicker { font-size: 12px; color: var(--brass); margin-bottom: 33px; }
 .station-kicker > span { display: inline-block; padding-left: 17px; margin-left: 17px; border-left: 1px solid #c49b5c70; color: var(--muted); font-size: 10px; }
 .station-copy h1 { font-size: clamp(65px, 6.2vw, 118px); line-height: .93; letter-spacing: -.045em; font-weight: 400; }
@@ -53,6 +53,8 @@
 .editorial-link { display: inline-flex; align-items: center; gap: 36px; min-height: 44px; background: transparent; padding: 13px 0; margin-top: 30px; border-bottom: 1px solid #a8987c; color: inherit; font-size: 11px; }
 .editorial-link:hover { color: #9b7435; }
 .collection-portrait { position: relative; margin: 0; height: 850px; display: flex; align-items: center; justify-content: center; }
+.collection-portrait > .detail-scene { z-index: 1; }
+.collection-portrait figcaption { z-index: 2; pointer-events: none; }
 .collection-portrait img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; }
 .portrait-ring { position: absolute; width: 75%; aspect-ratio: 1; border: 1px solid #a8987c70; border-radius: 50%; }
 .portrait-ring::after { content: ''; position: absolute; inset: 20px; border: 1px solid #a8987c30; border-radius: 50%; }
@@ -70,6 +72,16 @@
 .material-notes article > span { font-size: 10px; color: #897142; padding-top: 5px; }
 .material-notes h3 { font-family: var(--font-display); font-size: 32px; line-height: 1.2; font-weight: 400; }
 .material-notes p { margin-top: 14px; font-size: 13px; line-height: 1.9; max-width: 300px; color: var(--paper-muted); }
+.material-closeup { position: sticky; top: 115px; align-self: start; }
+.material-model { position: relative; height: 340px; padding-bottom: 42px; margin-top: 10px; border-top: 1px solid #a9a49580; }
+.material-model > p { position: absolute; bottom: 0; left: 0; max-width: none; margin: 0; font-size: 11px; line-height: 1.65; color: var(--ink); }
+.material-model > p > span { display: block; font-size: 10px; color: var(--paper-muted); }
+.detail-scene { width: 100%; height: 100%; position: relative; min-width: 0; isolation: isolate; }
+.detail-scene-surface { position: absolute; inset: 0; z-index: 1; }
+.detail-scene-surface > canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+.detail-scene .detail-scene-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 1; transition: opacity .55s ease; }
+.detail-scene[data-scene-status='ready'] .detail-scene-poster { opacity: 0; }
+.detail-scene-surface:empty { pointer-events: none; }
 .mechanism-section { overflow: hidden; color: var(--text); background: #111c28; padding: 100px 6vw 130px; }
 .mechanism-heading { text-align: center; }
 .mechanism-heading h2 { font-size: clamp(55px, 5.4vw, 100px); margin-top: 25px; }
@@ -87,7 +99,7 @@
 .selection-layout { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 7vw; max-width: 1580px; margin: 0 auto; }
 .selection-portrait { position: relative; height: 820px; }
 .selection-portrait::before { content: ''; position: absolute; width: 65%; aspect-ratio: 1; border: 1px solid #9a88684d; border-radius: 50%; left: 17.5%; top: 27%; }
-.selection-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .4s; }
+.selection-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .7s cubic-bezier(.2, .6, .2, 1); }
 .selection-portrait img.is-selected { opacity: 1; }
 .selection-copy { padding-block: 70px; }
 .selection-copy h2 { font-size: clamp(55px, 4.9vw, 90px); margin-top: 20px; }
@@ -166,7 +178,7 @@
   .karpov-site .watch-story--compact { height: 100svh; }
   .karpov-site .story-pin { background: radial-gradient(ellipse at 55% 55%, #253447, #101c2b 53%, #0a131d 85%); }
   .karpov-site .story-pin::after { background: linear-gradient(to bottom, #0a131d99 0, transparent 190px, transparent calc(100% - 120px), #0a131de6); }
-  .karpov-site .canvas-wrap, .karpov-site .experience--labels .canvas-wrap { left: 0; top: 245px; bottom: 112px; }
+  .karpov-site .canvas-wrap, .karpov-site .experience--labels .canvas-wrap { left: 0; top: 230px; bottom: 100px; }
   .station-copy { left: 22px; top: 98px; width: calc(100% - 44px); max-width: none; transform: none; }
   .station-kicker { font-size: 10px; margin-bottom: 19px; }
   .station-kicker > span { font-size: 9px; margin-left: 11px; padding-left: 11px; }
@@ -175,6 +187,7 @@
   .station-fact { margin-top: 15px; flex-direction: row; align-items: baseline; gap: 12px; max-width: 100%; }
   .station-fact strong { font-size: 20px; flex-shrink: 0; }
   .station-fact > span { font-size: 9px; max-width: 150px; line-height: 1.5; }
+  .station-copy[data-station='0'] .station-fact { display: none; }
   .station-note, .station-link { display: none; }
   .karpov-site .exhibit-dock { left: 22px; right: 22px; bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; row-gap: 0; }
   .station-nav { grid-column: 1 / -1; grid-row: 1; display: flex; justify-content: space-between; width: 100%; gap: 0; }
@@ -206,6 +219,8 @@
   .materials-heading .small-label { padding: 0; margin-bottom: 23px; }
   .materials-layout { display: block; margin-top: 40px; }
   .material-closeup { height: 355px; }
+  .material-closeup { position: relative; top: auto; }
+  .material-model { height: 330px; margin-top: 10px; }
   .material-notes { margin-top: 35px; }
   .material-notes article { padding-block: 24px; }
   .material-notes h3 { font-size: 30px; }
@@ -256,4 +271,4 @@
   .station-fact { margin-top: 18px; }
   .station-note { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { .selection-portrait img { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .selection-portrait img, .detail-scene .detail-scene-poster { transition: none; } }

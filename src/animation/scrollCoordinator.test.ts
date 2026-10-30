@@ -22,7 +22,7 @@ const integration = vi.hoisted(() => {
     immediate?: boolean; duration?: number; easing?: (t: number) => number; onComplete?: () => void
   }
   type LenisOptions = {
-    autoRaf: boolean; autoResize: boolean; smoothWheel: boolean; syncTouch: boolean
+    autoRaf: boolean; autoResize: boolean; smoothWheel: boolean; syncTouch: boolean; lerp: number
     prevent: (node: HTMLElement) => boolean
   }
   const instances: MockLenis[] = []
@@ -134,7 +134,7 @@ describe('Lenis and ScrollTrigger scroll ownership', () => {
     expect(section.dataset.scrollEngine).toBe('gsap-lenis')
     expect(section.dataset.storyStart).toBe('120')
     expect(section.dataset.storyTravel).toBe('4000')
-    expect(lenis.options).toMatchObject({ autoRaf: false, autoResize: false, smoothWheel: true, syncTouch: false })
+    expect(lenis.options).toMatchObject({ autoRaf: false, autoResize: false, smoothWheel: true, syncTouch: false, lerp: .085 })
     expect(integration.create.mock.calls[0][0]).toMatchObject({ pin: false, scrub: false })
     expect(integration.ticker.size).toBe(1)
     expect(integration.lagSmoothing).toHaveBeenCalledWith(0)
@@ -186,6 +186,57 @@ describe('Lenis and ScrollTrigger scroll ownership', () => {
     step(20000)
     expect(win.scrollY).toBe(y)
     expect(progress.getSnapshot().progress).toBe(p)
+  })
+  it('visits an intermediate stop through the same Lenis clock without jumping or starting another RAF', () => {
+    connect(); progress.set(.04)
+    const before = win.scrollY
+    expect(coordinator.navigateTo(.78)).toBe(true)
+    expect(win.scrollY).toBe(before)
+    expect(progress.getSnapshot()).toEqual({ progress: .04, target: null })
+    expect(callbacks.size).toBe(0)
+    step(); step(900)
+    expect(progress.getSnapshot().progress).toBeGreaterThan(.04)
+    expect(progress.getSnapshot().progress).toBeLessThan(.78)
+    expect(progress.getSnapshot().progress).toBe(progressFromScroll(win.scrollY, { start: 120, travel: 4000 }))
+    step(3000)
+    expect(win.scrollY).toBe(3240)
+    expect(progress.getSnapshot()).toEqual({ progress: .78, target: null })
+    expect(integration.instances).toHaveLength(1)
+    expect(integration.ticker.size).toBe(1)
+  })
+  it('cancels a product-stop passage on wheel, touch or keys, and replaces an old destination', () => {
+    connect()
+    for (const type of ['wheel', 'touchstart', 'keydown']) {
+      progress.set(.04); coordinator.navigateTo(.78); step(); step(400)
+      const p = progress.getSnapshot().progress, y = win.scrollY
+      const event = type === 'keydown' ? Object.assign(new Event(type), { key: 'PageDown' }) : new Event(type)
+      win.dispatchEvent(event)
+      step(60000)
+      expect(win.scrollY).toBe(y)
+      expect(progress.getSnapshot()).toEqual({ progress: p, target: null })
+    }
+    progress.set(.04); coordinator.navigateTo(.78); step(); step(400)
+    coordinator.navigateTo(.28); step(3000)
+    expect(win.scrollY).toBe(1240)
+    expect(progress.getSnapshot()).toEqual({ progress: .28, target: null })
+    step(60000)
+    expect(win.scrollY).toBe(1240)
+  })
+  it('measures a resized story before navigation and keeps manual and reduced navigation explicit', () => {
+    connect(); progress.set(.4)
+    height = 4200; pinHeight = 800
+    coordinator.navigateTo(.53); step(); step(3000)
+    expect(win.scrollY).toBe(1922)
+    expect(progress.getSnapshot()).toEqual({ progress: .53, target: null })
+    coordinator.inspect()
+    expect(coordinator.navigateTo(.28)).toBe(false)
+    expect(progress.getSnapshot().progress).toBe(.53)
+    coordinator.dispose(); coordinator = new ScrollCoordinator(progress, true); connect()
+    coordinator.resume(); step()
+    expect(coordinator.navigateTo(.28)).toBe(true)
+    expect(win.scrollY).toBe(1072)
+    expect(progress.getSnapshot()).toEqual({ progress: .28, target: null })
+    expect(integration.ticker.size).toBe(0)
   })
   it('allows reversing buttons, pause and exact story endpoints', () => {
     connect(); progress.animateTo(1); step(); step(3000)

@@ -311,9 +311,22 @@ export class WatchScene {
     }
     // Lenis owns smoothing. Geometry, labels and UI share the exact ScrollTrigger
     // progress; a second visual follower would add latency and competing tails.
-    this.applyPose(p)
     this.canvas.dataset.progress = p.toFixed(5)
     this.canvas.dataset.mode = this.mode
+    const visualPose = evaluateStoryPose(p)
+    if (this.model && !this.initialFrame && this.renderedFrames > 0 && !this.frame
+      && !this.contextLost && !this.rig.transitioning
+      && visualPose === evaluateStoryPose(this.displayedProgress)) {
+      // The raw scroll moves through a reading hold, but this exact geometry and
+      // camera have already been painted. Reuse that frame instead of redrawing
+      // 188k triangles and recomputing 47 identical transforms on every tick.
+      this.poseProgress = p
+      this.displayedProgress = p
+      this.canvas.dataset.renderedProgress = p.toFixed(5)
+      this.canvas.dataset.poseProgress = visualPose.toFixed(5)
+      return
+    }
+    this.applyPose(p)
     this.invalidate()
   }
 
@@ -408,7 +421,10 @@ export class WatchScene {
   }
 
   private updateLabels(p: number) {
-    for (const { label, leader } of this.bound) { label.hidden = true; leader.style.display = 'none' }
+    for (const { label, leader } of this.bound) {
+      if (!label.hidden) label.hidden = true
+      if (leader.style.display !== 'none') leader.style.display = 'none'
+    }
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
     for (const point of this.boundsPoints) {
       this.projected.copy(point).project(this.camera)

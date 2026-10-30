@@ -1,0 +1,62 @@
+{
+  "source": "Original procedural models in src/scene/detailModels.ts; actual Three.js transparent render, no external or generated imagery",
+  "sourceSha256": "c590cdf7a005037dfe3623521b1c6aa838057550233571b9e19580b31bb1a60e",
+  "lighting": {
+    "exposure": 0.96,
+    "environmentIntensity": 1.05,
+    "pmremSize": 128,
+    "key": 2.1,
+    "fill": 0.8,
+    "rim": 2.2
+  },
+  "views": [
+    {
+      "kind": "balance",
+      "width": 1200,
+      "height": 1200,
+      "drawCalls": 17,
+      "triangles": 11128,
+      "camera": [
+        -1.4580919091465605,
+        1.874028507109598,
+        7.192993210660156
+      ],
+      "progress": 0.5,
+      "reduced": true,
+      "path": "public/images/karpov-balance.webp",
+      "bytes": 133292
+    },
+    {
+      "kind": "crown",
+      "width": 1200,
+      "height": 1200,
+      "drawCalls": 16,
+      "triangles": 12420,
+      "camera": [
+        -2.685771015820745,
+        1.6537904205609528,
+        8.68236755055426
+      ],
+      "progress": 0.5,
+      "reduced": true,
+      "path": "public/images/karpov-crown.webp",
+      "bytes": 59410
+    },
+    {
+      "kind": "geartrain",
+      "width": 1200,
+      "height": 1200,
+      "drawCalls": 38,
+      "triangles": 15344,
+      "camera": [
+        2.391501291600747,
+        2.4682326679004465,
+        9.3658780358692
+      ],
+      "progress": 0.5,
+      "reduced": true,
+      "path": "public/images/karpov-geartrain.webp",
+      "bytes": 86014
+    }
+  ]
+}

@@ -2,11 +2,11 @@ import { clampProgress, smootherStep } from './evaluatePartTransform'
 
 /** Scroll intervals held still long enough to read the product characteristics. */
 export const storyHolds = [
-  { start: 0, end: .10, pose: 0 },
-  { start: .22, end: .34, pose: .22 },
-  { start: .47, end: .59, pose: .46 },
-  { start: .72, end: .84, pose: .75 },
-  { start: .94, end: 1, pose: 1 },
+  { start: 0, end: .06, pose: 0 },
+  { start: .25, end: .30, pose: .22 },
+  { start: .51, end: .56, pose: .46 },
+  { start: .75, end: .80, pose: .75 },
+  { start: .96, end: 1, pose: 1 },
 ] as const
 
 /**

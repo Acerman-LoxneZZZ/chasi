@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "entry": "./assets/index-l-D7L3YA.js",
+  "css": "./assets/index-CyfZKR0D.css",
+  "command": "npm run build",
+  "modelBytes": 5324520,
+  "sourceGlbSha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+  "distGlbSha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+  "secondaryGeometry": "Original procedural source src/scene/detailModels.ts, no extra GLB/network model",
+  "modelProof": "docs/evidence/detail-models.json"
+}

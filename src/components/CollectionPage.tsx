@@ -3,25 +3,9 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { finishes, type WatchFinish } from '../data/collection'
 import { Icon } from './Icon'
+import { DetailScene } from './DetailScene'
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}images/${name}`
-
-function MovementDrawing() {
-  return <svg className="movement-drawing" viewBox="0 0 600 600" fill="none" aria-hidden="true">
-    <circle cx="300" cy="300" r="269" stroke="currentColor" strokeWidth=".6" />
-    <circle cx="300" cy="300" r="250" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 10" />
-    {[{ x: 255, y: 290, r: 116, cls: 'drawing-wheel' }, { x: 410, y: 225, r: 76, cls: 'drawing-pinion' }, { x: 380, y: 405, r: 88, cls: 'drawing-wheel' }].map(({ x, y, r, cls }) => <g key={x} transform={`translate(${x} ${y})`}>
-      <g className={cls}>
-        <circle r={r} stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 5" />
-        <circle r={r - 13} stroke="currentColor" strokeWidth=".7" />
-        <circle r="14" stroke="currentColor" />
-        {Array.from({ length: 6 }, (_, index) => <path key={index} d={`M21 0H${r - 20}`} stroke="currentColor" strokeWidth="5" transform={`rotate(${index * 60})`} />)}
-      </g>
-      <circle r="5" fill="currentColor" />
-    </g>)}
-    <path d="M300 24v36M300 540v36M24 300h36M540 300h36" stroke="currentColor" />
-  </svg>
-}
 
 export const CollectionPage = memo(function CollectionPage({ finish, onFinish, onView3D }: { finish: WatchFinish; onFinish: (finish: WatchFinish) => void; onView3D: (progress: number) => void }) {
   const root = useRef<HTMLDivElement>(null)
@@ -32,10 +16,6 @@ export const CollectionPage = memo(function CollectionPage({ finish, onFinish, o
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const context = gsap.context(() => {
-        gsap.fromTo('.collection-portrait img', { yPercent: 7, rotate: -4 }, { yPercent: -5, rotate: 3, ease: 'none', scrollTrigger: { trigger: '.collection-intro', start: 'top bottom', end: 'bottom top', scrub: true } })
-        gsap.fromTo('.movement-portrait img', { yPercent: 8 }, { yPercent: -7, ease: 'none', scrollTrigger: { trigger: '.mechanism-section', start: 'top bottom', end: 'bottom top', scrub: true } })
-        gsap.to('.drawing-wheel', { rotation: 100, transformOrigin: '0px 0px', ease: 'none', scrollTrigger: { trigger: '.mechanism-section', start: 'top bottom', end: 'bottom top', scrub: true } })
-        gsap.to('.drawing-pinion', { rotation: -150, transformOrigin: '0px 0px', ease: 'none', scrollTrigger: { trigger: '.mechanism-section', start: 'top bottom', end: 'bottom top', scrub: true } })
         gsap.fromTo('.material-rule', { scaleX: .1, transformOrigin: '0px 0px' }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.materials-section', start: 'top 85%', end: 'center center', scrub: true } })
       }, root)
       return () => context.revert()
@@ -57,7 +37,7 @@ export const CollectionPage = memo(function CollectionPage({ finish, onFinish, o
       <div className="section-topline"><span>Коллекция №01</span><span>Механические карманные часы</span></div>
       <div className="editorial-grid">
         <div className="editorial-copy"><p className="small-label">Характер KARpOV</p><h2 id="design-title">Не спешить.<br />Замечать.</h2><p className="editorial-lead">Некоторые вещи созданы, чтобы к ним возвращаться.</p><p>Вес в ладони. Прикосновение к головке. Тихая геометрия стрелок. Карманные часы превращают обычный взгляд на время в маленький личный ритуал.</p><a className="editorial-link" href="#selection">Найти своё исполнение <Icon name="arrow" size={19} /></a></div>
-        <figure className="collection-portrait"><span className="portrait-ring" aria-hidden="true" /><img src={asset('karpov-product.webp')} width="1400" height="1600" alt="Карманные часы KARpOV с латунным корпусом и светлым циферблатом" loading="lazy" /><figcaption>№01 <span>Латунь / светлая эмаль</span></figcaption></figure>
+        <figure className="collection-portrait"><span className="portrait-ring" aria-hidden="true" /><DetailScene kind="balance" label="Объёмная модель баланса KARpOV: латунное колесо и синяя спираль" poster={asset('karpov-balance.webp')} /><figcaption>Баланс <span>Спираль и ритм механизма</span></figcaption></figure>
       </div>
     </section>
 
@@ -67,12 +47,13 @@ export const CollectionPage = memo(function CollectionPage({ finish, onFinish, o
         <article><span>01</span><div><h3>Светлая эмаль</h3><p>Спокойная поверхность циферблата и тонкие метки оставляют время читаемым с первого взгляда.</p></div></article>
         <article><span>02</span><div><h3>Синёная сталь</h3><p>Глубокий синий оттенок стрелок меняется вместе со светом. Открытая форма делает их визуально лёгкими.</p></div></article>
         <article><span>03</span><div><h3>Обработанный металл</h3><p>Сатинированные плоскости встречаются с полированными кромками. Объём проявляется в отражении.</p></div></article>
+        <div className="material-model"><DetailScene kind="crown" label="Объёмная модель заводной головки KARpOV с рифлёным ободом и стальным валом" poster={asset('karpov-crown.webp')} /><p>Заводная головка <span>Деталь, с которой начинается движение</span></p></div>
       </div></div>
     </section>
 
     <section id="mechanism" className="mechanism-section" aria-labelledby="mechanism-title">
       <div className="mechanism-heading"><p className="small-label">Скрытая сторона времени</p><h2 id="mechanism-title">У каждого движения<br />есть причина.</h2></div>
-      <div className="mechanism-layout"><div className="movement-portrait"><MovementDrawing /><img src={asset('karpov-movement.webp')} width="1400" height="1200" alt="Открытый механизм KARpOV: латунные колёса, пружина, мосты и рубиновые опоры" loading="lazy" /></div><div className="mechanism-copy"><p className="editorial-lead">Энергия становится ритмом.</p><p>Ручной завод передаёт энергию пружине. Затем — колёсам, спуску и балансу. Цепочка простых связей складывается в сложное движение.</p><dl className="mechanism-facts"><div><dt>Источник энергии</dt><dd>Заводная пружина</dd></div><div><dt>Передача</dt><dd>Зубчатые колёса</dd></div><div><dt>Ритм</dt><dd>Баланс и спуск</dd></div></dl><button className="editorial-link" onClick={() => onView3D(.78)}>Рассмотреть в 3D <Icon name="arrow" size={19} /></button></div></div>
+      <div className="mechanism-layout"><div className="movement-portrait"><DetailScene kind="geartrain" label="Объёмная колёсная передача KARpOV: взаимосвязанные латунные шестерни и стальные оси" poster={asset('karpov-geartrain.webp')} /></div><div className="mechanism-copy"><p className="editorial-lead">Энергия становится ритмом.</p><p>Ручной завод передаёт энергию пружине. Затем — колёсам, спуску и балансу. Цепочка простых связей складывается в сложное движение.</p><dl className="mechanism-facts"><div><dt>Источник энергии</dt><dd>Заводная пружина</dd></div><div><dt>Передача</dt><dd>Зубчатые колёса</dd></div><div><dt>Ритм</dt><dd>Баланс и спуск</dd></div></dl><button className="editorial-link" onClick={() => onView3D(.78)}>Рассмотреть в 3D <Icon name="arrow" size={19} /></button></div></div>
     </section>
 
     <section id="selection" className="selection-section paper-section" aria-labelledby="selection-title">
