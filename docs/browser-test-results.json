@@ -127,12 +127,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 58338,
+                  "duration": 66394,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:30:22.452Z",
+                  "startTime": "2026-10-30T15:08:35.684Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -161,12 +161,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 104949,
+                  "duration": 117412,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:30:22.432Z",
+                  "startTime": "2026-10-30T15:08:35.660Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -176,7 +176,7 @@
           ],
           "id": "116f6b4a9defd92cdbb9-bd7d0c411939cc7628d0",
           "file": "experience.spec.ts",
-          "line": 98,
+          "line": 106,
           "column": 1
         },
         {
@@ -195,12 +195,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 73397,
+                  "duration": 85687,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:31:21.585Z",
+                  "startTime": "2026-10-30T15:09:42.925Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -210,7 +210,7 @@
           ],
           "id": "116f6b4a9defd92cdbb9-f5e5bef52981f68520aa",
           "file": "experience.spec.ts",
-          "line": 129,
+          "line": 137,
           "column": 1
         },
         {
@@ -229,12 +229,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 114618,
+                  "duration": 127618,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:32:08.111Z",
+                  "startTime": "2026-10-30T15:10:33.963Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -244,7 +244,7 @@
           ],
           "id": "116f6b4a9defd92cdbb9-7f266ab5918682e3f277",
           "file": "experience.spec.ts",
-          "line": 156,
+          "line": 164,
           "column": 1
         },
         {
@@ -263,12 +263,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 46333,
+                  "duration": 62773,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:32:35.172Z",
+                  "startTime": "2026-10-30T15:11:08.740Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -278,7 +278,7 @@
           ],
           "id": "116f6b4a9defd92cdbb9-a84157c065a588e7341f",
           "file": "experience.spec.ts",
-          "line": 186,
+          "line": 194,
           "column": 1
         },
         {
@@ -297,12 +297,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 46227,
+                  "duration": 55501,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:33:21.648Z",
+                  "startTime": "2026-10-30T15:12:11.617Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -312,7 +312,7 @@
           ],
           "id": "116f6b4a9defd92cdbb9-6eb07f7c507a6a140003",
           "file": "experience.spec.ts",
-          "line": 205,
+          "line": 213,
           "column": 1
         },
         {
@@ -331,12 +331,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 35438,
+                  "duration": 61133,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-30T14:34:02.989Z",
+                  "startTime": "2026-10-30T15:12:41.767Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -346,7 +346,75 @@
           ],
           "id": "116f6b4a9defd92cdbb9-3e2146b61682cf4c0885",
           "file": "experience.spec.ts",
-          "line": 225,
+          "line": 241,
+          "column": 1
+        },
+        {
+          "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 66731,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:13:07.203Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-d4b47fccc24c0fe1d88c",
+          "file": "experience.spec.ts",
+          "line": 263,
+          "column": 1
+        },
+        {
+          "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 45857,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-30T15:13:43.015Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7347c1dc9cd854f7d517",
+          "file": "experience.spec.ts",
+          "line": 294,
           "column": 1
         }
       ]
@@ -354,9 +422,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-30T14:30:21.026Z",
-    "duration": 258219.00100000002,
-    "expected": 7,
+    "startTime": "2026-10-30T15:08:33.504Z",
+    "duration": 355618.45,
+    "expected": 9,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

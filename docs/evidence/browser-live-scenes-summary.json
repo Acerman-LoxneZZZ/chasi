@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "entry": "./assets/index-l-D7L3YA.js",
+  "source": "docs/browser-live-scenes-full.json",
+  "stats": {
+    "startTime": "2026-10-30T15:08:33.504Z",
+    "duration": 355618.45,
+    "expected": 9,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "scenarios": 9,
+  "results": [
+    {
+      "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+      "status": "passed"
+    },
+    {
+      "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+      "status": "passed"
+    },
+    {
+      "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+      "status": "passed"
+    },
+    {
+      "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+      "status": "passed"
+    },
+    {
+      "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+      "status": "passed"
+    },
+    {
+      "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+      "status": "passed"
+    },
+    {
+      "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+      "status": "passed"
+    },
+    {
+      "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+      "status": "passed"
+    },
+    {
+      "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+      "status": "passed"
+    }
+  ],
+  "command": "PW_BASE_URL=http://127.0.0.1:4173 npm run test:browser -- --fully-parallel --workers=2",
+  "limits": "Headless Chrome/SwiftShader and viewport emulation, not physical phone or hardware GPU benchmark"
+}
