@@ -37,6 +37,8 @@ try{
    const finale=page.locator('.detail-scene[data-scene-kind="assembly"]')
    await expectReady(finale)
    await page.waitForFunction(p=>{const h=document.querySelector('[data-scene-kind="assembly"]');return Math.abs(+h.dataset.progress-p)<.001&&h.dataset.renderedProgress===h.dataset.progress},p,{timeout:60000})
+   await page.waitForFunction(()=>getComputedStyle(document.querySelector('.site-header')).opacity==='0')
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))
    await page.waitForTimeout(400)
    await page.screenshot({path:`${out}/${width}-assembly-${p}.png`})
    shots.push(await describe('assembly',width,p))
