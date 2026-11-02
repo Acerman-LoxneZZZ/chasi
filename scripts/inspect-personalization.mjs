@@ -2,9 +2,9 @@ import { chromium } from '@playwright/test'
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 
-const out='docs/screenshots/finale'
-mkdirSync(out,{recursive:true})
 const quick=process.argv.includes('--quick')
+const out=quick?'docs/screenshots/finale-initial':'docs/screenshots/finale'
+mkdirSync(out,{recursive:true})
 const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']})
 const page=await browser.newPage({viewport:{width:1440,height:1000},locale:'ru-RU'})
 const errors=[],warnings=[],external=[],shots=[]

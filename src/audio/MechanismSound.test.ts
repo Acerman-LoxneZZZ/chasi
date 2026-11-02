@@ -40,6 +40,16 @@ describe('opt-in mechanical sound',()=>{
     setup();const sound=new MechanismSound(()=>{throw new Error('Unsupported')});sound.setActive(true);await sound.toggle()
     expect(sound.getSnapshot()).toEqual({enabled:false,status:'unavailable'});expect(vi.getTimerCount()).toBe(0);sound.dispose()
   })
+  it('suspends a late native resume after visibility has already changed again',async()=>{
+    const {sound,context}=setup();await sound.toggle()
+    let release=()=>{}
+    context.resume.mockImplementation(()=>new Promise<void>(resolve=>{release=()=>{context.state='running';resolve()}}))
+    sound.setActive(true)
+    sound.setActive(false)
+    release();await Promise.resolve();await Promise.resolve()
+    expect(context.state).toBe('suspended');expect(sound.getSnapshot().status).toBe('paused');expect(vi.getTimerCount()).toBe(0)
+    sound.dispose()
+  })
   it('synthesizes bounded short impulses with no clipping and distinct tick/tock',()=>{
     const a=makeTickSamples(48000),b=makeTickSamples(48000,true)
     expect(a.length).toBe(864);expect(Math.abs(a[0])).toBe(0)

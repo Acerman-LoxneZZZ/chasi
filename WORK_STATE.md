@@ -12,9 +12,10 @@
 
 ## Уже проверено и что осталось
 
-- Текущая сборка **dist/assets/index-CWMf5rZE.js**. TypeScript/Vite проходят. **73/73 unit**, 9 файлов, docs/evidence/unit-finale.json. Не переносить старые 63/13/36 на эту сборку.
+- Текущая сборка **dist/assets/index-DmBgl6qn.js**. TypeScript/Vite проходят. **74/74 unit**, 9 файлов, docs/evidence/unit-finale.json. Не переносить старые 63/13/36 на эту сборку.
 - Первый browser-кадр реальной гравировки подтверждён визуально: А.К. на крышке, 187900 rendered triangles / 137 calls (GLB 187898 + 2 decal). Быстрый desktop/mobile capture идёт через node scripts/inspect-personalization.mjs --quick. Его ранние результаты не считать финальной QA.
 - Добавлены 6 новых сценариев в tests/personalization.spec.ts: пиксели/память/карточка, финал/reverse/replay, reduced, реальный opt-in AudioContext + simulated visibility, lazy GLB retry/context restore, отказ audio. Вместе со старыми 13 будет 19. Сначала проверить новые, устранить находки, затем выполнить полный прогон и финальные кадры фактического entry.
+- Шесть новых browser-сценариев прошли для CWMf5rZE. После этого исправлен late resume аудиоконтекста (новый unit, всего 74) и сообщение отказа перенесено выше кнопок. Идёт полный 19-сценарный прогон последней сборки; точные хеши в docs/evidence/build-finale.json. Не считать targeted-прогон финальным.
 - Финально обновить DESIGN/README/VERIFICATION (старый VERIFICATION сохранить как V7), ASSET_SOURCES, WORK_STATE; сохранить пакет/копию/атомарный checkpoint; локальные commits. Предыдущая версия целиком в artifacts/checkpoints/before-finale.zip и Git 6b633c1. Предыдущий push в origin/main выполнен; пользователь продолжает разрешённую работу, по готовности отправить изменения без force push.
 - Основной preview на 4174, чужой 4173 не трогать. Дополнительный dev 5173 запущен только для генерации резервных рендеров. GPU — SwiftShader / viewport emulation, физический телефон и аппаратный FPS не измерены.
 

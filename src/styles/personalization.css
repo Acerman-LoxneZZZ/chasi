@@ -32,7 +32,7 @@
 .commerce-footer--closing a { display: inline-flex; min-height: 44px; align-items: center; }
 .sound-toggle { min-width: 44px; }
 .sound-toggle[aria-pressed='true'] { color: var(--text); }
-.sound-notice { position: fixed; z-index: 40; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 12px 18px; background: #16212e; color: var(--text); font-size: 12px; line-height: 1.6; }
+.sound-notice { position: fixed; z-index: 40; left: 50%; top: 100px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 12px 18px; background: #16212e; color: var(--text); font-size: 12px; line-height: 1.6; pointer-events: none; }
 .karpov-site .site-header nav { gap: 16px; }
 @media (max-width: 999px) {
   .personalization-section { gap: 4vw; grid-template-columns: 1fr 1fr; }
@@ -43,6 +43,7 @@
   .karpov-site .site-header nav { gap: 8px; }
   .site-header .sound-toggle { padding-inline: 0; }
   .site-header .sound-toggle span { display: none; }
+  .sound-notice { top: 88px; }
   .personalization-section { display: block; padding-top: 25px; padding-bottom: 45px; }
   .engraving-view { height: 400px; }
   .engraving-copy { padding: 15px 0 20px; max-width: none; }

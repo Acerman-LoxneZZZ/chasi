@@ -2,7 +2,7 @@ import { chromium } from '@playwright/test'
 import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 
-const out = 'docs/screenshots/immersive'
+const out = process.argv[2] || 'docs/screenshots/immersive'
 mkdirSync(out, { recursive: true })
 const baseURL = process.env.PW_BASE_URL || 'http://127.0.0.1:4174/'
 const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })

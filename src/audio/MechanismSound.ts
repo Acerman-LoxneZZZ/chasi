@@ -85,7 +85,12 @@ export class MechanismSound {
     try {
       this.prepareContext()
       await this.context!.resume()
-      if (this.disposed || generation !== this.generation) return
+      if (this.disposed || generation !== this.generation) {
+        // A late resume must not leave the audio thread running after a rapid
+        // mute/visibility change, even though all sample sources were cancelled.
+        if ((!this.snapshot.enabled || !this.active || document.hidden) && this.context?.state === 'running') void this.context.suspend().catch(() => {})
+        return
+      }
       this.next = this.context!.currentTime + .045
       this.publish(true, 'playing')
       this.schedule()
