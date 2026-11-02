@@ -16,6 +16,16 @@
 
 В текущем сеансе 4173 занят другим проектом, KARpOV запущен на **http://127.0.0.1:4174/**. Для повторного запуска используйте `PORT=4174 ./start.sh`.
 
+На Windows (PowerShell) из папки проекта:
+
+```powershell
+npm ci
+npm run build
+npm run preview -- --port 4174 --strictPort
+```
+
+Если зависимости и сборка уже подготовлены, достаточно последней команды. Для браузерных проверок и снимков на Windows задайте `$env:CHROME_BIN='C:\Program Files\Google\Chrome\Application\chrome.exe'` и `$env:PW_BASE_URL='http://127.0.0.1:4174'`.
+
 Живые модели требуют WebGL 2. До первого нарисованного кадра и при ошибке виден соответствующий предметный poster; характеристики и выбор исполнения остаются доступны. Blender и Python для просмотра не нужны. Исходники отправлены в [GitHub](https://github.com/Acerman-LoxneZZZ/chasi), ветка main. Сайт работает локально; облачный деплой не выполнялся.
 
 ## Что работает
@@ -69,14 +79,14 @@ Mapping одинаков в истории и ручном режиме. На п
 
 ## Проверки и сохранение
 
-Текущий unit-прогон: **74/74**, 9 файлов: [unit-finale.json](docs/evidence/unit-finale.json). Предыдущая сборка прошла **19/19** браузерных сценариев без повторов и пропусков: [JSON до правки кадрирования](docs/browser-finale-before-framing.json). После небольшого CSS-исправления финального ракурса идёт полный повтор для текущей сборки; финальная сводка ещё готовится. Точная production-сборка, свежие кадры и ограничения — в [VERIFICATION.md](docs/VERIFICATION.md). Отчёт предыдущей версии сохранён отдельно: [VERIFICATION_V7.md](docs/VERIFICATION_V7.md).
+Текущая сборка **BDwMm0TQ** прошла **74/74 unit** в 9 файлах и **19/19 браузерных сценариев** без повторов и пропусков. Проверены **56 свежих кадров** на четырёх размерах экрана: [итоговая сводка](docs/evidence/browser-finale-summary.json), [unit JSON](docs/evidence/unit-finale.json), [browser JSON](docs/browser-finale-full.json). Исправлено смещение финальной анимации после загрузки шрифтов или изменения высоты контента; регрессия входит в полный прогон. Точная сборка, кадры и ограничения — в [VERIFICATION.md](docs/VERIFICATION.md). Отчёт предыдущей версии сохранён отдельно: [VERIFICATION_V7.md](docs/VERIFICATION_V7.md).
 
 ```bash
 npm run typecheck
 npm test -- --reporter=json --outputFile=docs/evidence/unit-finale.json
 npm run verify:model
 npm run build
-PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
+PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --workers=1 --reporter=list,json
 PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-immersive.mjs docs/screenshots/finale-story
 PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-personalization.mjs
 node scripts/summarize-finale.mjs

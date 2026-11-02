@@ -1,0 +1,219 @@
+{
+  "verifiedAtUtc": "2026-11-02T16:20:21.226Z",
+  "productionEntry": "assets/index-BDwMm0TQ.js",
+  "sourceCommit": "8ba44de370c2f3dab5f900b7e125c509ecf9fbd8",
+  "passed": 19,
+  "failed": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "retries": 0,
+  "fullRun": {
+    "path": "docs/browser-finale-full.json",
+    "stats": {
+      "startTime": "2026-11-02T16:12:06.895Z",
+      "duration": 380108.637,
+      "expected": 19,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "unit": {
+    "passed": 74,
+    "files": 9,
+    "path": "docs/evidence/unit-finale.json"
+  },
+  "screenshots": {
+    "count": 56,
+    "story": {
+      "count": 36,
+      "path": "docs/screenshots/finale-story/metrics.json"
+    },
+    "personalization": {
+      "count": 20,
+      "path": "docs/screenshots/finale/metrics.json"
+    },
+    "viewports": [
+      "1440×1000",
+      "1280×800",
+      "390×844",
+      "360×800"
+    ],
+    "pageErrors": 0,
+    "consoleProblems": 0,
+    "externalRequests": 0,
+    "horizontalOverflows": 0
+  },
+  "model": {
+    "sourceBytes": 5324520,
+    "sha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+    "sourceDistEqual": true,
+    "majorCarriers": 47,
+    "sourceTriangles": 187898,
+    "decalTrianglesPerVisibleInscription": 2
+  },
+  "tests": [
+    {
+      "title": "the film opens with only a full-screen live watch and reveals controls by pointer or keyboard",
+      "status": "passed",
+      "durationMs": 12966,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted",
+      "status": "passed",
+      "durationMs": 34334,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "a touch reveals film controls without selecting a part, while native swipe still advances the story",
+      "status": "passed",
+      "durationMs": 8281,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+      "status": "passed",
+      "durationMs": 27212,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+      "status": "passed",
+      "durationMs": 27119,
+      "entries": [
+        "assets/index-BDwMm0TQ.js",
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+      "status": "passed",
+      "durationMs": 26199,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+      "status": "passed",
+      "durationMs": 34127,
+      "entries": [
+        "assets/index-BDwMm0TQ.js",
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+      "status": "passed",
+      "durationMs": 18355,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+      "status": "passed",
+      "durationMs": 10681,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+      "status": "passed",
+      "durationMs": 15973,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+      "status": "passed",
+      "durationMs": 20483,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+      "status": "passed",
+      "durationMs": 14024,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "the immersive main scene recovers its real WebGL context and current story pose",
+      "status": "passed",
+      "durationMs": 21436,
+      "entries": [
+        "assets/index-BDwMm0TQ.js",
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "initials alter the actual back-cover pixels, persist and enter the local selection card",
+      "status": "passed",
+      "durationMs": 25412,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "the finale assembles all carriers, reveals the signature only after motion, and replays the original story",
+      "status": "passed",
+      "durationMs": 23930,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "reduced motion gives a compact completed finale and a static engraving view",
+      "status": "passed",
+      "durationMs": 11834,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "sound is silent by default, uses a real opt-in AudioContext, and pauses on simulated tab hiding",
+      "status": "passed",
+      "durationMs": 13114,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "the shared watch retries its asset and restores its WebGL context with the same initials",
+      "status": "passed",
+      "durationMs": 19968,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    },
+    {
+      "title": "unsupported audio leaves the live scene usable and shows a clear status",
+      "status": "passed",
+      "durationMs": 12513,
+      "entries": [
+        "assets/index-BDwMm0TQ.js"
+      ]
+    }
+  ],
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "entry": "./assets/index-BDwMm0TQ.js",
+    "method": "Headless Chrome / ANGLE SwiftShader; viewport emulation, not a physical phone or hardware FPS measurement"
+  },
+  "limitation": "Headless Chrome / ANGLE SwiftShader, viewport and CDP touch emulation. AudioContext is real; tab hiding integration is simulated. No physical phone, hardware GPU FPS, speaker or new 200%-zoom/no-JS validation."
+}

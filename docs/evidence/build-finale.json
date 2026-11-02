@@ -1,17 +1,62 @@
 {
-  "createdAtUtc": "2026-11-02T15:45:16.598911+00:00",
-  "sourceCommit": "68d40e669c98b4152b52883aec3bd6ebc1fc87b3",
-  "entry": "assets/index-Dovk9NqQ.js",
+  "createdAtUtc": "2026-11-02T16:12:31.181Z",
+  "sourceCommit": "8ba44de370c2f3dab5f900b7e125c509ecf9fbd8",
+  "entry": "assets/index-BDwMm0TQ.js",
   "assets": [
+    {
+      "path": "assets/cormorant-garamond-cyrillic-400-normal-CVFrM67f.woff",
+      "bytes": 15696,
+      "sha256": "11a86b7cdc25186a0a119cfc4e9269032ae8b11aa9e70acf98e48ac5d05e390d"
+    },
+    {
+      "path": "assets/cormorant-garamond-cyrillic-400-normal-DD2KOZkl.woff2",
+      "bytes": 12776,
+      "sha256": "0d23162e67528fdc5fe1b12bedc525a69bbdc86d5d9f3c2ee9e9ee459934ecd4"
+    },
+    {
+      "path": "assets/cormorant-garamond-latin-400-normal-B-1hWBU7.woff2",
+      "bytes": 22876,
+      "sha256": "8048ac209bec741e1c29cd0cfac5aac1c0c2ba8c3ddbd4a58fa9bd92ef5c63c2"
+    },
+    {
+      "path": "assets/cormorant-garamond-latin-400-normal-B7YtguxJ.woff",
+      "bytes": 30980,
+      "sha256": "b926f33f9d3d5cb64e639b8fe9ad5380560a63f3e7a29d212f2b80a2d22ec051"
+    },
+    {
+      "path": "assets/index-BDwMm0TQ.js",
+      "bytes": 493568,
+      "sha256": "8bcb2d970bd808fec46f8eea7e488773e28207d457b125f4aa69f57be52b0ef4"
+    },
     {
       "path": "assets/index-DEfI_tuW.css",
       "bytes": 43348,
       "sha256": "1449ff1d0c50285df5a6300fd87fe6bcc7a72b204de0d456caeeb97478b42a7c"
     },
     {
-      "path": "assets/index-Dovk9NqQ.js",
-      "bytes": 493228,
-      "sha256": "ce78eb7f9e697097a658df7fa2534b00c35f90201e00fdd204a249ec65e3675b"
+      "path": "assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2",
+      "bytes": 14500,
+      "sha256": "c268b459a9329e59fecf39a17618efd44c71735532048d60b12aab76a8c14914"
+    },
+    {
+      "path": "assets/manrope-greek-wght-normal-DL7QRZyv.woff2",
+      "bytes": 9444,
+      "sha256": "2fb2e8cbfd52ae46179a8b6024eb162f1f9c6de3d22d6e3a30d8f395de7220be"
+    },
+    {
+      "path": "assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2",
+      "bytes": 15120,
+      "sha256": "3911b66d9f2e005a4b989223405d0e5032619c668597ba467cc76a23c8fffcfb"
+    },
+    {
+      "path": "assets/manrope-latin-wght-normal-DHIcAJRg.woff2",
+      "bytes": 24836,
+      "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+    },
+    {
+      "path": "assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2",
+      "bytes": 8520,
+      "sha256": "6bbb044ab420e07edb0a3042d2eb314b85e83a0182e945a15ab3b9092668dfd5"
     },
     {
       "path": "assets/three-core-hIsY1vH6.js",
@@ -24,7 +69,7 @@
       "sha256": "65fdc5861917748107e58f9c0b99486cbeaff7413fa4f26f68cca2db0d929989"
     }
   ],
-  "sourceTreeSha256": "a8ab1f20cca577a3c3edcf323be27a4097a8b491e66e156648014e998e9081cb",
+  "sourceTreeSha256": "e3b0587c4cc57239d057d1dfe8a105785e1440cb30dc418b76eb348a8b54dfb5",
   "sourceTreeInputs": [
     "src/",
     "public/",
@@ -43,5 +88,5 @@
     "sourceTriangles": 187898,
     "decalTrianglesPerVisibleInscription": 2
   },
-  "method": "Headless Chrome / ANGLE SwiftShader; viewport/touch emulation. AudioContext real, tab hiding integration simulated; no physical phone, hardware FPS or speaker validation."
+  "method": "Windows 11, headless Chrome / ANGLE SwiftShader; viewport/touch emulation. AudioContext real, tab hiding integration simulated; no physical phone, hardware FPS or speaker validation."
 }
