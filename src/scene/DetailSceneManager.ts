@@ -70,6 +70,7 @@ class DetailSceneManager {
   private slowFrames = 0
   private qualityRatio = 1.5
   private frameInterval = 1 / 60
+  private refreshFrame = 0
 
   constructor() {
     gsap.registerPlugin(ScrollTrigger)
@@ -92,12 +93,25 @@ class DetailSceneManager {
         entry.height = Math.max(1, record.contentRect.height)
         if (entry === this.active) this.resizeCanvas()
       }
+      this.scheduleRefresh()
     })
+    // Font loading and content above the finale can move it without resizing
+    // its fixed-height host. Re-measure all lower scroll bounds after layout.
+    this.resizeObserver.observe(document.body)
+    document.fonts.ready.then(this.scheduleRefresh)
     document.addEventListener('visibilitychange', this.onVisibility)
     this.motionQuery.addEventListener('change', this.onMotionPreference)
   }
 
   get empty() { return this.entries.size === 0 }
+
+  private scheduleRefresh = () => {
+    if (this.disposed || this.refreshFrame) return
+    this.refreshFrame = requestAnimationFrame(() => {
+      this.refreshFrame = 0
+      for (const entry of this.entries) entry.trigger?.refresh()
+    })
+  }
 
   register(host: HTMLDivElement, surface: HTMLDivElement, kind: DetailSceneKind, onProgress?: (progress: number) => void) {
     const box = host.getBoundingClientRect()
@@ -443,6 +457,7 @@ class DetailSceneManager {
 
   dispose() {
     this.disposed = true
+    cancelAnimationFrame(this.refreshFrame)
     this.watchAbort.abort()
     this.stopTicking()
     if (this.warmup !== null) {

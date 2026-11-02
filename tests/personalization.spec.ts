@@ -56,6 +56,12 @@ test('initials alter the actual back-cover pixels, persist and enter the local s
 
 test('the finale assembles all carriers, reveals the signature only after motion, and replays the original story',async({page})=>{
   await ready(page)
+  // Late font/content layout changes above the finale must update its scroll
+  // bounds too, even though the fixed-height 3D host itself did not resize.
+  await page.locator('.collection-intro').evaluate(section=>{
+    section.style.paddingBottom=`${parseFloat(getComputedStyle(section).paddingBottom)+137}px`
+  })
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))
   await ending(page,.04)
   await expect(host(page,'assembly')).toHaveAttribute('data-assembly-pose','1.00000')
   expect(await page.locator('.finale-copy').evaluate(el=>Number(getComputedStyle(el).opacity))).toBe(0)
