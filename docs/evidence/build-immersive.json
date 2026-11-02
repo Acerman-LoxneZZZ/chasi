@@ -1,0 +1,37 @@
+{
+  "createdAtUtc": "2026-11-02T13:47:45.366063+00:00",
+  "gitHead": "560d1165e8fa02e17cf2d072cb38d9a2c1508879",
+  "entry": "assets/index-BdpAQHkG.js",
+  "assets": [
+    {
+      "path": "assets/index-BdpAQHkG.js",
+      "bytes": 474800,
+      "sha256": "20660e4df7861bcc538555451176e956292b778fe2067633fc98b74e68c5a199"
+    },
+    {
+      "path": "assets/three-core-ClJ483Xl.js",
+      "bytes": 254081,
+      "sha256": "a3441f56897f0890e30fe0466478fae81a37680f384279fbf327cd93a999249e"
+    },
+    {
+      "path": "assets/three-renderer-CZ8Y3g3O.js",
+      "bytes": 419345,
+      "sha256": "fea57e97d73cf0925b310975bdb00890d141b96a876dba92a982a6ee1d6c2468"
+    },
+    {
+      "path": "assets/index-auaVxJQG.css",
+      "bytes": 38879,
+      "sha256": "81b4d329b0cf4ffd60433ba3009ed93bf60f563e94a59a88a7717688d670bac8"
+    }
+  ],
+  "model": {
+    "sha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+    "distIdentical": true,
+    "bytes": 5324520
+  },
+  "preview": "http://127.0.0.1:4174/",
+  "browserCommand": "PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-immersive-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json",
+  "method": "Headless Chrome, ANGLE SwiftShader, viewport/touch emulation; no physical phone or hardware GPU measurement",
+  "sourceTreeSha256": "5caee2484e100bf93674ea7a81bfcea4c0377b9d2445452a0ecdfe525d67f145",
+  "expectedBrowserTests": 13
+}

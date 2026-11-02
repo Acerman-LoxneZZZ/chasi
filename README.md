@@ -63,7 +63,7 @@ Mapping одинаков в истории и ручном режиме. На п
 
 ## Проверки и сохранение
 
-Текущий unit-прогон: **63/63**, 6 файлов: [unit-immersive.json](docs/evidence/unit-immersive.json). Браузерные результаты, точная production-сборка, свежие кадры и ограничения фиксируются в [VERIFICATION.md](docs/VERIFICATION.md). Отчёт предыдущей версии сохранён отдельно: [VERIFICATION_V6.md](docs/VERIFICATION_V6.md).
+Текущий unit-прогон: **63/63**, 6 файлов: [unit-immersive.json](docs/evidence/unit-immersive.json). Полный браузерный прогон: **13/13**, без повторов и пропусков: [browser-immersive-full.json](docs/browser-immersive-full.json). Точная production-сборка, свежие кадры и ограничения — в [VERIFICATION.md](docs/VERIFICATION.md). Отчёт предыдущей версии сохранён отдельно: [VERIFICATION_V6.md](docs/VERIFICATION_V6.md).
 
 ```bash
 npm run typecheck

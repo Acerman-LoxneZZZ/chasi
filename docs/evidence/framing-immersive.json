@@ -1,0 +1,19 @@
+{
+  "previousEntry": "http://127.0.0.1:4173/assets/index-l-D7L3YA.js",
+  "currentEntry": "assets/index-BdpAQHkG.js",
+  "method": "Projected mesh AABB heights in CSS pixels at raw progress 0; includes intentional opening crop, not visible-pixel area or GPU performance. Phone is viewport emulation.",
+  "comparison": [
+    {
+      "viewportWidth": 1440,
+      "previousProjectedHeight": 1017.3268878664497,
+      "currentProjectedHeight": 1105.8877070383028,
+      "increasePercent": 8.705247077228417
+    },
+    {
+      "viewportWidth": 390,
+      "previousProjectedHeight": 503.3758624583085,
+      "currentProjectedHeight": 564.4405992719771,
+      "increasePercent": 12.13104190484029
+    }
+  ]
+}

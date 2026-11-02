@@ -1,0 +1,773 @@
+{
+  "config": {
+    "argv": [
+      "/home/nolimetrus/.nvm/versions/node/v22.23.3/bin/node",
+      "/home/nolimetrus/Рабочий стол/Karpov_Watch/node_modules/.bin/playwright",
+      "test",
+      "--fully-parallel",
+      "--workers=2",
+      "--reporter=list,json"
+    ],
+    "configFile": "/home/nolimetrus/Рабочий стол/Karpov_Watch/playwright.config.ts",
+    "rootDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "snapshotDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "locale": "ru-RU",
+          "colorScheme": "dark",
+          "headless": true,
+          "launchOptions": {
+            "executablePath": "/usr/bin/google-chrome",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "experience.spec.ts",
+      "file": "experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the film opens with only a full-screen live watch and reveals controls by pointer or keyboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 47026,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:36:51.932Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-09533cf8eeb0719a17d1",
+          "file": "experience.spec.ts",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 99519,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 15000ms exceeded while waiting on the predicate",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 15000ms exceeded while waiting on the predicate\n    at revealCinemaControls (/home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts:65:60)\n    at /home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts:103:3",
+                    "location": {
+                      "file": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts",
+                      "column": 60,
+                      "line": 65
+                    },
+                    "snippet": "  63 | const revealCinemaControls = async (page: Page) => {\n  64 |   await page.mouse.move(20, 20)\n> 65 |   await expect.poll(() => uiOpacity(page, '.site-header')).toBe(1)\n     |                                                            ^\n  66 | }\n  67 |\n  68 | test('the film opens with only a full-screen live watch and reveals controls by pointer or keyboard', async ({ page }) => {"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts",
+                        "column": 60,
+                        "line": 65
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 15000ms exceeded while waiting on the predicate\n\n  63 | const revealCinemaControls = async (page: Page) => {\n  64 |   await page.mouse.move(20, 20)\n> 65 |   await expect.poll(() => uiOpacity(page, '.site-header')).toBe(1)\n     |                                                            ^\n  66 | }\n  67 |\n  68 | test('the film opens with only a full-screen live watch and reveals controls by pointer or keyboard', async ({ page }) => {\n    at revealCinemaControls (/home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts:65:60)\n    at /home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts:103:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:36:51.918Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results/experience-every-flight-ha-01d2c-playback-can-be-interrupted/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results/experience-every-flight-ha-01d2c-playback-can-be-interrupted/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts",
+                    "column": 60,
+                    "line": 65
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-ddb2ef9a2bc18469c1e2",
+          "file": "experience.spec.ts",
+          "line": 86,
+          "column": 1
+        },
+        {
+          "title": "a touch reveals film controls without selecting a part, while native swipe still advances the story",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 41236,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:37:39.675Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-aa6b08c4005e8d65d0af",
+          "file": "experience.spec.ts",
+          "line": 134,
+          "column": 1
+        },
+        {
+          "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 78954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:38:21.056Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-e5e89ba591da672fe690",
+          "file": "experience.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "timedOut",
+                  "duration": 242419,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 240000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 240000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 240000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts",
+                        "column": 72,
+                        "line": 203
+                      },
+                      "message": "Error: locator.click: Test timeout of 240000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Рассмотреть', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"header-button mode-button\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <canvas role=\"img\" width=\"1224\" height=\"850\" data-frames=\"5\" data-dpr=\"0.85\" data-mode=\"story\" data-finish=\"brass\" data-macro=\"0.00000\" data-draw-calls=\"136\" data-progress=\"0.28000\" data-visible-labels=\"0\" data-triangles=\"187898\" data-engine=\"three.js r186\" data-pose-progress=\"0.22000\" data-rendered-progress=\"0.28000\" aria-describedby=\"scene-instructions\" class=\"watch-canvas watch-canvas--story\" data-focus=\"[0.07634654595525835,-0.014846823113526827,0.9832575710464267]\" aria-label=\"Объёмная модель кар…></canvas> from <main id=\"top\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <canvas role=\"img\" width=\"1224\" height=\"850\" data-frames=\"5\" data-dpr=\"0.85\" data-mode=\"story\" data-finish=\"brass\" data-macro=\"0.00000\" data-draw-calls=\"136\" data-progress=\"0.28000\" data-visible-labels=\"0\" data-triangles=\"187898\" data-engine=\"three.js r186\" data-pose-progress=\"0.22000\" data-rendered-progress=\"0.28000\" aria-describedby=\"scene-instructions\" class=\"watch-canvas watch-canvas--story\" data-focus=\"[0.07634654595525835,-0.014846823113526827,0.9832575710464267]\" aria-label=\"Объёмная модель кар…></canvas> from <main id=\"top\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    333 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m        - element is visible, enabled and stable\u001b[22m\n\u001b[2m        - scrolling into view if needed\u001b[22m\n\u001b[2m        - done scrolling\u001b[22m\n\u001b[2m        - <canvas role=\"img\" width=\"1224\" height=\"850\" data-frames=\"5\" data-dpr=\"0.85\" data-mode=\"story\" data-finish=\"brass\" data-macro=\"0.00000\" data-draw-calls=\"136\" data-progress=\"0.28000\" data-visible-labels=\"0\" data-triangles=\"187898\" data-engine=\"three.js r186\" data-pose-progress=\"0.22000\" data-rendered-progress=\"0.28000\" aria-describedby=\"scene-instructions\" class=\"watch-canvas watch-canvas--story\" data-focus=\"[0.07634654595525835,-0.014846823113526827,0.9832575710464267]\" aria-label=\"Объёмная модель кар…></canvas> from <main id=\"top\">…</main> subtree intercepts pointer events\u001b[22m\n\u001b[2m      - retrying click action\u001b[22m\n\u001b[2m        - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\n\n  201 |   await scrollToProgress(page, .28)\n  202 |   const held = await camera(page)\n> 203 |   await page.getByRole('button', { name: 'Рассмотреть', exact: true }).click()\n      |                                                                        ^\n  204 |   await expect(canvas(page)).toHaveAttribute('data-mode', 'manual')\n  205 |   expect(await camera(page)).toEqual(held)\n  206 |   const b = await canvas(page).boundingBox()\n    at /home/nolimetrus/Рабочий стол/Karpov_Watch/tests/experience.spec.ts:203:72"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:38:36.324Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results/experience-manual-controls-2d16e-oad-the-same-story-position/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results/experience-manual-controls-2d16e-oad-the-same-story-position/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-bd7d0c411939cc7628d0",
+          "file": "experience.spec.ts",
+          "line": 199,
+          "column": 1
+        },
+        {
+          "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 57986,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:39:40.118Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-f5e5bef52981f68520aa",
+          "file": "experience.spec.ts",
+          "line": 230,
+          "column": 1
+        },
+        {
+          "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                },
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 82360,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:40:38.201Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    },
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7f266ab5918682e3f277",
+          "file": "experience.spec.ts",
+          "line": 257,
+          "column": 1
+        },
+        {
+          "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 36099,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:42:00.646Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-a84157c065a588e7341f",
+          "file": "experience.spec.ts",
+          "line": 287,
+          "column": 1
+        },
+        {
+          "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 53600,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:42:36.831Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-6eb07f7c507a6a140003",
+          "file": "experience.spec.ts",
+          "line": 306,
+          "column": 1
+        },
+        {
+          "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 59146,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:42:43.043Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-3e2146b61682cf4c0885",
+          "file": "experience.spec.ts",
+          "line": 334,
+          "column": 1
+        },
+        {
+          "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 69893,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:43:30.540Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-d4b47fccc24c0fe1d88c",
+          "file": "experience.spec.ts",
+          "line": 356,
+          "column": 1
+        },
+        {
+          "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 59794,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:43:43.240Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7347c1dc9cd854f7d517",
+          "file": "experience.spec.ts",
+          "line": 387,
+          "column": 1
+        },
+        {
+          "title": "the immersive main scene recovers its real WebGL context and current story pose",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                },
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BRZcte2i.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 55797,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:44:40.563Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    },
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BRZcte2i.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7693cd849414e34d8131",
+          "file": "experience.spec.ts",
+          "line": 409,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-02T13:36:49.037Z",
+    "duration": 531099.0989999999,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

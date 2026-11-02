@@ -1,0 +1,719 @@
+{
+  "config": {
+    "argv": [
+      "/home/nolimetrus/.nvm/versions/node/v22.23.3/bin/node",
+      "/home/nolimetrus/Рабочий стол/Karpov_Watch/node_modules/.bin/playwright",
+      "test",
+      "--fully-parallel",
+      "--workers=2",
+      "--reporter=list,json"
+    ],
+    "configFile": "/home/nolimetrus/Рабочий стол/Karpov_Watch/playwright.config.ts",
+    "rootDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "snapshotDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "locale": "ru-RU",
+          "colorScheme": "dark",
+          "headless": true,
+          "launchOptions": {
+            "executablePath": "/usr/bin/google-chrome",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "experience.spec.ts",
+      "file": "experience.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the film opens with only a full-screen live watch and reveals controls by pointer or keyboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 50114,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:47:36.959Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-09533cf8eeb0719a17d1",
+          "file": "experience.spec.ts",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 143763,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:47:37.062Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-ddb2ef9a2bc18469c1e2",
+          "file": "experience.spec.ts",
+          "line": 86,
+          "column": 1
+        },
+        {
+          "title": "a touch reveals film controls without selecting a part, while native swipe still advances the story",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 44093,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:48:27.805Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-aa6b08c4005e8d65d0af",
+          "file": "experience.spec.ts",
+          "line": 134,
+          "column": 1
+        },
+        {
+          "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 91211,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:49:12.061Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-e5e89ba591da672fe690",
+          "file": "experience.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                },
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 121406,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:50:01.600Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    },
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-bd7d0c411939cc7628d0",
+          "file": "experience.spec.ts",
+          "line": 199,
+          "column": 1
+        },
+        {
+          "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 94182,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:50:43.492Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-f5e5bef52981f68520aa",
+          "file": "experience.spec.ts",
+          "line": 231,
+          "column": 1
+        },
+        {
+          "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                },
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 142976,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:52:03.238Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    },
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7f266ab5918682e3f277",
+          "file": "experience.spec.ts",
+          "line": 258,
+          "column": 1
+        },
+        {
+          "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 68515,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:52:18.056Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-a84157c065a588e7341f",
+          "file": "experience.spec.ts",
+          "line": 288,
+          "column": 1
+        },
+        {
+          "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 55076,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:53:26.770Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-6eb07f7c507a6a140003",
+          "file": "experience.spec.ts",
+          "line": 307,
+          "column": 1
+        },
+        {
+          "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 64889,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:54:21.987Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-3e2146b61682cf4c0885",
+          "file": "experience.spec.ts",
+          "line": 335,
+          "column": 1
+        },
+        {
+          "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 65191,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:54:26.441Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-d4b47fccc24c0fe1d88c",
+          "file": "experience.spec.ts",
+          "line": 357,
+          "column": 1
+        },
+        {
+          "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 58688,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:55:27.017Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7347c1dc9cd854f7d517",
+          "file": "experience.spec.ts",
+          "line": 388,
+          "column": 1
+        },
+        {
+          "title": "the immersive main scene recovers its real WebGL context and current story pose",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                },
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-BdpAQHkG.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 74746,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T13:55:31.779Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    },
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-BdpAQHkG.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "116f6b4a9defd92cdbb9-7693cd849414e34d8131",
+          "file": "experience.spec.ts",
+          "line": 410,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-02T13:47:34.323Z",
+    "duration": 552957.0560000001,
+    "expected": 13,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

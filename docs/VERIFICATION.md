@@ -1,40 +1,49 @@
-# KARpOV — больше, плавнее, дополнительные живые 3D-сцены
+# KARpOV — полноэкранная 3D-история
 
-30 октября 2026. Проверена production-сборка http://127.0.0.1:4173/ — entry `index-l-D7L3YA.js`. Предыдущий полный отчёт сохранён в [VERIFICATION_V5.md](VERIFICATION_V5.md); его результаты не подменяют этот прогон.
-
-## Изменения
-
-- Первые часы крупнее: openingfill1.04desktop/1.00mobile, canvasleft26%. Проекция по вертикали на 1440×1000 увеличена на 20,35% относительноv5 при том же GLB. Небольшой выход intro за границы намеренный; следующие общие планы снова вписаны. На телефоне убрано дублирование подписи№01 возле дужки.
-- Переходы между пятью выдержками длиннее. Timeline остаётся quintic, yaw линейный поpose: исключено повторное ускорение одной траектории. Lenislerp.085. Переход по точкамnavigateTo занимает 1.5–2.4s, отменяется wheel/touch/key/новой навигацией. Native range остаётся прямым. Без второго progress-follower или второго Lenis.
-- При неизменной позе наhold основной viewer повторно не вычисляет 47TRS и не рисует 187898 треугольников. Проверка учитывает загрузку, pendingframe, camera-transition, contextloss, resize, материалы и подписи; metadata rawprogress остаётся точной.
-- В нижних разделах теперь живые оригинальные 3D-модели баланса со спиралью, заводной головки и колёсной передачи. Один дополнительный WebGLRenderer/canvas переносится между видимыми host. GSAPticker, lazyIO, выключение вне экрана/в скрытой вкладке, reducedstatic, восстановление контекста. Совпадающие прозрачные WebP — резерв, а не замена активной сцены.
+2 ноября 2026. Проверена production-сборка **http://127.0.0.1:4174/**, entry **`assets/index-BdpAQHkG.js`**, исходная реализация `560d116`. Хеши JS/CSS, GLB и дерева исходников — [build-immersive.json](evidence/build-immersive.json). Предыдущая версия описана в [VERIFICATION_V6.md](VERIFICATION_V6.md); её результаты не заменяют текущий прогон.
 
 ## Результат
 
-- **60/60 unit**,6 файлов: mapping/holds/C2 границы, уменьшение пикового ускорения камеры, framing, полная обратимость/423°–407°, ownership/resize/reload, navigateTo и прерывание. [Сырой JSON](evidence/unit-live-scenes.json).
-- **9/9 browser в одном полном прогоне**,2workers, без retries/skip/flaky. [Сводка](evidence/browser-live-scenes-summary.json), [полный JSON](browser-live-scenes-full.json).
-- Браузер подтвердил крупный intro, плавный non-instant nav, отсутствие новых WebGL-кадров наhold при измененииraw; manual/resume/reload; desktop/mobile разделы и 44pxцели; реальные PBR-исполнения иlocalStorage; скачивание карточки; reducedmotion;503retry; все 3 новые сцены с ненулевой геометрией и одним sharedcanvas, движение видимых/остановку невидимых; сохранение постеров и коммерческой части при отказе нижнегоWebGL.
-- **8 целевых production-кадров**: enlargedintro +3 живыхмодели для 1440×1000 и 390×844. В каждом live-кадре managerready, canvas находится в host, renderer показывает реальные drawcalls/triangles. Ошибок страницы/console, внешних запросов и горизонтального overflow нет. Root визуально осмотрел обе версии первого экрана и все новые модели. [Метрики](screenshots/live-scenes/metrics.json).
-- Изолированная проверка менеджера дополнительно подтверждает contextloss→restore и cleanup/unregister. [JSON](evidence/detail-manager.json). Это отдельная проверка того же кода, не 9-й дополнительный полный прогон страницы.
-- Три proceduralmodel: balance11128tri/17calls, crown12420/16, geartrain15344/38. [Геометрия и обратимость](evidence/detail-models.json), [точные резервные рендеры](evidence/detail-renders.json).
-- TypeScript/Vitebuild проходят; основной GLB не менялся:5324520 байт,47 групп,187898 треугольников,136 примитивов. Исходный иdist SHA256 одинаковы. [Сборка](evidence/build-live-scenes.json).
+- **63/63 unit**, 6 файлов: [исходный JSON](evidence/unit-immersive.json). Проверены абсолютные позы, обратный ход, неизменность 47 групп на остановках, C2-границы, кадрирование, макро, полный обход камеры, scroll ownership, resize/reload, навигация, прерывание и 42-секундная длительность одного общего clock.
+- **13/13 браузерных сценариев в одном полном запуске**, 2 workers, без retries, skip и flaky: [полный JSON](browser-immersive-full.json). Каждый сценарий записывает фактически загруженный entry; сводка сверяет их с build JSON и текущими файлами dist.
+- Проверены: чистый первый экран с настоящим полноэкранным canvas; вызов и уход меню мышью/Tab; отсутствие текста во всех четырёх пролётах; подписи только внутри hold; отсутствие повторного draw на hold; play/pause мышью, wheel и Escape; нативный вертикальный свайп через CDP touch; manual/resume/reload; три PBR-исполнения и localStorage; локальное скачивание карточки; reduced motion; контролируемый 503/retry; три живые нижние модели и один общий canvas, остановка вне экрана; matching posters при отказе нижнего WebGL; потеря и восстановление основного WebGL-контекста с сохранением позы.
+- **36 свежих production-кадров**: 1440×1000, 1280×800, 390×844 и 360×800; в каждом размере intro, четыре пролёта и четыре остановки. Во всех кадрах header/dock скрыты, canvas занимает весь viewport, подписи видны только на hold. Ошибок страницы/console, внешних запросов и горизонтального overflow нет. Общие остановки вписаны; обрезка intro и macro намеренна. [Метрики](screenshots/immersive/metrics.json), [строгая сводка](evidence/browser-immersive-summary.json). Основные кадры всех четырёх размеров просмотрены визуально.
+- TypeScript/Vite build и `npm run verify:model` проходят. Основной GLB сохранён: **5 324 520 байт, 47 групп, 95 nodes / 47 meshes, 136 primitives, 187 898 треугольников**, без внешних ресурсов. Source/dist SHA256 совпадают: `dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35`.
+- Проверка UI Impeccable detect для финальных App/CSS/hook/Icon вернула `[]`: [JSON](evidence/ui-immersive.json).
+
+## Что изменилось
+
+Canvas занимает весь sticky-экран вместо прежнего поля справа и отдельной нижней сцены на телефоне. Начало показывает только часы. Opening fill **1.13**, FOV **30°**; небольшая обрезка силуэта в intro намеренна по запросу. Общие планы далее вписаны, макро по-прежнему допускает выход корпуса за края. По высоте проекции относительно сохранённой V6 intro крупнее на 8.7% при 1440×1000 и на 12.1% при эмуляции 390×844: [методика и числа](evidence/framing-immersive.json). Границы проекции включают намеренную обрезку, это не площадь видимых пикселей.
+
+Текст появляется только на неподвижных остановках после intro. На фоне латуни его поддерживает компактная тёмная подложка. Header/dock вызываются движением мыши у края, нажатием на сцену или Tab. Указатель над управлением, открытый popover и клавиатурный фокус сохраняют доступ; после ухода указателя меню исчезает через 2.8 секунды. Wheel/свайп убирают его сразу. В режиме истории нажатие на часы вызывает управление; выбор детали работает в явно включённом manual.
+
+Raw → pose теперь использует **cinematicEase**: мягкий разгон, долгий равномерный пролёт и торможение. Максимальная скорость той же траектории составляет **1.25 средней вместо 1.875** — снижение на треть. Это свойство математической кривой, а не измерение FPS. Скорость и ускорение на краях hold нулевые. Полный обход 423° desktop / 407° mobile и макро-интервал 54–96% **pose** сохранены.
+
+Lenis `.075`, ScrollTrigger и один GSAP ticker продолжают управлять единственным canonical raw progress. Навигация к точке занимает 2.4–8.5 секунды. **«Смотреть историю»** проходит весь сценарий за **42 секунды** через настоящий scroll; продолжение от текущего места пропорционально оставшейся дистанции. Пауза, wheel, touch, клавиша, range, новая навигация и скрытая вкладка отменяют текущий проход. Отдельной догоняющей копии progress нет.
+
+Нижние баланс, заводная головка и передача сохраняют общий lazy renderer, visibility cleanup и статический reduced-motion ракурс. Коммерческие разделы, бренд, локальные шрифты, три исполнения и сохранение карточки продолжают работать.
 
 ## Ограничения
 
-Chrome155 headless / Playwright1.64.1, Linux, WebGL2 через ANGLE/Vulkan/SwiftShader. Это программный renderer и viewport-эмуляция, не физический телефон и не аппаратныйFPS benchmark. Аппаратная плавность не измерялась. Старые 200%/native-touch проверкиV4 не объявляются новыми; currentreducedmotion и WebGLfallback проверены указанными сценариями. No-JSposter существует, отдельный no-JSпрогон не выполнялся.
+Браузерные проверки выполнены в headless Chrome / Playwright с WebGL 2 через ANGLE SwiftShader. Это программный renderer; размеры viewport и CDP touch эмулированы. Физический телефон и аппаратный FPS не измерялись. Отдельных новых прогонов browser zoom 200% и no-JS в этой итерации нет. Старые результаты этих проверок не выдаются за актуальные.
 
-Модели — авторские механические иллюстрации, не инженерная симуляция серийного калибра. Оплата/отправка заказа не добавлялись; «Сохранить выбор» скачивает локальную карточку.
+Основные часы и нижние модели — авторские механические иллюстрации. Движение не является инженерной симуляцией конкретного серийного калибра. «Сохранить выбор» скачивает локальную карточку; цены и коммерческие характеристики не выдуманы.
 
-## Воспроизведение
+## Воспроизведение и сохранение
 
 ```bash
 npm run build
-npm test -- --reporter=json --outputFile=docs/evidence/unit-live-scenes.json
-./start.sh
-PW_BASE_URL=http://127.0.0.1:4173 npm run test:browser -- --fully-parallel --workers=2
-PW_BASE_URL=http://127.0.0.1:4173 node scripts/inspect-commerce.mjs --focus
+npm test -- --reporter=json --outputFile=docs/evidence/unit-immersive.json
+npm run verify:model
+PORT=4174 ./start.sh
+PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-immersive-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
+PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-immersive.mjs
+node scripts/summarize-immersive.mjs
 python3 scripts/package-release.py
+cp artifacts/hod-vremeni.zip artifacts/KARpOV.zip
 python3 scripts/save-checkpoint.py
 ```
 
-Без --focus inspect-commerce может снять 26 полных кадров; финальная целевая серия содержит 8, а остальные сценарии подтверждены browserJSON. Восстановление — WORK_STATE/AGENTS, локальныйGit, latest.zip/previous.zip. База до этой итерации:53ffa43 и before-live-scenes.zip. Облако иGitpush не использовались.
+Порт 4173 занят другим проектом; его процесс не останавливался. Готовая версия работает на 4174. Исходники и контрольные точки сохраняются локально; публикация и Git push не выполнялись.
+
+По дополнительному запросу установлен официальный [Remotion skill](https://github.com/remotion-dev/skills): `remotion-best-practices` 4.0.540 в `/home/nolimetrus/.codex/skills/remotion-best-practices`. Глобальная установка навыка не включается в ZIP проекта. Сайт сохраняет React/TypeScript/Vite и императивный Three.js.

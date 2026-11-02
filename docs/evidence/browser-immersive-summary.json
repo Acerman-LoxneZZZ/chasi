@@ -1,0 +1,155 @@
+{
+  "verifiedAtUtc": "2026-11-02T14:03:30.661Z",
+  "productionEntry": "assets/index-BdpAQHkG.js",
+  "sourceCommit": "560d1165e8fa02e17cf2d072cb38d9a2c1508879",
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "retries": 0,
+  "fullRun": {
+    "path": "docs/browser-immersive-full.json",
+    "stats": {
+      "startTime": "2026-11-02T13:47:34.323Z",
+      "duration": 552957.0560000001,
+      "expected": 13,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "unit": {
+    "passed": 63,
+    "path": "docs/evidence/unit-immersive.json"
+  },
+  "screenshots": {
+    "count": 36,
+    "viewports": [
+      "1440×1000",
+      "1280×800",
+      "390×844",
+      "360×800"
+    ],
+    "path": "docs/screenshots/immersive/metrics.json",
+    "pageErrors": 0,
+    "consoleProblems": 0,
+    "externalRequests": 0,
+    "horizontalOverflows": 0
+  },
+  "tests": [
+    {
+      "title": "the film opens with only a full-screen live watch and reveals controls by pointer or keyboard",
+      "status": "passed",
+      "durationMs": 50114,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted",
+      "status": "passed",
+      "durationMs": 143763,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "a touch reveals film controls without selecting a part, while native swipe still advances the story",
+      "status": "passed",
+      "durationMs": 44093,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+      "status": "passed",
+      "durationMs": 91211,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+      "status": "passed",
+      "durationMs": 121406,
+      "entries": [
+        "assets/index-BdpAQHkG.js",
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+      "status": "passed",
+      "durationMs": 94182,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+      "status": "passed",
+      "durationMs": 142976,
+      "entries": [
+        "assets/index-BdpAQHkG.js",
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+      "status": "passed",
+      "durationMs": 68515,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+      "status": "passed",
+      "durationMs": 55076,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+      "status": "passed",
+      "durationMs": 64889,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+      "status": "passed",
+      "durationMs": 65191,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+      "status": "passed",
+      "durationMs": 58688,
+      "entries": [
+        "assets/index-BdpAQHkG.js"
+      ]
+    },
+    {
+      "title": "the immersive main scene recovers its real WebGL context and current story pose",
+      "status": "passed",
+      "durationMs": 74746,
+      "entries": [
+        "assets/index-BdpAQHkG.js",
+        "assets/index-BdpAQHkG.js"
+      ]
+    }
+  ],
+  "environment": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "entry": "./assets/index-BdpAQHkG.js",
+    "method": "Headless Chrome / ANGLE SwiftShader; viewport emulation, not a physical phone or hardware FPS measurement"
+  },
+  "limitation": "Headless Chrome / ANGLE SwiftShader, viewport and CDP touch emulation. No physical phone, hardware GPU FPS or new 200%-zoom/no-JS validation."
+}
