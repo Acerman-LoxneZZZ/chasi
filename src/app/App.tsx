@@ -5,6 +5,10 @@ import { collectionStops, collectionStopIndex, finishes, type WatchFinish } from
 import { CollectionPage } from '../components/CollectionPage'
 import { evaluateStoryPose, storyCaptionOpacity } from '../animation/storyTimeline'
 import { useCinemaControls } from './useCinemaControls'
+import { useMechanismSound } from './useMechanismSound'
+import { normalizeEngraving } from '../data/personalization'
+import { setDetailPersonalization } from '../scene/DetailSceneManager'
+import { SoundToggle } from '../components/SoundToggle'
 import { Experience } from '../components/Experience'
 import { ExplosionControls, stageTitle } from '../components/ExplosionControls'
 import { Icon } from '../components/Icon'
@@ -28,6 +32,7 @@ function useReducedMotion() {
 
 export function App() {
   const reducedMotion = useReducedMotion()
+  const sound = useMechanismSound()
   const controller = useMemo(() => new ProgressController(), [])
   const coordinator = useMemo(() => new ScrollCoordinator(controller, window.matchMedia('(prefers-reduced-motion: reduce)').matches), [controller])
   const { progress, target } = useSyncExternalStore(controller.subscribe, controller.getSnapshot)
@@ -42,9 +47,10 @@ export function App() {
   const [selected, setSelected] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)
   const [storyVisible, setStoryVisible] = useState(true)
+  const [finaleVisible, setFinaleVisible] = useState(false)
   const ready = status === 'ready'
-  const immersive = ready && storyVisible && mode === 'story' && !reducedMotion
-  const captionOpacity = immersive ? storyCaptionOpacity(progress) : 1
+  const immersive = ((ready && storyVisible && mode === 'story') || finaleVisible) && !reducedMotion
+  const captionOpacity = ready && mode === 'story' && !reducedMotion ? storyCaptionOpacity(progress) : 1
   const currentPart = parts.find(part => part.id === selected) ?? null
   const chapter = collectionStopIndex(progress)
   const stage = collectionStops[chapter]
@@ -52,6 +58,13 @@ export function App() {
     try { const stored = localStorage.getItem('karpov:finish'); if (finishes.some(item => item.id === stored)) return stored as WatchFinish } catch { /* Storage is optional. */ }
     return 'brass'
   })
+  const [engraving, setEngraving] = useState(() => {
+    try { return normalizeEngraving(localStorage.getItem('karpov:engraving') ?? '') } catch { return '' }
+  })
+  useEffect(() => {
+    try { if (engraving) localStorage.setItem('karpov:engraving', engraving); else localStorage.removeItem('karpov:engraving') } catch { /* Storage remains optional. */ }
+    setDetailPersonalization(finish, engraving)
+  }, [finish, engraving])
   const displayedPart = currentPart && currentPart.category === 'case' && finish !== 'brass'
     ? { ...currentPart, materialLabel: `Отделка корпуса: ${finishes.find(item => item.id === finish)!.title}` }
     : currentPart
@@ -111,6 +124,22 @@ export function App() {
       requestAnimationFrame(play)
     } else play()
   }
+  const replayStory = useCallback(() => {
+    if (tools.current) tools.current.open = false
+    detailDialog.current?.close()
+    if (reducedMotion || !ready) {
+      controller.set(0)
+      window.scrollTo({ top: Number(storySection.current?.dataset.storyStart ?? 0), behavior: 'instant' })
+      return
+    }
+    if (coordinator.getSnapshot().mode === 'manual') coordinator.resume()
+    requestAnimationFrame(() => {
+      coordinator.seek(0)
+      document.querySelector<HTMLButtonElement>('.film-button')?.focus({ preventScroll: true })
+      dismissCinemaControls()
+      requestAnimationFrame(() => controller.animateTo(1))
+    })
+  }, [controller, coordinator, reducedMotion, ready, dismissCinemaControls])
 
   useEffect(() => () => controller.dispose(), [controller])
   useLayoutEffect(() => {
@@ -121,7 +150,10 @@ export function App() {
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => setStoryVisible(entry.isIntersecting), { rootMargin: '-90px 0px 0px 0px' })
     if (storyPin.current) observer.observe(storyPin.current)
-    return () => observer.disconnect()
+    const ending = new IntersectionObserver(([entry]) => setFinaleVisible(entry.isIntersecting), { rootMargin: '-90px 0px 0px 0px' })
+    const pin = document.querySelector('.finale-pin')
+    if (pin) ending.observe(pin)
+    return () => { observer.disconnect(); ending.disconnect() }
   }, [])
   useEffect(() => {
     if (status === 'error' || status === 'unsupported') coordinator.reduceMotion()
@@ -145,12 +177,13 @@ export function App() {
     }
   }, [])
 
-  return <div className="karpov-site" data-immersive={immersive} data-cinema-ui={cinemaControls ? 'visible' : 'hidden'}>
+  return <div className="karpov-site" data-immersive={immersive} data-cinema-ui={cinemaControls ? 'visible' : 'hidden'} data-sound-enabled={sound.enabled} data-sound-status={sound.status}>
     <a className="skip-link" href="#explosion-range" onClick={event => { event.preventDefault(); revealControls() }}>К управлению часами</a>
     <header className={`site-header ${storyVisible ? '' : 'site-header--editorial'}`}>
       <a className="brand karpov-wordmark" href="#top" aria-label="KARpOV — начало коллекции">KARpOV</a>
       <div className="desktop-menu"><a href="#design">Коллекция</a><a href="#materials">Материалы</a><a href="#mechanism">Механика</a></div>
       <nav aria-label="Управление просмотром">
+        <SoundToggle sound={sound} />
         <button className="header-button details-button" aria-label="Детали часов" disabled={!ready} onClick={openDetails}><Icon name="layers" size={17} /><span>Детали</span></button>
         <button className="header-button mode-button" disabled={!ready} onClick={changeMode}><span className="mode-dot" aria-hidden="true" /><span>{mode === 'story' ? 'Рассмотреть' : 'Продолжить историю'}</span></button>
         <a className="header-selection" href="#selection">Выбрать часы <Icon name="arrow" size={15} /></a>
@@ -171,7 +204,7 @@ export function App() {
             {chapter === 4 && <a className="station-link" href="#design">Продолжить знакомство <Icon name="arrow" size={18} /></a>}
           </div></div>
           <div className="story-stage">
-            <Experience parts={parts} controller={controller} mode={mode} reducedMotion={reducedMotion} labels={labels} selected={selected} resetKey={resetKey} finish={finish} onSelect={choosePart} onStatus={setStatus} />
+            <Experience parts={parts} controller={controller} mode={mode} reducedMotion={reducedMotion} labels={labels} selected={selected} resetKey={resetKey} finish={finish} engraving={engraving} onSelect={choosePart} onStatus={setStatus} />
           </div>
           <div className="exhibit-dock">
             <div className="dock-left">
@@ -194,8 +227,9 @@ export function App() {
           <div className="sr-only" role="status" aria-live="polite">{ready ? stageTitle(progress) : status === 'loading' ? 'Модель загружается' : 'Модель недоступна'}</div>
         </div>
       </section>
-      <CollectionPage finish={finish} onFinish={setFinish} onView3D={viewIn3D} />
+      <CollectionPage finish={finish} onFinish={setFinish} onView3D={viewIn3D} engraving={engraving} onEngraving={setEngraving} reducedMotion={reducedMotion || status === 'error' || status === 'unsupported'} onReplay={replayStory} sound={sound} />
     </main>
+    {sound.status === 'unavailable' && <p className="sound-notice" role="status">В этом браузере звук недоступен.</p>}
 
     <dialog ref={detailDialog} className="detail-dialog" data-lenis-prevent aria-labelledby="parts-title" onClick={event => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
       <div className="drawer-content">

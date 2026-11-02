@@ -1,0 +1,47 @@
+{
+  "source": "Same original GLB and shared-renderer camera/material code; no generated or stock images",
+  "results": [
+    {
+      "kind": "engraving",
+      "finish": "brass",
+      "file": "public/images/karpov-caseback-brass.webp",
+      "triangles": 187898,
+      "calls": 136
+    },
+    {
+      "kind": "engraving",
+      "finish": "steel",
+      "file": "public/images/karpov-caseback-steel.webp",
+      "triangles": 187898,
+      "calls": 136
+    },
+    {
+      "kind": "engraving",
+      "finish": "graphite",
+      "file": "public/images/karpov-caseback-graphite.webp",
+      "triangles": 187898,
+      "calls": 136
+    },
+    {
+      "kind": "assembly",
+      "finish": "brass",
+      "file": "public/images/karpov-finale-brass.webp",
+      "triangles": 187898,
+      "calls": 136
+    },
+    {
+      "kind": "assembly",
+      "finish": "steel",
+      "file": "public/images/karpov-finale-steel.webp",
+      "triangles": 187898,
+      "calls": 136
+    },
+    {
+      "kind": "assembly",
+      "finish": "graphite",
+      "file": "public/images/karpov-finale-graphite.webp",
+      "triangles": 187898,
+      "calls": 136
+    }
+  ]
+}

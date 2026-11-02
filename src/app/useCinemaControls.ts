@@ -32,7 +32,7 @@ export function useCinemaControls(tools: RefObject<HTMLDetailsElement | null>) {
       }
     }
     const down = (event: PointerEvent) => {
-      if (event.target instanceof Element && event.target.closest('canvas.watch-canvas--story')) {
+      if (event.target instanceof Element && event.target.closest('canvas.watch-canvas--story, .finale-pin')) {
         pointer = { x: event.clientX, y: event.clientY, id: event.pointerId }
       }
     }

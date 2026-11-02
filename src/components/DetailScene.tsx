@@ -6,15 +6,18 @@ export interface DetailSceneProps {
   label: string
   poster: string
   className?: string
+  onProgress?: (progress: number) => void
 }
 
 /** Progressive WebGL enhancement: the illustration stays visible until paint. */
-export const DetailScene = memo(function DetailScene({ kind, label, poster, className = '' }: DetailSceneProps) {
+export const DetailScene = memo(function DetailScene({ kind, label, poster, className = '', onProgress }: DetailSceneProps) {
   const host = useRef<HTMLDivElement>(null)
   const surface = useRef<HTMLDivElement>(null)
+  const progressCallback = useRef(onProgress)
+  progressCallback.current = onProgress
   useEffect(() => {
     if (!host.current || !surface.current) return
-    try { return registerDetailScene(host.current, surface.current, kind) }
+    try { return registerDetailScene(host.current, surface.current, kind, value => progressCallback.current?.(value)) }
     catch {
       // A missing browser enhancement API must leave the section's art intact.
       host.current.dataset.sceneStatus = 'error'

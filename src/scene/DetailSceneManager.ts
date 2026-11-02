@@ -5,7 +5,10 @@ import {
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createDetailModels, type DetailModel, type DetailSceneKind } from './detailModels'
+import { createDetailModels, type DetailModel, type DetailSceneKind, type ProceduralSceneKind } from './detailModels'
+import { loadPersonalWatch, type PersonalWatchModel, type WatchDetailKind } from './PersonalWatchModel'
+import { evaluateFinale } from '../animation/finaleTimeline'
+import type { WatchFinish } from '../data/collection'
 
 export type { DetailSceneKind } from './detailModels'
 
@@ -22,11 +25,15 @@ interface DetailEntry {
   height: number
   motionTime: number
   frames: number
+  lastVisualKey: string
+  onProgress?: (progress: number) => void
 }
 
 const ORIGIN = new Vector3()
 const UP = new Vector3(0, 1, 0)
 const clamp = (value: number) => Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0))
+const isWatch = (kind: DetailSceneKind): kind is WatchDetailKind => kind === 'engraving' || kind === 'assembly'
+let personalization = { finish: 'brass' as WatchFinish, engraving: '' }
 
 /**
  * The three editorial sculptures share one GPU context and one canvas. The
@@ -40,7 +47,11 @@ class DetailSceneManager {
   private resizeObserver: ResizeObserver
   private motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
   private active: DetailEntry | null = null
-  private models: Record<DetailSceneKind, DetailModel> | null = null
+  private models: Record<ProceduralSceneKind, DetailModel> | null = null
+  private watchModel: PersonalWatchModel | null = null
+  private watchLoading = false
+  private watchFailed = false
+  private watchAbort = new AbortController()
   private renderer: WebGLRenderer | null = null
   private canvas: HTMLCanvasElement | null = null
   private environment: WebGLRenderTarget | null = null
@@ -71,6 +82,7 @@ class DetailSceneManager {
     }, { rootMargin: '-76px 0px 0px', threshold: [0, .1, .25, .5, .75, 1] })
     this.proximity = new IntersectionObserver(records => {
       if (records.some(record => record.isIntersecting)) this.scheduleWarmup()
+      if (records.some(record => record.isIntersecting && isWatch(this.find(record.target)?.kind ?? 'balance'))) this.prepareWatch()
     }, { rootMargin: '250px 0px', threshold: 0 })
     this.resizeObserver = new ResizeObserver(records => {
       for (const record of records) {
@@ -87,16 +99,18 @@ class DetailSceneManager {
 
   get empty() { return this.entries.size === 0 }
 
-  register(host: HTMLDivElement, surface: HTMLDivElement, kind: DetailSceneKind) {
+  register(host: HTMLDivElement, surface: HTMLDivElement, kind: DetailSceneKind, onProgress?: (progress: number) => void) {
     const box = host.getBoundingClientRect()
     const entry: DetailEntry = { host, surface, poster: host.querySelector<HTMLImageElement>('.detail-scene-poster'), kind, trigger: null, progress: 0, visibleArea: 0,
-      width: Math.max(1, box.width), height: Math.max(1, box.height), motionTime: 0, frames: 0 }
+      width: Math.max(1, box.width), height: Math.max(1, box.height), motionTime: 0, frames: 0, lastVisualKey: '', onProgress }
     this.entries.add(entry)
     host.dataset.sceneEngine = 'three-shared'
     host.dataset.active = 'false'
     this.status(entry, this.failed ? 'error' : 'poster')
     entry.trigger = ScrollTrigger.create({
-      trigger: host, start: 'top bottom', end: 'bottom top',
+      trigger: kind === 'assembly' ? host.closest('.watch-finale')! : host,
+      start: kind === 'assembly' ? 'top top' : 'top bottom',
+      end: kind === 'assembly' ? 'bottom bottom' : 'bottom top',
       onUpdate: trigger => this.updateProgress(entry, trigger.progress),
       onRefresh: trigger => this.updateProgress(entry, trigger.progress),
     })
@@ -132,7 +146,55 @@ class DetailSceneManager {
   private updateProgress(entry: DetailEntry, value: number) {
     entry.progress = clamp(value)
     entry.host.dataset.progress = entry.progress.toFixed(5)
+    entry.onProgress?.(entry.progress)
     if (entry === this.active) this.invalidate()
+  }
+
+  updatePersonalization() {
+    this.watchModel?.setPersonalization(personalization.finish, personalization.engraving)
+    for (const entry of this.entries) if (isWatch(entry.kind)) {
+      entry.host.dataset.finish = personalization.finish
+      entry.host.dataset.engraving = personalization.engraving
+      entry.lastVisualKey = ''
+    }
+    if (this.active && isWatch(this.active.kind)) this.invalidate()
+  }
+
+  retryWatch() {
+    if (this.disposed || this.watchLoading) return
+    this.watchFailed = false
+    this.watchAbort = new AbortController()
+    if (this.failed || this.contextLost) {
+      this.releaseRenderer()
+      this.failed = false
+      this.contextLost = false
+      this.scene.clear()
+      this.prepareRenderer()
+    }
+    for (const entry of this.entries) if (isWatch(entry.kind)) this.status(entry, 'loading')
+    this.prepareWatch()
+    this.selectActive()
+  }
+
+  private prepareWatch() {
+    if (this.watchModel || this.watchLoading || this.watchFailed || this.disposed || this.failed) return
+    this.watchLoading = true
+    const timeout = window.setTimeout(() => this.watchAbort.abort(), 30000)
+    loadPersonalWatch(this.watchAbort.signal).then(model => {
+      if (this.disposed) { model.dispose(); return }
+      this.watchModel = model
+      this.updatePersonalization()
+      this.selectActive()
+    }).catch(() => {
+      if (this.disposed) return
+      this.watchFailed = true
+      for (const entry of this.entries) if (isWatch(entry.kind)) this.status(entry, 'error')
+      if (this.active && isWatch(this.active.kind)) this.stopTicking()
+    }).finally(() => { this.watchLoading = false; window.clearTimeout(timeout) })
+  }
+
+  private modelFor(entry: DetailEntry) {
+    return isWatch(entry.kind) ? this.watchModel : this.models?.[entry.kind]
   }
 
   private scheduleWarmup() {
@@ -207,10 +269,19 @@ class DetailSceneManager {
       this.lastPaint = -Infinity
     }
     if (!this.renderer || !this.canvas || !this.models) { this.scheduleWarmup(); return }
+    const model = this.modelFor(best)
+    if (!model) {
+      if (isWatch(best.kind)) {
+        if (this.watchFailed) this.status(best, 'error')
+        else this.prepareWatch()
+      }
+      return
+    }
     if (this.canvas.parentElement !== best.surface) {
       best.surface.append(this.canvas)
       for (const model of Object.values(this.models)) this.scene.remove(model.root)
-      this.scene.add(this.models[best.kind].root)
+      if (this.watchModel) this.scene.remove(this.watchModel.root)
+      this.scene.add(model.root)
       this.resizeCanvas()
     }
     this.invalidate()
@@ -234,6 +305,7 @@ class DetailSceneManager {
     this.renderer.setSize(entry.width, entry.height, false)
     this.camera.aspect = entry.width / entry.height
     this.camera.updateProjectionMatrix()
+    entry.lastVisualKey = ''
     this.invalidate()
   }
 
@@ -254,8 +326,8 @@ class DetailSceneManager {
   private tick = (time: number) => {
     const entry = this.active
     if (!entry || !this.renderer || !this.models || !this.canvas || document.hidden || this.contextLost || this.disposed) { this.stopTicking(); return }
-    const reduced = this.motionQuery.matches
-    const continuous = !reduced && entry.kind !== 'crown'
+    const reduced = this.motionQuery.matches || !!entry.host.closest('.watch-finale--reduced')
+    const continuous = !reduced && (entry.kind === 'balance' || entry.kind === 'geartrain')
     const elapsed = this.lastTick === null ? 0 : Math.max(0, Math.min(.05, time - this.lastTick))
     this.lastTick = time
     if (!reduced) entry.motionTime += elapsed
@@ -263,9 +335,23 @@ class DetailSceneManager {
       if (!continuous) this.stopTicking()
       return
     }
-    const model = this.models[entry.kind]
-    const pose = reduced ? .5 : entry.progress
+    const model = this.modelFor(entry)
+    if (!model) { this.stopTicking(); return }
+    const pose = reduced ? entry.kind === 'assembly' ? 1 : .5 : entry.progress
+    const final = evaluateFinale(pose, reduced)
+    const visualKey = isWatch(entry.kind) ? `${entry.kind}/${entry.kind === 'assembly' ? final.pose + '/' + final.camera : pose}/${reduced}` : ''
+    if (visualKey && visualKey === entry.lastVisualKey) {
+      entry.host.dataset.renderedProgress = entry.progress.toFixed(5)
+      this.dirty = false
+      this.stopTicking()
+      return
+    }
+    if (isWatch(entry.kind)) this.watchModel!.configure(entry.kind, entry.width)
     model.update(pose, reduced ? 0 : entry.motionTime, reduced)
+    if (isWatch(entry.kind)) this.watchModel!.frameCamera(this.camera, entry.width, entry.height)
+    else {
+    this.camera.fov = 35
+    this.camera.updateProjectionMatrix()
     const yawBase = entry.kind === 'crown' ? -.3 : entry.kind === 'balance' ? -.2 : .25
     const yaw = yawBase + (reduced ? 0 : (pose - .5) * .65)
     const pitch = entry.kind === 'crown' ? .18 : .25 + (reduced ? 0 : (pose - .5) * .10)
@@ -275,11 +361,13 @@ class DetailSceneManager {
     this.camera.up.copy(UP)
     this.camera.lookAt(ORIGIN)
     this.camera.updateMatrixWorld()
+    }
     const start = performance.now()
     this.renderer.render(this.scene, this.camera)
     const cost = performance.now() - start
     this.lastPaint = time
     this.dirty = false
+    entry.lastVisualKey = visualKey
     entry.frames++
     const data = entry.host.dataset
     data.renderedProgress = entry.progress.toFixed(5)
@@ -290,6 +378,13 @@ class DetailSceneManager {
     data.motionTime = entry.motionTime.toFixed(4)
     data.dpr = String(this.renderer.getPixelRatio())
     data.reducedMotion = String(reduced)
+    if (isWatch(entry.kind)) {
+      data.assemblyPose = this.watchModel!.visualPose.toFixed(5)
+      data.finish = personalization.finish
+      data.engraving = personalization.engraving
+      data.partCount = '47'
+      data.camera = JSON.stringify({ position: this.camera.position.toArray(), quaternion: this.camera.quaternion.toArray() })
+    }
     this.canvas.dataset.sceneKind = entry.kind
     if (this.renderer.info.render.calls > 0) this.status(entry, 'ready')
     // Hardware quality stays capped, while an expensive software draw lowers
@@ -343,10 +438,12 @@ class DetailSceneManager {
     this.canvas?.removeEventListener('webglcontextrestored', this.onContextRestored)
     this.canvas?.remove()
     this.canvas = null
+    for (const entry of this.entries) entry.lastVisualKey = ''
   }
 
   dispose() {
     this.disposed = true
+    this.watchAbort.abort()
     this.stopTicking()
     if (this.warmup !== null) {
       if (this.warmupIsIdle) window.cancelIdleCallback(this.warmup)
@@ -361,6 +458,8 @@ class DetailSceneManager {
     this.releaseRenderer()
     if (this.models) for (const model of Object.values(this.models)) model.dispose()
     this.models = null
+    this.watchModel?.dispose()
+    this.watchModel = null
     this.entries.clear()
     this.scene.clear()
   }
@@ -368,10 +467,10 @@ class DetailSceneManager {
 
 let sharedManager: DetailSceneManager | null = null
 
-export function registerDetailScene(host: HTMLDivElement, surface: HTMLDivElement, kind: DetailSceneKind) {
+export function registerDetailScene(host: HTMLDivElement, surface: HTMLDivElement, kind: DetailSceneKind, onProgress?: (progress: number) => void) {
   sharedManager ??= new DetailSceneManager()
   const owner = sharedManager
-  const unregister = owner.register(host, surface, kind)
+  const unregister = owner.register(host, surface, kind, onProgress)
   return () => {
     unregister()
     if (owner.empty) {
@@ -380,3 +479,11 @@ export function registerDetailScene(host: HTMLDivElement, surface: HTMLDivElemen
     }
   }
 }
+
+export function setDetailPersonalization(finish: WatchFinish, engraving: string) {
+  if (finish === personalization.finish && engraving === personalization.engraving) return
+  personalization = { finish, engraving }
+  sharedManager?.updatePersonalization()
+}
+
+export function retryWatchDetails() { sharedManager?.retryWatch() }

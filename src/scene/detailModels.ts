@@ -5,7 +5,8 @@ import {
   SphereGeometry, TorusGeometry, TubeGeometry, Vector2, Vector3,
 } from 'three'
 
-export type DetailSceneKind = 'balance' | 'crown' | 'geartrain'
+export type ProceduralSceneKind = 'balance' | 'crown' | 'geartrain'
+export type DetailSceneKind = ProceduralSceneKind | 'engraving' | 'assembly'
 
 export interface DetailModel {
   root: Group
@@ -276,7 +277,7 @@ function createGeartrain(): DetailModel {
 }
 
 /** Original, code-native mechanical studies; no network assets or GLB clones. */
-export function createDetailModels(): Record<DetailSceneKind, DetailModel> {
+export function createDetailModels(): Record<ProceduralSceneKind, DetailModel> {
   const models = { balance: createBalance(), crown: createCrown(), geartrain: createGeartrain() }
   for (const model of Object.values(models)) model.update(.35, 0, true)
   return models

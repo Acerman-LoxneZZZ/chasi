@@ -16,6 +16,7 @@ interface ExperienceProps {
   selected: string | null
   resetKey: number
   finish: WatchFinish
+  engraving: string
   onSelect: (id: string | null) => void
   onStatus: (status: SceneStatus) => void
 }
@@ -51,6 +52,7 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
       }, callbacks.current.mode, callbacks.current.reducedMotion)
       engine.current = scene
       scene.setFinish(callbacks.current.finish)
+      scene.setEngraving(callbacks.current.engraving)
       scene.load().then(() => {
         if (!active || contextLost) return
         scene!.setLabels(callbacks.current.labels)
@@ -74,6 +76,7 @@ export const Experience = memo(function Experience(props: ExperienceProps) {
 
   useEffect(() => { engine.current?.setLabels(props.labels) }, [props.labels])
   useEffect(() => { engine.current?.setFinish(props.finish) }, [props.finish])
+  useEffect(() => { engine.current?.setEngraving(props.engraving) }, [props.engraving])
   useLayoutEffect(() => { engine.current?.setMode(props.mode, props.reducedMotion) }, [props.mode, props.reducedMotion])
   useEffect(() => { engine.current?.select(props.selected) }, [props.selected])
   useEffect(() => { engine.current?.resetCamera() }, [props.resetKey])

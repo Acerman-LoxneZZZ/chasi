@@ -4,10 +4,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { finishes, type WatchFinish } from '../data/collection'
 import { Icon } from './Icon'
 import { DetailScene } from './DetailScene'
+import { PersonalizationSection } from './PersonalizationSection'
+import { FinaleSection } from './FinaleSection'
+import { selectionCard } from '../data/personalization'
+import type { SoundControl } from './SoundToggle'
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}images/${name}`
 
-export const CollectionPage = memo(function CollectionPage({ finish, onFinish, onView3D }: { finish: WatchFinish; onFinish: (finish: WatchFinish) => void; onView3D: (progress: number) => void }) {
+export const CollectionPage = memo(function CollectionPage({ finish, onFinish, onView3D, engraving, onEngraving, reducedMotion, onReplay, sound }: { finish: WatchFinish; onFinish: (finish: WatchFinish) => void; onView3D: (progress: number) => void; engraving: string; onEngraving: (value: string) => void; reducedMotion: boolean; onReplay: () => void; sound: SoundControl }) {
   const root = useRef<HTMLDivElement>(null)
   const [saved, setSaved] = useState(false)
   const selected = finishes.find(item => item.id === finish)!
@@ -24,7 +28,7 @@ export const CollectionPage = memo(function CollectionPage({ finish, onFinish, o
   }, [])
 
   const saveSelection = () => {
-    const body = `KARpOV — Карманные часы №01\n\nИсполнение корпуса: ${selected.title}\nЦиферблат: светлая эмаль, римские цифры\nСтрелки: синёная сталь\nИндикация: часы, минуты, малая секунда\nЗавод: ручной\nМеханизм: пружина, колёсная передача, баланс\n\nВыбранная конфигурация. Не является оформленным заказом.\n`
+    const body = selectionCard(finish, engraving)
     const url = URL.createObjectURL(new Blob([body], { type: 'text/plain;charset=utf-8' }))
     const link = document.createElement('a')
     link.href = url; link.download = `KARpOV-No01-${finish}.txt`; link.click()
@@ -61,7 +65,9 @@ export const CollectionPage = memo(function CollectionPage({ finish, onFinish, o
       <div className="selection-layout"><div className="selection-portrait">{finishes.map(item => <img key={item.id} className={finish === item.id ? 'is-selected' : ''} src={asset(item.image)} width="1400" height="1600" alt={finish === item.id ? `KARpOV №01 — корпус ${item.title.toLowerCase()}` : ''} aria-hidden={finish !== item.id} loading="lazy" />)}</div><div className="selection-copy"><p className="small-label">Личный выбор</p><h2 id="selection-title">Один предмет.<br />Ваш характер.</h2><p>Выберите отделку корпуса. Светлая эмаль и синёные стрелки сохраняют почерк коллекции.</p><fieldset className="finish-options"><legend>Исполнение корпуса</legend>{finishes.map(item => <label key={item.id} className={finish === item.id ? 'finish-option is-selected' : 'finish-option'}><input type="radio" name="finish" value={item.id} checked={finish === item.id} onChange={() => { onFinish(item.id); setSaved(false) }} /><span className="finish-swatch" style={{ backgroundColor: item.color }} /><span>{item.title}</span><Icon name="check" size={15} /></label>)}</fieldset><p className="finish-caption" aria-live="polite">{selected.caption}</p><div className="selection-actions"><button className="commerce-button" onClick={saveSelection}>Сохранить выбор <Icon name="arrow" size={18} /></button><button className="quiet-button" onClick={() => onView3D(.04)}>Посмотреть в 3D</button></div><p className="selection-note" role="status">{saved ? 'Карточка выбранного исполнения скачана.' : 'Сохраните карточку исполнения, чтобы вернуться к своему выбору.'}</p></div></div>
     </section>
 
-    <section id="specifications" className="specifications-section paper-section" aria-labelledby="specifications-title"><div><p className="small-label">Карманные часы №01</p><h2 id="specifications-title">Ближе<br />к деталям.</h2></div><dl className="specification-list"><div><dt>Формат</dt><dd>Карманные часы</dd></div><div><dt>Завод</dt><dd>Ручной</dd></div><div><dt>Циферблат</dt><dd>Светлая эмаль, римские цифры</dd></div><div><dt>Стрелки</dt><dd>Синёная сталь</dd></div><div><dt>Индикация</dt><dd>Часы, минуты, малая секунда</dd></div><div><dt>Отделка корпуса</dt><dd>{selected.title}</dd></div></dl></section>
-    <footer className="commerce-footer"><div className="footer-top"><p>Для времени,<br />которое принадлежит вам.</p><a href="#top">Вернуться к началу <Icon name="arrow" size={18} /></a></div><p className="footer-wordmark" aria-label="KARpOV">KARpOV</p><div className="footer-bottom"><span>Карманная коллекция №01</span><span>Форма. Механика. Характер.</span></div></footer>
+    <PersonalizationSection finish={finish} engraving={engraving} onEngraving={value => { onEngraving(value); setSaved(false) }} />
+    <section id="specifications" className="specifications-section paper-section" aria-labelledby="specifications-title"><div><p className="small-label">Карманные часы №01</p><h2 id="specifications-title">Ближе<br />к деталям.</h2></div><dl className="specification-list"><div><dt>Формат</dt><dd>Карманные часы</dd></div><div><dt>Завод</dt><dd>Ручной</dd></div><div><dt>Циферблат</dt><dd>Светлая эмаль, римские цифры</dd></div><div><dt>Стрелки</dt><dd>Синёная сталь</dd></div><div><dt>Индикация</dt><dd>Часы, минуты, малая секунда</dd></div><div><dt>Отделка корпуса</dt><dd>{selected.title}</dd></div><div><dt>Гравировка, примерка</dt><dd>{engraving.trim() || 'Без гравировки'}</dd></div></dl></section>
+    <FinaleSection finish={finish} reducedMotion={reducedMotion} onReplay={onReplay} sound={sound} />
+    <footer className="commerce-footer commerce-footer--closing"><div className="footer-bottom"><span>Карманная коллекция №01</span><a href="#selection">Ваше исполнение: {selected.title}</a><span>Форма. Механика. Характер.</span></div></footer>
   </div>
 })

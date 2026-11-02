@@ -14,6 +14,7 @@ import { shortFunctions, storyStageIndex, storyStages } from '../data/story'
 import type { WatchPart } from '../types'
 import { CameraRig } from './CameraRig'
 import { highlightMaterial, makeGlass } from './materials'
+import { Engraving } from './Engraving'
 
 type Hooks = {
   select: (partId: string | null) => void
@@ -84,6 +85,9 @@ export class WatchScene {
   private macroFocus = new Vector3()
   private leaders: SVGSVGElement
   private renderedFrames = 0
+  private inscription: Engraving | null = null
+  private engravingText = ''
+  private decorationDirty = false
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -230,6 +234,10 @@ export class WatchScene {
         this.byId.set(part.id, entry)
       }
       this.scene.add(this.model)
+      await document.fonts.ready
+      if (this.disposed) return
+      this.inscription = new Engraving(this.byId.get('back_cover')!.object)
+      this.inscription.setText(this.engravingText)
       this.setFinish(this.finish)
       this.updatePose()
       this.renderer.compile(this.scene, this.camera)
@@ -245,6 +253,7 @@ export class WatchScene {
 
   setFinish(finish: WatchFinish) {
     this.finish = finish
+    this.inscription?.setFinish(finish)
     for (const [material, original] of this.finishMaterials) {
       if (finish === 'brass') {
         material.color.copy(original.color)
@@ -256,6 +265,15 @@ export class WatchScene {
     }
     this.canvas.dataset.finish = finish
     this.invalidate()
+  }
+
+  setEngraving(value: string) {
+    this.engravingText = value
+    this.inscription?.setText(value)
+    this.canvas.dataset.engraving = value
+    this.decorationDirty = true
+    const rect = this.canvas.getBoundingClientRect()
+    if (rect.bottom > 0 && rect.top < innerHeight) this.invalidate()
   }
 
   setMode(mode: ViewMode, reducedMotion: boolean) {
@@ -315,7 +333,7 @@ export class WatchScene {
     this.canvas.dataset.mode = this.mode
     const visualPose = evaluateStoryPose(p)
     if (this.model && !this.initialFrame && this.renderedFrames > 0 && !this.frame
-      && !this.contextLost && !this.rig.transitioning
+      && !this.contextLost && !this.rig.transitioning && !this.decorationDirty
       && visualPose === evaluateStoryPose(this.displayedProgress)) {
       // The raw scroll moves through a reading hold, but this exact geometry and
       // camera have already been painted. Reuse that frame instead of redrawing
@@ -382,6 +400,7 @@ export class WatchScene {
     const moving = this.rig.tick(start)
     const drawStarted = performance.now()
     this.renderer.render(this.scene, this.camera)
+    this.decorationDirty = false
     const renderCost = performance.now() - drawStarted
     this.displayedProgress = p
     this.displayedCameraPosition.copy(this.camera.position)
@@ -558,6 +577,7 @@ export class WatchScene {
     document.removeEventListener('visibilitychange', this.onVisibility)
     this.rig.dispose()
     this.controls.dispose()
+    this.inscription?.dispose()
     if (this.model) this.disposeObject(this.model)
     this.allMaterials.forEach(material => material.dispose())
     this.finishMaterials.clear()

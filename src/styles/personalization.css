@@ -1,0 +1,63 @@
+.personalization-section { --paper-muted: #58635e; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 8vw; padding-top: 45px; padding-bottom: 80px; }
+.engraving-view { position: relative; height: 720px; min-width: 0; }
+.engraving-copy { max-width: 450px; padding-block: 60px; }
+.engraving-copy h2 { font-size: clamp(55px, 5.2vw, 94px); text-wrap: balance; }
+.engraving-copy > p:first-of-type { margin-top: 30px; color: var(--paper-muted); font-size: 14px; line-height: 1.85; max-width: 350px; }
+.engraving-field { margin-top: 37px; }
+.engraving-label { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; font-size: 12px; }
+.engraving-label output { color: var(--paper-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.engraving-field input { display: block; width: 100%; min-height: 64px; margin-top: 12px; padding: 6px 0; border: 0; border-bottom: 1px solid #717964; border-radius: 0; background: transparent; color: var(--ink); font-family: var(--font-display); font-size: 36px; letter-spacing: .1em; caret-color: #6c4c1b; }
+.engraving-field input::placeholder { color: #59665f; opacity: 1; }
+.engraving-field > p { margin-top: 12px; font-size: 11px; line-height: 1.65; color: var(--paper-muted); max-width: 340px; }
+.engraving-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-top: 20px; }
+.engraving-actions .quiet-button { gap: 12px; }
+.engraving-actions .editorial-link { margin: 0; gap: 18px; }
+.engraving-finish { margin-top: 24px; font-size: 11px; line-height: 1.75; color: var(--paper-muted); max-width: 330px; }
+.engraving-unavailable { display: none; position: absolute; bottom: 15px; left: 5%; right: 5%; color: var(--ink); background: var(--paper); font-size: 12px; line-height: 1.7; text-align: center; }
+.engraving-view:has([data-scene-status='error'], [data-scene-status='context-lost']) .engraving-unavailable { display: block; }
+.watch-finale { position: relative; height: 360svh; background: #0a131d; color: var(--text); }
+.watch-finale--reduced { height: 100svh; }
+.finale-pin { position: sticky; top: 0; height: 100svh; width: 100%; isolation: isolate; background: radial-gradient(ellipse at 50% 42%, #243344, #111c29 46%, #0a131d 84%); }
+.finale-stage { position: absolute; inset: 0; }
+.finale-copy { position: absolute; z-index: 2; bottom: 26px; left: 22px; right: 22px; text-align: center; pointer-events: none; }
+.finale-wordmark { font-family: 'Manrope Variable', sans-serif; font-size: clamp(42px, 4.6vw, 72px); line-height: 1; font-weight: 500; letter-spacing: -.04em; }
+.finale-line { margin-top: 14px; color: var(--muted); font-family: var(--font-display); font-size: 25px; line-height: 1.2; }
+.finale-actions { display: flex; align-items: center; justify-content: center; gap: 30px; margin-top: 13px; }
+.finale-actions button { pointer-events: auto; }
+.finale-replay { display: inline-flex; align-items: center; gap: 20px; min-height: 44px; padding: 6px 0; border-bottom: 1px solid #c49b5c80; background: transparent; color: var(--text); font-size: 11px; }
+.finale-replay svg { color: var(--brass); }
+.finale-replay:hover { color: var(--brass); }
+.commerce-footer--closing { padding: 22px 6vw 28px; }
+.commerce-footer--closing .footer-bottom { align-items: center; border: 0; padding: 0; }
+.commerce-footer--closing a { display: inline-flex; min-height: 44px; align-items: center; }
+.sound-toggle { min-width: 44px; }
+.sound-toggle[aria-pressed='true'] { color: var(--text); }
+.sound-notice { position: fixed; z-index: 40; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 12px 18px; background: #16212e; color: var(--text); font-size: 12px; line-height: 1.6; }
+.karpov-site .site-header nav { gap: 16px; }
+@media (max-width: 999px) {
+  .personalization-section { gap: 4vw; grid-template-columns: 1fr 1fr; }
+  .engraving-view { height: 600px; }
+  .engraving-actions { gap: 12px; }
+}
+@media (max-width: 699px) {
+  .karpov-site .site-header nav { gap: 8px; }
+  .site-header .sound-toggle { padding-inline: 0; }
+  .site-header .sound-toggle span { display: none; }
+  .personalization-section { display: block; padding-top: 25px; padding-bottom: 45px; }
+  .engraving-view { height: 400px; }
+  .engraving-copy { padding: 15px 0 20px; max-width: none; }
+  .engraving-copy h2 { font-size: 48px; }
+  .engraving-copy > p:first-of-type { margin-top: 20px; font-size: 13px; }
+  .engraving-field { margin-top: 26px; }
+  .engraving-field input { min-height: 58px; font-size: 32px; }
+  .engraving-actions { gap: 18px; }
+  .engraving-finish { margin-top: 18px; }
+  .watch-finale { height: 300svh; }
+  .watch-finale--reduced { height: 100svh; }
+  .finale-copy { bottom: 25px; }
+  .finale-wordmark { font-size: 44px; }
+  .finale-line { font-size: 21px; max-width: 280px; margin-inline: auto; }
+  .finale-actions { gap: 24px; margin-top: 12px; }
+  .commerce-footer--closing { padding-inline: 22px; }
+  .commerce-footer--closing .footer-bottom { flex-wrap: wrap; gap: 8px 22px; }
+}
