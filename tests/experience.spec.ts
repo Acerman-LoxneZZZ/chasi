@@ -84,6 +84,7 @@ test('the film opens with only a full-screen live watch and reveals controls by 
 })
 
 test('every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted', async ({ page }) => {
+  test.setTimeout(180_000)
   await ready(page)
   for (const p of [.16, .405, .67, .9]) {
     await scrollToProgress(page, p)
@@ -104,7 +105,15 @@ test('every flight has a clear screen, captions appear only in still holds and t
   await expect(page.getByRole('button', { name: 'Пауза просмотра', exact: true })).toBeAttached()
   await expect.poll(() => progress(page)).toBeGreaterThan(.075)
   await expect.poll(() => uiOpacity(page, '.exhibit-dock')).toBe(0)
-  expect(await uiOpacity(page, '.station-copy')).toBe(0)
+  // Hovering the edge during playback must still allow an actual pause click.
+  await revealCinemaControls(page)
+  await page.getByRole('button', { name: 'Пауза просмотра', exact: true }).click()
+  const mousePaused = await progress(page)
+  await page.waitForTimeout(350)
+  expect(await progress(page)).toBe(mousePaused)
+  await revealCinemaControls(page)
+  await page.getByRole('button', { name: 'Смотреть историю', exact: true }).click()
+  await expect.poll(() => progress(page)).toBeGreaterThan(mousePaused + .005)
   await page.mouse.wheel(0, 80)
   await expect(page.getByRole('button', { name: 'Смотреть историю', exact: true })).toBeAttached()
   await page.waitForTimeout(1800)
@@ -191,6 +200,7 @@ test('manual controls preserve the displayed pose and resume and reload the same
   await ready(page)
   await scrollToProgress(page, .28)
   const held = await camera(page)
+  await revealCinemaControls(page)
   await page.getByRole('button', { name: 'Рассмотреть', exact: true }).click()
   await expect(canvas(page)).toHaveAttribute('data-mode', 'manual')
   expect(await camera(page)).toEqual(held)

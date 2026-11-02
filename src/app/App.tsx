@@ -35,7 +35,7 @@ export function App() {
   const storySection = useRef<HTMLElement>(null)
   const storyPin = useRef<HTMLDivElement>(null)
   const tools = useRef<HTMLDetailsElement>(null)
-  const cinemaControls = useCinemaControls(tools)
+  const { visible: cinemaControls, dismiss: dismissCinemaControls } = useCinemaControls(tools)
   const detailDialog = useRef<HTMLDialogElement>(null)
   const [status, setStatus] = useState<SceneStatus>('loading')
   const [labels, setLabels] = useState(false)
@@ -175,7 +175,7 @@ export function App() {
           </div>
           <div className="exhibit-dock">
             <div className="dock-left">
-              <button className="film-button" disabled={!ready} data-pause-transition={target !== null || undefined} onClick={event => { playStory(); if (event.detail) event.currentTarget.blur() }} aria-label={target !== null ? 'Пауза просмотра' : progress > .995 ? 'Смотреть историю снова' : 'Смотреть историю'}><Icon name={target !== null ? 'pause' : 'play'} size={17} /><span>{target !== null ? 'Пауза' : progress > .995 ? 'Смотреть снова' : 'Смотреть историю'}</span></button>
+              <button className="film-button" disabled={!ready} data-pause-transition={target !== null || undefined} onClick={event => { playStory(); if (target === null) dismissCinemaControls(); if (event.detail) event.currentTarget.blur() }} aria-label={target !== null ? 'Пауза просмотра' : progress > .995 ? 'Смотреть историю снова' : 'Смотреть историю'}><Icon name={target !== null ? 'pause' : 'play'} size={17} /><span>{target !== null ? 'Пауза' : progress > .995 ? 'Смотреть снова' : 'Смотреть историю'}</span></button>
               <details ref={tools} className="exhibit-tools">
                 <summary><Icon name="layers" size={17} /><span>Управление</span><span className="tools-plus" aria-hidden="true">+</span></summary>
                 <div className="controls-popover" data-lenis-prevent>
@@ -187,7 +187,7 @@ export function App() {
               </details>
               <span className="scroll-cue" aria-hidden="true"><span className="scroll-stroke" />{mode === 'manual' ? 'Свободное вращение' : progress > .98 ? 'Прокрутите обратно' : 'Прокрутите, чтобы заглянуть внутрь'}</span>
             </div>
-            <nav className="station-nav" aria-label="Остановки знакомства с часами">{collectionStops.map((stop, index) => <button key={stop.name} aria-current={index === chapter ? 'step' : undefined} aria-label={`Остановка ${index + 1}: ${stop.name}`} disabled={!ready} onClick={event => { viewIn3D(stop.at); if (event.detail) event.currentTarget.blur() }}><span className="station-dot" /><span>{stop.name}</span></button>)}</nav>
+            <nav className="station-nav" aria-label="Остановки знакомства с часами">{collectionStops.map((stop, index) => <button key={stop.name} aria-current={index === chapter ? 'step' : undefined} aria-label={`Остановка ${index + 1}: ${stop.name}`} disabled={!ready} onClick={event => { viewIn3D(stop.at); dismissCinemaControls(); if (event.detail) event.currentTarget.blur() }}><span className="station-dot" /><span>{stop.name}</span></button>)}</nav>
             <div className="exhibit-progress" aria-hidden="true"><span className="chapter-count">{String(chapter + 1).padStart(2, '0')}<span> / 05</span></span><output aria-live="off">{Math.round(progress * 100)}<span>%</span></output></div>
           </div>
           <div className="story-hairline" aria-hidden="true"><span style={{ width: `${progress * 100}%` }} /></div>
