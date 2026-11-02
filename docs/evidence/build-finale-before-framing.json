@@ -1,0 +1,37 @@
+{
+  "createdAtUtc": "2026-11-02T15:21:56.084640+00:00",
+  "sourceCommit": "27d57456a080aa1ce2e5ddd68ac6639685313a35",
+  "entry": "assets/index-DmBgl6qn.js",
+  "assets": [
+    {
+      "path": "assets/index-DmBgl6qn.js",
+      "bytes": 493228,
+      "sha256": "ce78eb7f9e697097a658df7fa2534b00c35f90201e00fdd204a249ec65e3675b"
+    },
+    {
+      "path": "assets/three-core-hIsY1vH6.js",
+      "bytes": 254212,
+      "sha256": "71d8037d87b4a2afda01a39dd14f873971f3dc096122d5ffdc5b25943eda850b"
+    },
+    {
+      "path": "assets/three-renderer-KOfFk8LB.js",
+      "bytes": 419338,
+      "sha256": "65fdc5861917748107e58f9c0b99486cbeaff7413fa4f26f68cca2db0d929989"
+    },
+    {
+      "path": "assets/index-BcEpB9ic.css",
+      "bytes": 43209,
+      "sha256": "9bd9f2570538ffcf487ed2f10662fa60b016e0de201679082087ef5efa402db3"
+    }
+  ],
+  "sourceTreeSha256": "b2d985e774dbe4bbb4dfa0d30e4e441154d1cf851343f66e8c8c23833a8582ad",
+  "model": {
+    "sourceBytes": 5324520,
+    "sha256": "dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35",
+    "sourceDistEqual": true,
+    "majorCarriers": 47,
+    "sourceTriangles": 187898,
+    "decalTrianglesPerVisibleInscription": 2
+  },
+  "method": "Headless Chrome / ANGLE SwiftShader; viewport/touch emulation. AudioContext real, tab hiding integration simulated; no physical phone, hardware FPS or speaker validation."
+}

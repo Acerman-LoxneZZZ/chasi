@@ -1,76 +1,68 @@
-# KARpOV — финальная сборка, гравировка и звук: проверка в работе
+# KARpOV — финальная сборка, гравировка и звук
 
-Пользователь принял все три предложенные функции: финальная сборка часов перед KARpOV/повтором истории, примерка инициалов на крышке, тихий звук механизма по отдельной кнопке. Не останавливаться на предложении, довести и проверить. Сохранять две WebGL-системы: основной WatchScene и один общий нижний renderer/canvas.
+Пользователь принял все три предложенные функции запросом «добавляй звучит интересно». Они реализованы. Сейчас проверяется последняя правка композиции на коротких desktop-экранах; довести QA, сохранение и разрешённый push. Не начинать заново.
 
-## Реализовано в этой итерации
+## Текущая точка
 
-- Финал после спецификации: sticky 360svh desktop / 300svh mobile, 47 GLB-carrier собираются по исходным rest-TRS. Потом камера заканчивает отъезд, только после этого появляется подпись KARpOV/«Повторить историю». Reduced — компактный 100svh, собранные часы и подпись сразу.
-- PersonalizationSection: до 8 латинских/кириллических букв, цифр, точек/пробелов; локальное сохранение и строка «Гравировка (примерка)» в скачиваемой карточке. Engraving — depth-tested Mesh/CanvasTexture на существующем back_cover, local z=-.079, поворот Y=π, текст следует детали. Главная 3D тоже получает инициалы; при вводе не перерисовывает скрытый основной canvas.
-- PersonalWatchModel — одна ленивая GLB-модель для обоих новых нижних слотов. DetailSceneManager переносит тот же renderer/canvas между прежними balance/crown/geartrain и engraving/assembly, а не создаёт renderer на слот. Первичная главная сцена сохранена. Новый lower GLB load имеет retry, контекст восстанавливается. На неизменном финальном ракурсе повторного draw нет.
-- Шесть совпадающих резервных WebP с исходного GLB/того же кода камеры и материалов: caseback/finale × brass/steel/graphite. Это fallback, активные сцены — настоящая геометрия. scripts/render-personal-watch.mjs и docs/evidence/personal-posters.json.
-- MechanismSound: AudioContext создаётся/разблокируется только кнопкой; тише синтезированные короткие tick/tock, один context переиспользуется. Без звука по умолчанию/после reload. IO и visibility приостанавливают и отменяют источники; без догоняющей очереди. UI есть в header и финале.
+Исходники приложения: **68d40e6** (реализация 1279a22, audio lifecycle 27d5745). Production entry: **dist/assets/index-Dovk9NqQ.js**, CSS **index-DEfI_tuW.css**. Хеши всех assets и дерева входных исходников: docs/evidence/build-finale.json. Основной preview: **http://127.0.0.1:4174/**. Порт 4173 — чужой проект, не трогать.
 
-## Уже проверено и что осталось
+**QA в работе:** build и 74/74 unit прошли; полный 19-сценарный browser-прогон Dovk9NqQ идёт (exec session 74445), затем нужны 36 основных + 20 новых кадров и строгая сводка. Физический телефон/GPU/FPS/колонки не проверялись. Не переносить старые результаты на новый entry.
 
-- Предыдущая сборка **dist/assets/index-DmBgl6qn.js**. После визуальной QA добавлен только CSS-отступ финальной сцены для desktop высотой до 900px: подпись пересекала низ корпуса на 1280×800. Новый build и полный повтор browser/capture обязательны; прежние 19/19 и кадры сохранены как *-before-framing и не являются проверкой изменённого CSS. TypeScript/Vite проходят. **74/74 unit**, 9 файлов, docs/evidence/unit-finale.json. Не переносить старые 63/13/36 на эту сборку.
-- Первый browser-кадр реальной гравировки подтверждён визуально: А.К. на крышке, 187900 rendered triangles / 137 calls (GLB 187898 + 2 decal). Быстрый desktop/mobile capture идёт через node scripts/inspect-personalization.mjs --quick. Его ранние результаты не считать финальной QA.
-- Добавлены 6 новых сценариев в tests/personalization.spec.ts: пиксели/память/карточка, финал/reverse/replay, reduced, реальный opt-in AudioContext + simulated visibility, lazy GLB retry/context restore, отказ audio. Вместе со старыми 13 будет 19. Сначала проверить новые, устранить находки, затем выполнить полный прогон и финальные кадры фактического entry.
-- Полный browser-прогон последней DmBgl6qn-сборки завершён: **19/19**, 2 workers, 0 retry / skipped / flaky, 14.1 минуты. docs/browser-finale-full.json; каждый сценарий записал фактический entry. После этого идут только свежие screenshot captures и документация, исходники приложения не менялись. Точные хеши в docs/evidence/build-finale.json. Ранний targeted CWM-прогон не является финальной QA.
-- Финально обновить DESIGN/README/VERIFICATION (старый VERIFICATION сохранить как V7), ASSET_SOURCES, WORK_STATE; сохранить пакет/копию/атомарный checkpoint; локальные commits. Предыдущая версия целиком в artifacts/checkpoints/before-finale.zip и Git 6b633c1. Предыдущий push в origin/main выполнен; пользователь продолжает разрешённую работу, по готовности отправить изменения без force push.
-- Основной preview на 4174, чужой 4173 не трогать. Дополнительный dev 5173 запущен только для генерации резервных рендеров. GPU — SwiftShader / viewport emulation, физический телефон и аппаратный FPS не измерены.
+Ранний полный прогон DmBgl6qn имел 19/19, но визуальная проверка выявила наложение подписи на нижний край часов при 1280×800. Исправление только CSS: у финальной сцены bottom 80px при desktop высотой до 900px, 130px до 650px. Он отражён в 68d40e6. Старые отчёты: docs/browser-finale-before-framing.json и docs/evidence/build-finale-before-framing.json, старые PNG — artifacts/qa-finale-preliminary/. Они не подтверждают новый CSS. Старый targeted CWMf5rZE также не является финальным полным прогоном.
 
-## Состояние предыдущей версии (история, не QA нового кода)
+## Реализованные дополнения
 
-# KARpOV — полноэкранная кинематографическая история завершена
+- Примерка до восьми нормализованных символов (кириллица, латиница, цифры, пробелы/точки) на живой задней крышке. localStorage, очистка, обновление основной 3D-сцены, строка «Гравировка (примерка)» в локальной карточке. Никакой отправки данных или заказа.
+- Engraving — один Mesh/CanvasTexture с локальным Cormorant Garamond, прикреплён к существующему back_cover: position (0,.035,-.079), rotation Y=π, depth test. Цвет текста согласован с brass/steel/graphite. Пустая строка скрывает Mesh. Дополнение даёт 2 runtime-треугольника / 1 draw call и не меняет carrier или исходный GLB. Основной canvas не рисует скрытую сцену при вводе внизу.
+- В финале после спецификации 47 GLB-групп собираются по исходным rest-TRS. Сборка завершается к 78%, камера к 90%, подпись KARpOV проявляется на 91–98%. Во время движения только часы; путь абсолютный и обратимый. Sticky 360svh desktop / 300svh mobile, reduced 100svh с собранными часами и подписью. «Повторить историю» возвращает intro и запускает прежний 42-секундный просмотр.
+- PersonalWatchModel — один ленивый GLB для новых слотов engraving/assembly. DetailSceneManager сохраняет ОДИН нижний renderer/canvas на все пять слотов: balance/crown/geartrain/engraving/assembly. Вместе с основным WatchScene на странице две WebGL-системы. Не создавать renderer на слот. Crown/engraving/assembly — demand draw, неизменный финальный ракурс переиспользует кадр. Сохранять lazy visibility, hidden/offscreen/reduced stop, retry и context restore.
+- Шесть новых fallback WebP (caseback/finale × brass/steel/graphite) получены из того же GLB/кода материалов и камеры. scripts/render-personal-watch.mjs; docs/evidence/personal-posters.json. Активные сцены — живая геометрия.
+- MechanismSound: AudioContext создаётся/разблокируется только кнопкой. Синтезированные короткие тихие tick/tock; по умолчанию и после reload выключено. Один context переиспользуется; скрытая вкладка, уход со всех 3D-сцен и mute отменяют источники и suspend. Late resume после выключения тоже suspend. Lookahead использует аудиочасы, визуальный progress независим. Кнопки в header/финале, понятный статус отказа, cleanup закрывает context.
 
-Последний запрос выполнен: полное погружение, сначала только большие часы, свободный экран во время анимации, плавный обход/приближение камеры и просмотр как ролика. По дополнительному запросу установлен официальный Remotion skill. Пользователь предпочитает самостоятельную работу без лишних вопросов. Без нового запроса готовый сайт не менять и QA не повторять.
+## Сохранённая основа
 
-## GitHub
+React / TypeScript / Vite / императивный Three.js + GSAP ScrollTrigger + Lenis. Один общий ticker/ScrollTrigger canonical raw progress. Живые сцены не подменять видео или картинками. Локальные шрифты и KARpOV, коммерческие разделы, три исполнения PBR сохранены.
 
-Последним сообщением пользователь явно попросил запушить изменения. Все 14 локальных коммитов сайта и проверок, до **3c9cfef**, успешно отправлены в **origin/main**: https://github.com/Acerman-LoxneZZZ/chasi. Fetch перед push подтвердил отсутствие расхождения веток; force push не использовался. Последующий коммит обновляет только журнал и документацию. Сайт продолжает работать локально на 4174; облачный деплой не запрашивался.
+Основной GLB не менялся: **5 324 520 B, 187 898 triangles, 136 primitives, 95 nodes / 47 meshes, 47 основных групп**. SHA256 `dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35`; public/dist одинаковы. Exported rest-TRS сохранять.
 
-Пользователь также попросил предложить дальнейшее дополнение. Приоритетная идея: финальная плавная сборка часов выбранного исполнения перед подписью KARpOV. Дополнительные идеи: примерка гравировки и тихий звук механизма по явному включению. Последний запрос «добавляй звучит интересно» разрешил все три дополнения; идёт реализация и новая проверка, см. начало файла.
+Основной canvas занимает полный viewport. Intro fill 1.13, FOV 30°, небольшой выход за край намеренный. Raw hold: 0–.06 → pose 0; .25–.30 → .22; .51–.56 → .46; .75–.80 → .75; .96–1 → 1. Подписи только на остановках после intro. CinematicEase даёт мягкий разгон/равномерный пролёт/торможение, пик 1.25 средней (на треть меньше прежнего quintic); это математика, не FPS. Обход 423° desktop / 407° mobile; macro 54–96% POSE намеренно может обрезать корпус. Не возвращать constant-fit в macro.
 
-## Текущая версия
+Lenis lerp .075; навигация 2.4–8.5s, просмотр всей основной истории 42s через настоящий scroll. Нет второго progress-follower. Mouse pause, wheel, touch, key, range, новая навигация и hidden tab прерывают проход. Меню изначально скрыто, вызывается краем экрана/нажатием/Tab и уходит через 2.8s; focus/popover удерживают доступ. Picking только в manual. Три нижних procedural-модели остаются живыми.
 
-- React / TypeScript / Vite / императивный Three.js, GSAP ScrollTrigger + Lenis. Модель и 47 основных групп / экспортные rest-TRS сохранены. GLB не менялся; активный 3D не заменён изображением или видео.
-- Главный canvas занимает весь viewport на desktop и mobile. Прежние left 26% / top 230px убраны. Первый кадр — только часы по центру. Opening fill 1.13, FOV 30°. Небольшая обрезка intro намеренна; общие остановки вписаны. По высоте проекции intro больше V6 на 8.7% desktop 1440×1000 и 12.1% при эмуляции 390×844; границы включают намеренную обрезку.
-- Пять raw hold сохранены: 0–.06 → pose 0; .25–.30 → .22; .51–.56 → .46; .75–.80 → .75; .96–1 → 1. В intro и четырёх пролётах нет подписи. Характеристики появляются только внутри остальных hold, на тёмной подложке.
-- cinematicEase: мягкий разгон, равномерный пролёт, торможение; пик скорости 1.25 средней вместо 1.875 у прежней quintic, то есть на треть ниже при той же длине перехода. Это математика, не FPS. Абсолютность, C2, обратимость и неподвижность hold проверены. Обход 423° desktop / 407° mobile и macro 54–96% POSE сохранены; не возвращать constant-fit во время macro.
-- Lenis lerp .075, один общий GSAP ticker / ScrollTrigger canonical raw progress. Навигация 2.4–8.5s. «Смотреть историю» проходит весь путь за 42s через настоящий scroll; продолжение занимает пропорционально меньше. Пауза мышью, wheel/touch/key/range, новая навигация и скрытая вкладка прерывают проход. Второго progress-follower нет.
-- Меню по умолчанию скрыто в story. Мышь у верхнего/нижнего края, tap или Tab вызывают его. Над управлением оно остаётся видимым; после ухода указателя исчезает через 2.8s. Wheel/свайп убирают его сразу. Во время playback можно вызвать меню и нажать паузу. Popover и keyboard focus сохраняют доступ. Tap истории больше не выбирает случайный узел: picking работает только в manual.
-- Сохранены бренд KARpOV, коммерческие разделы, три исполнения PBR, localStorage и скачивание карточки. Нижние balance/crown/geartrain — живые procedural 3D с одним дополнительным shared renderer/canvas, lazy visibility, offscreen/hidden stop, reduced static и cleanup. Не создавать renderer на каждый блок и не заменять активные модели картинками.
+## Проверки и доказательства
 
-## Фактические проверки этой сборки
+- npm run build / npm run verify:model — проходят; unit-файл последней сборки docs/evidence/unit-finale.json: 74/74, 9 файлов.
+- Новый полный browser: docs/browser-finale-full.json; каждый сценарий аннотирует реальный entry. 13 прежних + 6 новых: настоящие пиксели гравировки/память/карточка, assembly/reverse/replay, reduced, реальный opt-in AudioContext с моделируемым visibility, lower GLB retry/context restore, отказ AudioContext.
+- Свежие кадры нужно снять в docs/screenshots/finale-story/ (36) и docs/screenshots/finale/ (20): 1440×1000, 1280×800, 390×844, 360×800. scripts/inspect-personalization.mjs дожидается скрытия header и двух RAF перед кадром.
+- Строгая сводка scripts/summarize-finale.mjs проверяет 19 единичных passed без retry/skip/flaky, реальные entry, 74 unit, хеши dist/всех входных исходников, GLB и метрики 56 кадров. Выход docs/evidence/browser-finale-summary.json.
+- Impeccable detect финальных App/components/CSS: docs/evidence/ui-finale.json (`[]`). DESIGN/ASSET_SOURCES/README обновлены. docs/VERIFICATION.md честно отмечает повторный QA в работе — заменить на итог после успешной сводки.
+- Метод: headless Chrome / ANGLE SwiftShader; viewport и CDP touch эмуляция. AudioContext настоящий, скрытие вкладки в интеграционном тесте моделируется. Это не физический телефон, аппаратный GPU/FPS или акустическая проверка колонок. Отдельных новых zoom 200% / no-JS прогонов нет.
 
-Production entry: **dist/assets/index-BdpAQHkG.js**. Основной source commit: **560d116** (первый этап 44ae2be). Точные хеши JS/CSS/исходников и GLB: docs/evidence/build-immersive.json. Финальный документационный commit см. git log -1.
-
-- **63/63 unit**, 6 файлов: docs/evidence/unit-immersive.json.
-- **13/13 browser в одном полном прогоне**, 2 workers, 0 retry / skip / flaky: docs/browser-immersive-full.json и docs/evidence/browser-immersive-summary.json. Каждый сценарий записал фактически загруженный entry. Проверены чистая сцена/меню/Tab, четыре пролёта, неподвижные hold и отсутствие лишнего draw, playback/mouse pause/wheel/Escape, CDP touch swipe, manual/resume/reload, реальные PBR-исполнения, карточка, reduced motion, 503/retry, три нижних live-сцены/один canvas/stop offscreen, matching fallback и main WebGL loss/restore.
-- **36 свежих production-кадров**, 1440×1000 / 1280×800 / 390×844 / 360×800. В каждом размере intro, 4 пролёта, 4 остановки. docs/screenshots/immersive/metrics.json подтверждает entry и SHA, full viewport canvas, hidden header/dock, caption только на hold, отсутствие page/console errors, внешних запросов и horizontal overflow. Основные кадры всех четырёх размеров просмотрены. Source model triangles и rendered triangles различаются при frustum culling в macro; это не удаление геометрии.
-- Строгая сводка воспроизводится через node scripts/summarize-immersive.mjs: проверяет один полный green run, 13 entry, 63 unit, 36 кадров, их хеши и кадрирование остановок. Impeccable detect финального UI: docs/evidence/ui-immersive.json (`[]`).
-- npm run build / npm run verify:model проходят. GLB: 5 324 520 B, 187 898 triangles, 136 primitives, 95 nodes / 47 meshes, 47 groups. Source/dist идентичны, SHA256 dc9ecfc7240aba0ebcd3c8dd3930113e9ca5ff3b072485525eb52eb49cfa3d35.
-- Метод: headless Chrome / ANGLE SwiftShader, viewport и CDP touch эмуляция. Это не физический телефон и не замер аппаратного GPU/FPS. Новых отдельных browser zoom 200% / no-JS прогонов нет. Подробности — docs/VERIFICATION.md; предыдущая версия — VERIFICATION_V6.md.
-
-## Запуск после выключения
+## Запуск и команды
 
 ```bash
 cd '/home/nolimetrus/Рабочий стол/Karpov_Watch'
 PORT=4174 ./start.sh
 ```
 
-Текущий сайт: **http://127.0.0.1:4174/**. Порт 4173 занят другим проектом; его не останавливать. Не использовать устаревший путь /3DD. После выключения исходники/Git/ZIP сохраняются, сервер запускается заново. После изменения исходников выполнить npm run build перед preview.
+После выключения исходники/Git/ZIP сохраняются, сервер запускается заново. После изменения исходников нужен npm run build перед preview. Не использовать старый путь /3DD. Dev 5173 запущен только для рендеров (session 74043); перед сдачей можно остановить свой dev, preview 4174 оставить.
 
-## Навык Remotion
+```bash
+PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
+node scripts/inspect-immersive.mjs docs/screenshots/finale-story
+node scripts/inspect-personalization.mjs
+node scripts/summarize-finale.mjs
+python3 scripts/package-release.py
+cp artifacts/hod-vremeni.zip artifacts/KARpOV.zip
+python3 scripts/save-checkpoint.py
+```
 
-Официальный remotion-dev/skills → remotion-best-practices **4.0.540** установлен через skill-installer в `/home/nolimetrus/.codex/skills/remotion-best-practices`. Он доступен со следующего сообщения пользователя. Сайт сохраняет утверждённый стек; отдельный Remotion-видеопроект и MP4 не запрашивались.
+## Git и локальные копии
 
-## Локальное сохранение
+Пользователь явно разрешил push готовой итерации: origin/main, https://github.com/Acerman-LoxneZZZ/chasi. Предыдущая версия до 6b633c1 отправлена. Новый запрос пользователя «запуш все что сделал пока» требует немедленно отправить текущий код и WIP-документацию, не дожидаясь окончания повторного QA. Отправляются commits 1279a22, 27d5745, 68d40e6 и текущий коммит состояния. После завершения QA отдельно отправить окончательные отчёты. Без force push. Облачная публикация сайта не запрашивалась.
 
-Релиз: artifacts/hod-vremeni.zip и брендовая копия artifacts/KARpOV.zip. Резервы: artifacts/checkpoints/latest.zip / previous.zip. После записи этого состояния выполнены финальный локальный Git-коммит, packaging и checkpoint. Исходная версия до этой итерации — b490e00, первая реализация — 44ae2be, управление — 560d116.
+Baseline этой итерации: Git **6b633c1**, artifacts/checkpoints/before-finale.zip. Предыдущие отчёты — docs/VERIFICATION_V7.md и более ранние. Release artifacts/hod-vremeni.zip / KARpOV.zip и checkpoints/latest.zip / previous.zip финально обновить после завершения и коммитов. Не включать .git, .tools, node_modules, .codex, .aws, .env и настройки аккаунтов.
 
-Команды: npm run build; npm test; npm run verify:model; PW_BASE_URL=http://127.0.0.1:4174 npm run test:browser -- --fully-parallel --workers=2. Кадры: node scripts/inspect-immersive.mjs. Не переносить результаты предыдущих entry на новый код.
+Официальный remotion-dev/skills → remotion-best-practices **4.0.540** установлен глобально в /home/nolimetrus/.codex/skills/remotion-best-practices. Отдельный Remotion-проект/MP4 не запрошены; сайт сохраняет текущий стек. Глобальный skill не входит в ZIP проекта.
 
-Сохранение: python3 scripts/package-release.py; cp artifacts/hod-vremeni.zip artifacts/KARpOV.zip; python3 scripts/save-checkpoint.py. ZIP не содержит .git / .tools / node_modules / .codex / .aws / .env и настроек аккаунтов. Git push выполнен по отдельному запросу, см. раздел GitHub. Облачная публикация сайта не выполнялась.
-
-Карточка выбора не является заказом, оплата и отправка отсутствуют. Модели — авторские механические иллюстрации, не инженерная симуляция серийного калибра.
+Карточка — локальная памятка, не заказ. Гравировка — визуальная примерка. Модели и звук — художественная механическая иллюстрация, не инженерная симуляция серийного калибра.

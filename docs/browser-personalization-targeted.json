@@ -1,0 +1,388 @@
+{
+  "config": {
+    "argv": [
+      "/home/nolimetrus/.nvm/versions/node/v22.23.3/bin/node",
+      "/home/nolimetrus/Рабочий стол/Karpov_Watch/node_modules/.bin/playwright",
+      "test",
+      "tests/personalization.spec.ts",
+      "--fully-parallel",
+      "--workers=2",
+      "--reporter=list,json"
+    ],
+    "configFile": "/home/nolimetrus/Рабочий стол/Karpov_Watch/playwright.config.ts",
+    "rootDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "",
+        "testDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "snapshotDir": "/home/nolimetrus/Рабочий стол/Karpov_Watch/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "locale": "ru-RU",
+          "colorScheme": "dark",
+          "headless": true,
+          "launchOptions": {
+            "executablePath": "/usr/bin/google-chrome",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "personalization.spec.ts",
+      "file": "personalization.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "initials alter the actual back-cover pixels, persist and enter the local selection card",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-CWMf5rZE.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 131588,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T15:11:05.493Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-CWMf5rZE.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c52a31dcb3dfe88a6acf-449a47f54deb2ffa2a6e",
+          "file": "personalization.spec.ts",
+          "line": 29,
+          "column": 1
+        },
+        {
+          "title": "the finale assembles all carriers, reveals the signature only after motion, and replays the original story",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-CWMf5rZE.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 88618,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T15:11:05.572Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-CWMf5rZE.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c52a31dcb3dfe88a6acf-c0b9f3d0fd5a25a0a87d",
+          "file": "personalization.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "reduced motion gives a compact completed finale and a static engraving view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-CWMf5rZE.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 53766,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T15:12:35.085Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-CWMf5rZE.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c52a31dcb3dfe88a6acf-9457670a0b8dc7dd146d",
+          "file": "personalization.spec.ts",
+          "line": 83,
+          "column": 1
+        },
+        {
+          "title": "sound is silent by default, uses a real opt-in AudioContext, and pauses on simulated tab hiding",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-CWMf5rZE.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 65296,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T15:13:18.188Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-CWMf5rZE.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c52a31dcb3dfe88a6acf-bdc8bfd4e3bfb31f62ba",
+          "file": "personalization.spec.ts",
+          "line": 95,
+          "column": 1
+        },
+        {
+          "title": "the shared watch retries its asset and restores its WebGL context with the same initials",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-CWMf5rZE.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 94819,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T15:13:29.003Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-CWMf5rZE.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c52a31dcb3dfe88a6acf-5cebce8b5c28c86e021d",
+          "file": "personalization.spec.ts",
+          "line": 121,
+          "column": 1
+        },
+        {
+          "title": "unsupported audio leaves the live scene usable and shows a clear status",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [
+                {
+                  "type": "tested-entry",
+                  "description": "./assets/index-CWMf5rZE.js"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45019,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-02T15:14:23.671Z",
+                  "annotations": [
+                    {
+                      "type": "tested-entry",
+                      "description": "./assets/index-CWMf5rZE.js"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c52a31dcb3dfe88a6acf-8f0c1b0d720a82cd0edd",
+          "file": "personalization.spec.ts",
+          "line": 139,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-02T15:11:03.017Z",
+    "duration": 246313.245,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
