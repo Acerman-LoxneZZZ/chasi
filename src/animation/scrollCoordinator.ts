@@ -1,8 +1,9 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { clampProgress, smootherStep } from './evaluatePartTransform'
+import { clampProgress } from './evaluatePartTransform'
 import { ProgressController, type ProgressOwner } from './progressController'
+import { cinematicEase } from './storyTimeline'
 
 export type ViewMode = 'story' | 'manual'
 export type StoryBounds = { start: number; travel: number }
@@ -95,7 +96,7 @@ export class ScrollCoordinator implements ProgressOwner {
       autoResize: false,
       smoothWheel: true,
       syncTouch: false,
-      lerp: .085,
+      lerp: .075,
       anchors: true,
       stopInertiaOnNavigate: true,
       prevent: node => node.hasAttribute('data-lenis-prevent') || node.tagName === 'DIALOG' || node.hasAttribute('popover'),
@@ -242,8 +243,8 @@ export class ScrollCoordinator implements ProgressOwner {
     this.navigating = true
     const passage = ++this.passage
     this.lenis.scrollTo(to, {
-      duration: Math.max(1.5, Math.min(2.4, Math.abs(to - from) / this.bounds.travel * 2.4)),
-      easing: smootherStep,
+      duration: Math.max(2.4, Math.min(8.5, Math.abs(to - from) / this.bounds.travel * 16)),
+      easing: cinematicEase,
       lock: false,
       onComplete: () => {
         if (passage !== this.passage) return
@@ -265,8 +266,10 @@ export class ScrollCoordinator implements ProgressOwner {
     const passage = ++this.passage
     this.syncProgress()
     this.lenis.scrollTo(to, {
-      duration: Math.max(.35, Math.min(9, Math.abs(to - from) / this.bounds.travel * 6.5)),
-      easing: smootherStep,
+      // One 42-second product film, through the same real document position.
+      // The story mapping supplies the acceleration and reading holds already.
+      duration: Math.max(1, Math.abs(to - from) / this.bounds.travel * 42),
+      easing: t => t,
       lock: false,
       onComplete: () => {
         if (passage !== this.passage) return

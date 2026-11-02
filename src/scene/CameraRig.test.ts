@@ -81,7 +81,7 @@ describe('scenario camera and measured framing', () => {
         rig.frame(p, width, height, points)
         for (const point of points) {
           const projected = point.clone().project(camera)
-          const edge = p < .22 ? 1.05 : 1
+          const edge = p < .22 ? 1.14 : 1
           expect(Math.abs(projected.x)).toBeLessThan(edge)
           expect(Math.abs(projected.y)).toBeLessThan(edge)
         }
@@ -91,7 +91,7 @@ describe('scenario camera and measured framing', () => {
   })
   it('opens large on desktop and phone then withdraws to the first measured detail stop', () => {
     const { camera, rig, points } = setup()
-    for (const [width, height, minimum] of [[1440, 1000, 1.02], [390, 844, .98]]) {
+    for (const [width, height, minimum] of [[1440, 1000, 1.1], [390, 844, 1.1]]) {
       const edges = (p: number) => {
         rig.frame(p, width, height, points)
         return Math.max(...points.flatMap(point => {
@@ -100,7 +100,7 @@ describe('scenario camera and measured framing', () => {
         }))
       }
       expect(edges(0)).toBeGreaterThan(minimum)
-      expect(edges(0)).toBeLessThan(1.05)
+      expect(edges(0)).toBeLessThan(1.14)
       expect(edges(.22)).toBeLessThan(.95)
     }
   })

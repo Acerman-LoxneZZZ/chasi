@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { ProgressController } from '../animation/progressController'
 import { ScrollCoordinator } from '../animation/scrollCoordinator'
-import { gsap } from 'gsap'
 import { collectionStops, collectionStopIndex, finishes, type WatchFinish } from '../data/collection'
 import { CollectionPage } from '../components/CollectionPage'
-import { evaluateStoryPose } from '../animation/storyTimeline'
+import { evaluateStoryPose, storyCaptionOpacity } from '../animation/storyTimeline'
+import { useCinemaControls } from './useCinemaControls'
 import { Experience } from '../components/Experience'
 import { ExplosionControls, stageTitle } from '../components/ExplosionControls'
 import { Icon } from '../components/Icon'
@@ -34,8 +34,8 @@ export function App() {
   const { mode, compact } = useSyncExternalStore(coordinator.subscribe, coordinator.getSnapshot)
   const storySection = useRef<HTMLElement>(null)
   const storyPin = useRef<HTMLDivElement>(null)
-  const stationCopy = useRef<HTMLDivElement>(null)
   const tools = useRef<HTMLDetailsElement>(null)
+  const cinemaControls = useCinemaControls(tools)
   const detailDialog = useRef<HTMLDialogElement>(null)
   const [status, setStatus] = useState<SceneStatus>('loading')
   const [labels, setLabels] = useState(false)
@@ -43,6 +43,8 @@ export function App() {
   const [resetKey, setResetKey] = useState(0)
   const [storyVisible, setStoryVisible] = useState(true)
   const ready = status === 'ready'
+  const immersive = ready && storyVisible && mode === 'story' && !reducedMotion
+  const captionOpacity = immersive ? storyCaptionOpacity(progress) : 1
   const currentPart = parts.find(part => part.id === selected) ?? null
   const chapter = collectionStopIndex(progress)
   const stage = collectionStops[chapter]
@@ -54,11 +56,6 @@ export function App() {
     ? { ...currentPart, materialLabel: `Отделка корпуса: ${finishes.find(item => item.id === finish)!.title}` }
     : currentPart
   useEffect(() => { try { localStorage.setItem('karpov:finish', finish) } catch { /* Selection remains usable. */ } }, [finish])
-  useLayoutEffect(() => {
-    if (reducedMotion) return
-    const tween = gsap.fromTo(stationCopy.current, { opacity: .65, y: 8 }, { opacity: 1, y: 0, duration: .8, ease: 'power2.out', clearProps: 'transform,opacity' })
-    return () => { tween.kill() }
-  }, [chapter, reducedMotion])
   const viewIn3D = useCallback((value: number) => {
     const focusStop = () => {
       const index = collectionStops.findIndex(stop => Math.abs(stop.at - value) < .001)
@@ -103,6 +100,17 @@ export function App() {
     if (mode === 'story') coordinator.inspect()
     else coordinator.resume()
   }
+  const playStory = () => {
+    if (target !== null) { controller.pause(); return }
+    const play = () => {
+      if (progress > .995) controller.set(0)
+      controller.animateTo(1, reducedMotion)
+    }
+    if (mode === 'manual' && !reducedMotion) {
+      coordinator.resume()
+      requestAnimationFrame(play)
+    } else play()
+  }
 
   useEffect(() => () => controller.dispose(), [controller])
   useLayoutEffect(() => {
@@ -137,7 +145,7 @@ export function App() {
     }
   }, [])
 
-  return <div className="karpov-site">
+  return <div className="karpov-site" data-immersive={immersive} data-cinema-ui={cinemaControls ? 'visible' : 'hidden'}>
     <a className="skip-link" href="#explosion-range" onClick={event => { event.preventDefault(); revealControls() }}>К управлению часами</a>
     <header className={`site-header ${storyVisible ? '' : 'site-header--editorial'}`}>
       <a className="brand karpov-wordmark" href="#top" aria-label="KARpOV — начало коллекции">KARpOV</a>
@@ -152,10 +160,10 @@ export function App() {
     <main id="top">
       <section ref={storySection} id="explore" className={`watch-story ${compact ? 'watch-story--compact' : ''}`} data-mode={mode} aria-labelledby="hero-title">
         <div ref={storyPin} className="story-pin">
+          <h1 id="hero-title" className="sr-only">KARpOV. Карманные часы №01</h1>
           <div className="story-heading sr-only"><p id="scene-instructions">{mode === 'story' ? 'Прокручивайте страницу: часы поворачиваются и останавливаются для знакомства с деталями.' : 'Перетаскивайте часы для вращения. Ползунок меняет ход истории.'}</p></div>
-          <div className="station-copy" data-station={chapter}><div ref={stationCopy} className="station-copy-inner">
-            <p className="station-kicker">KARpOV <span>Карманные часы №01</span></p>
-            <h1 id="hero-title">{stage.title[0]}<br />{stage.title[1]}</h1>
+          <div className="station-copy" data-station={chapter} data-caption-visible={captionOpacity > 0} aria-hidden={captionOpacity === 0} inert={captionOpacity === 0} style={{ opacity: captionOpacity, transform: `translateY(${(1 - captionOpacity) * 10}px)` }}><div className="station-copy-inner">
+            <h2>{stage.title[0]}<br />{stage.title[1]}</h2>
             <p className="station-description">{stage.text}</p>
             <div className="station-fact"><strong>{chapter === 1 ? finishes.find(item => item.id === finish)!.title : stage.fact}</strong><span>{stage.detail}</span></div>
             <p className="station-note">{stage.note}</p>
@@ -167,6 +175,7 @@ export function App() {
           </div>
           <div className="exhibit-dock">
             <div className="dock-left">
+              <button className="film-button" disabled={!ready} data-pause-transition={target !== null || undefined} onClick={event => { playStory(); if (event.detail) event.currentTarget.blur() }} aria-label={target !== null ? 'Пауза просмотра' : progress > .995 ? 'Смотреть историю снова' : 'Смотреть историю'}><Icon name={target !== null ? 'pause' : 'play'} size={17} /><span>{target !== null ? 'Пауза' : progress > .995 ? 'Смотреть снова' : 'Смотреть историю'}</span></button>
               <details ref={tools} className="exhibit-tools">
                 <summary><Icon name="layers" size={17} /><span>Управление</span><span className="tools-plus" aria-hidden="true">+</span></summary>
                 <div className="controls-popover" data-lenis-prevent>
@@ -178,7 +187,7 @@ export function App() {
               </details>
               <span className="scroll-cue" aria-hidden="true"><span className="scroll-stroke" />{mode === 'manual' ? 'Свободное вращение' : progress > .98 ? 'Прокрутите обратно' : 'Прокрутите, чтобы заглянуть внутрь'}</span>
             </div>
-            <nav className="station-nav" aria-label="Остановки знакомства с часами">{collectionStops.map((stop, index) => <button key={stop.name} aria-current={index === chapter ? 'step' : undefined} aria-label={`Остановка ${index + 1}: ${stop.name}`} disabled={!ready} onClick={() => viewIn3D(stop.at)}><span className="station-dot" /><span>{stop.name}</span></button>)}</nav>
+            <nav className="station-nav" aria-label="Остановки знакомства с часами">{collectionStops.map((stop, index) => <button key={stop.name} aria-current={index === chapter ? 'step' : undefined} aria-label={`Остановка ${index + 1}: ${stop.name}`} disabled={!ready} onClick={event => { viewIn3D(stop.at); if (event.detail) event.currentTarget.blur() }}><span className="station-dot" /><span>{stop.name}</span></button>)}</nav>
             <div className="exhibit-progress" aria-hidden="true"><span className="chapter-count">{String(chapter + 1).padStart(2, '0')}<span> / 05</span></span><output aria-live="off">{Math.round(progress * 100)}<span>%</span></output></div>
           </div>
           <div className="story-hairline" aria-hidden="true"><span style={{ width: `${progress * 100}%` }} /></div>

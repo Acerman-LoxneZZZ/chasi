@@ -37,7 +37,7 @@ interface BoundPart {
 export class WatchScene {
   private renderer: WebGLRenderer
   private scene = new Scene()
-  private camera = new PerspectiveCamera(33, 1, 0.1, 100)
+  private camera = new PerspectiveCamera(30, 1, 0.1, 100)
   private controls: OrbitControls
   private rig: CameraRig
   private model: Group | null = null
@@ -498,6 +498,9 @@ export class WatchScene {
   private onPointerCancel = (event: PointerEvent) => { this.pressedPointers.delete(event.pointerId); this.maxPointerTravel = 100 }
   private onPointerUp = (event: PointerEvent) => {
     this.pressedPointers.delete(event.pointerId)
+    // A tap in the film reveals its controls. Picking belongs to explicit
+    // manual inspection, so touching the object cannot unexpectedly open a drawer.
+    if (this.mode !== 'manual') return
     if (this.maxPointerTravel > 6 || this.pressedPointers.size || event.button !== 0 || !this.model) return
     const rect = this.canvas.getBoundingClientRect()
     this.pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1)

@@ -1,11 +1,12 @@
 import type { CSSProperties } from 'react'
 
-export type IconName = 'rotate' | 'expand' | 'collapse' | 'pause' | 'arrow' | 'close' | 'check' | 'sun' | 'layers' | 'cursor' | 'reset' | 'chevron'
+export type IconName = 'rotate' | 'expand' | 'collapse' | 'pause' | 'play' | 'arrow' | 'close' | 'check' | 'sun' | 'layers' | 'cursor' | 'reset' | 'chevron'
 const paths: Record<IconName, string> = {
   rotate: 'M4 10a8 8 0 1 1 1.7 7M4 4v6h6M12 8v4l3 2',
   expand: 'm8 7 4-3 4 3M12 4v6m-4 7 4 3 4-3m-4 3v-6M4 12h3m10 0h3',
   collapse: 'm8 4 4 3 4-3M12 2v5m-4 13 4-3 4 3m-4-3v5M4 12h3m10 0h3',
   pause: 'M8 5v14M16 5v14',
+  play: 'm8 4 12 8-12 8V4Z',
   arrow: 'M4 12h16m-6-6 6 6-6 6',
   close: 'm6 6 12 12M6 18 18 6',
   check: 'm5 12 4 4L19 6',

@@ -131,7 +131,7 @@ export class CameraRig {
     // A generous opening close-up gradually withdraws before the first detail
     // stop. The desktop hero may slightly cross the frame by design.
     const opening = 1 - smootherStep(clampProgress(progress / .22))
-    const fill = width < 700 ? .925 + .075 * opening : .935 + .105 * opening
+    const fill = width < 700 ? .88 + .25 * opening : .91 + .22 * opening
     const tanY = Math.tan(this.camera.fov * Math.PI / 360) * fill
     const tanX = tanY * this.camera.aspect
     let distance = 0

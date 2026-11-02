@@ -24,6 +24,7 @@ const painted = async (page: Page) => {
   }), { timeout: 60000 }).toBe(true)
   await page.evaluate(() => document.fonts.ready)
   await settled(page)
+  test.info().annotations.push({ type: 'tested-entry', description: (await page.locator('script[type="module"]').getAttribute('src'))! })
 }
 const ready = async (page: Page) => { await page.goto('/'); await painted(page) }
 const camera = async (page: Page) => {
@@ -58,6 +59,89 @@ const setManualProgress = async (page: Page, value: number) => {
   await settled(page)
 }
 const noOverflow = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
+const uiOpacity = (page: Page, selector: string) => page.locator(selector).evaluate(element => Number(getComputedStyle(element).opacity))
+const revealCinemaControls = async (page: Page) => {
+  await page.mouse.move(20, 20)
+  await expect.poll(() => uiOpacity(page, '.site-header')).toBe(1)
+}
+
+test('the film opens with only a full-screen live watch and reveals controls by pointer or keyboard', async ({ page }) => {
+  await ready(page)
+  await expect(page.locator('.karpov-site')).toHaveAttribute('data-immersive', 'true')
+  await expect.poll(() => uiOpacity(page, '.site-header')).toBe(0)
+  expect(await uiOpacity(page, '.station-copy')).toBe(0)
+  expect(await uiOpacity(page, '.exhibit-dock')).toBe(0)
+  const rect = await canvas(page).boundingBox()
+  expect(rect).toEqual({ x: 0, y: 0, width: 1440, height: 1000 })
+  await revealCinemaControls(page)
+  await page.mouse.move(720, 500)
+  await expect.poll(() => uiOpacity(page, '.site-header'), { timeout: 5000 }).toBe(0)
+  await page.keyboard.press('Tab')
+  await expect(page.locator('.skip-link')).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(slider(page)).toBeFocused()
+  await expect.poll(() => uiOpacity(page, '.exhibit-dock')).toBe(1)
+})
+
+test('every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted', async ({ page }) => {
+  await ready(page)
+  for (const p of [.16, .405, .67, .9]) {
+    await scrollToProgress(page, p)
+    await expect.poll(() => uiOpacity(page, '.site-header')).toBe(0)
+    expect(await uiOpacity(page, '.station-copy')).toBe(0)
+    expect(await uiOpacity(page, '.exhibit-dock')).toBe(0)
+  }
+  await scrollToProgress(page, .78)
+  expect(await uiOpacity(page, '.station-copy')).toBe(1)
+  const held = await camera(page)
+  const frames = await canvas(page).getAttribute('data-frames')
+  await scrollToProgress(page, .79)
+  expect(await camera(page)).toEqual(held)
+  expect(await canvas(page).getAttribute('data-frames')).toBe(frames)
+  await scrollToProgress(page, 0)
+  await revealCinemaControls(page)
+  await page.getByRole('button', { name: 'Смотреть историю', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Пауза просмотра', exact: true })).toBeAttached()
+  await expect.poll(() => progress(page)).toBeGreaterThan(.075)
+  await expect.poll(() => uiOpacity(page, '.exhibit-dock')).toBe(0)
+  expect(await uiOpacity(page, '.station-copy')).toBe(0)
+  await page.mouse.wheel(0, 80)
+  await expect(page.getByRole('button', { name: 'Смотреть историю', exact: true })).toBeAttached()
+  await page.waitForTimeout(1800)
+  const paused = await progress(page)
+  await page.waitForTimeout(400)
+  expect(Math.abs(await progress(page) - paused)).toBeLessThan(.0006)
+  await revealCinemaControls(page)
+  await page.getByRole('button', { name: 'Смотреть историю', exact: true }).click()
+  await expect.poll(() => progress(page)).toBeGreaterThan(paused + .01)
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('button', { name: 'Смотреть историю', exact: true })).toBeAttached()
+  const stopped = await progress(page)
+  await page.waitForTimeout(400)
+  expect(await progress(page)).toBe(stopped)
+  await noOverflow(page)
+})
+
+test('a touch reveals film controls without selecting a part, while native swipe still advances the story', async ({ browser }) => {
+  const context = await browser.newContext({ baseURL: process.env.PW_BASE_URL || 'http://127.0.0.1:5173', viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: 'ru-RU' })
+  const page = await context.newPage()
+  try {
+    await ready(page)
+    expect(await uiOpacity(page, '.station-copy')).toBe(0)
+    await page.touchscreen.tap(195, 430)
+    await expect.poll(() => uiOpacity(page, '.exhibit-dock')).toBe(1)
+    await expect(canvas(page)).toHaveAttribute('data-mode', 'story')
+    expect(await page.locator('.detail-dialog').evaluate((dialog: HTMLDialogElement) => dialog.open)).toBe(false)
+    const cdp = await context.newCDPSession(page)
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 195, y: 680 }] })
+    for (const y of [620, 540, 460, 380, 300, 220]) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 195, y }] })
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    await expect.poll(() => progress(page)).toBeGreaterThan(.02)
+    await expect.poll(() => uiOpacity(page, '.exhibit-dock')).toBe(0)
+    await expect(canvas(page)).toHaveCSS('touch-action', 'pan-y')
+    await noOverflow(page)
+  } finally { await context.close() }
+})
 
 test('KARpOV has five navigable product stops that hold the real camera and mechanism still', async ({ page }) => {
   const errors: string[] = []
@@ -311,4 +395,25 @@ test('a lower WebGL failure keeps matching posters and the finish selector usabl
   await page.getByRole('radio', { name: 'Сталь', exact: true }).check()
   await expect(page.locator('.selection-portrait img.is-selected')).toHaveAttribute('src', /karpov-product-steel\.webp$/)
   await expect(page.getByRole('button', { name: 'Сохранить выбор', exact: true })).toBeEnabled()
+})
+
+test('the immersive main scene recovers its real WebGL context and current story pose', async ({ page }) => {
+  await ready(page)
+  await scrollToProgress(page, .67)
+  const expected = await camera(page)
+  const original = await canvas(page).elementHandle()
+  await original!.evaluate(element => {
+    const gl = element.getContext('webgl2')!
+    const extension = gl.getExtension('WEBGL_lose_context')!
+    ;(element as HTMLCanvasElement & { restoreForQA: () => void }).restoreForQA = () => extension.restoreContext()
+    extension.loseContext()
+  })
+  await expect(page.locator('.experience')).toHaveAttribute('data-status', 'context-lost')
+  await expect(page.locator('.scene-message')).toContainText('Отображение 3D приостановлено')
+  await original!.evaluate(element => (element as HTMLCanvasElement & { restoreForQA: () => void }).restoreForQA())
+  await painted(page)
+  await expect.poll(() => progress(page)).toBeCloseTo(.67, 3)
+  expect(await camera(page)).toEqual(expected)
+  await expect(page.locator('canvas.watch-canvas')).toHaveCount(1)
+  await expect(page.locator('.karpov-site')).toHaveAttribute('data-immersive', 'true')
 })

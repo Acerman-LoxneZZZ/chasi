@@ -5,7 +5,7 @@ import { CameraRig, evaluateStoryCameraAngles } from '../scene/CameraRig'
 import rawParts from '../data/watch-parts.json'
 import type { WatchPart } from '../types'
 import { createPose, evaluatePartTransform } from './evaluatePartTransform'
-import { evaluateStoryPose, storyHolds } from './storyTimeline'
+import { cinematicEase, evaluateStoryPose, storyCaptionOpacity, storyHolds } from './storyTimeline'
 
 const parts = rawParts as WatchPart[]
 
@@ -58,9 +58,9 @@ describe('product story stops', () => {
         peakDegreesPerProgress = Math.max(peakDegreesPerProgress, (angle - previous) * samples * 180 / Math.PI)
         previous = angle
       }
-      // A 1%-of-story movement stays below 28°, versus about 80° with the old
-      // double-quintic, short transition. The 423°/407° orbit is tested separately.
-      expect(peakDegreesPerProgress).toBeLessThan(2800)
+      // The same complete orbit now stays below 19° per 1% of scroll, down
+      // from 28° with quintic travel. There is no second visual follower.
+      expect(peakDegreesPerProgress).toBeLessThan(1900)
     }
   })
 
@@ -83,5 +83,33 @@ describe('product story stops', () => {
     for (const value of [1, 2, 100]) expect(evaluateStoryPose(value)).toBe(1)
     expect(parts.map(part => evaluatePartTransform(part, evaluateStoryPose(0)))).toEqual(parts.map(part => evaluatePartTransform(part, 0)))
     expect(parts.map(part => evaluatePartTransform(part, evaluateStoryPose(1)))).toEqual(parts.map(part => evaluatePartTransform(part, 1)))
+  })
+  it('shows captions only when all parts and the camera are held, leaving the entire intro and every flight clear', () => {
+    for (let index = 0; index <= 10000; index++) {
+      const p = index / 10000
+      const opacity = storyCaptionOpacity(p)
+      expect(opacity).toBeGreaterThanOrEqual(0)
+      expect(opacity).toBeLessThanOrEqual(1)
+      if (opacity > 0) {
+        const hold = storyHolds.find(hold => p >= hold.start && p <= hold.end)!
+        expect(hold).toBeDefined()
+        expect(hold.pose).toBeGreaterThan(0)
+        expect(evaluateStoryPose(p)).toBe(hold.pose)
+      }
+    }
+    for (const p of [0, .04, .16, .405, .67, .9]) expect(storyCaptionOpacity(p)).toBe(0)
+    for (const p of [.28, .53, .78, .97, 1]) expect(storyCaptionOpacity(p)).toBe(1)
+  })
+  it('keeps a steady cruise with smooth joins and one-third lower peak speed', () => {
+    const epsilon = 1e-5
+    for (const t of [0, .2, .5, .8, 1]) {
+      expect(cinematicEase(1 - t)).toBeCloseTo(1 - cinematicEase(t), 12)
+      const acceleration = (cinematicEase(t + epsilon) - 2 * cinematicEase(t) + cinematicEase(t - epsilon)) / epsilon ** 2
+      expect(Math.abs(acceleration)).toBeLessThan(.001)
+    }
+    for (const t of [.3, .5, .7]) expect((cinematicEase(t + epsilon) - cinematicEase(t - epsilon)) / (2 * epsilon)).toBeCloseTo(1.25, 9)
+    expect(cinematicEase(NaN)).toBe(0)
+    expect(cinematicEase(-1)).toBe(0)
+    expect(cinematicEase(2)).toBe(1)
   })
 })
