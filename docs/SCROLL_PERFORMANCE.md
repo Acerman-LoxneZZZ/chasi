@@ -1,6 +1,6 @@
 # KARpOV — задержки прокрутки, 6 ноября 2026
 
-Production preview: **http://127.0.0.1:4174/**. Текущая сборка — **assets/index-CGOHlaLR.js**, CSS **index-DEfI_tuW.css**. [Хеши сборки и исходников](evidence/build-scroll-performance.json). Базовая версия — 8c6768d / Dovk9NqQ.
+Production preview: **http://127.0.0.1:4174/**. Текущая сборка — **assets/index-CGOHlaLR.js**, CSS **index-DEfI_tuW.css**. [Хеши сборки и исходников](evidence/build-scroll-performance.json). Базовая версия — 8c6768d / Dovk9NqQ. Итоговый код — **6fd242c**, с сохранением upstream 8ba44de / ab278ec. **QA завершён:** [строгая сводка](evidence/scroll-performance-summary.json) проверила хеши исходников, тестов, assets, модели, освещения и всех PNG.
 
 ## Причины и изменения
 
@@ -25,10 +25,14 @@ Production preview: **http://127.0.0.1:4174/**. Текущая сборка — 
 
 - Build/typecheck и verify:model прошли.
 - **79/79 unit, 10 файлов:** [JSON](evidence/unit-scroll-performance.json). Новые проверки подтверждают неблокирующее чтение query, ограниченную очередь, disjoint/context loss/отсутствие расширения и объединение storage с точным flush.
-- Browser QA текущего entry в работе: **20 сценариев**. Новый сценарий моделирует дорогую отрисовку, после включения fallback снимает инъекцию и проверяет соблюдение частоты при непрерывном scroll, последний pending progress и единственный нижний canvas. Старые результаты не подставляются.
+- **20/20 browser текущего entry одним полным запуском**, 1 worker, 16,7 минуты, 0 retries / skip / flaky: [сырой JSON](browser-scroll-performance.json). Новый сценарий моделирует дорогую отрисовку, после включения fallback снимает инъекцию и проверяет соблюдение частоты при непрерывном scroll, последний pending progress и единственный нижний canvas. Проверены неподвижные остановки/пролёты, manual/resume/reload, PBR и отсутствие скрытого main draw, opt-in звук, гравировка, точная обратимая сборка после late-layout +137 px, retry и восстановление обоих WebGL-контекстов. Старые результаты не подставлялись.
 - [Исходный полный wheel-профиль](evidence/scroll-performance-before.json), [полный профиль Bb3XpR_I до остановки невидимого main canvas](evidence/scroll-performance-before-visibility.json) и свежий [целевой профиль трёх procedural сцен CGOHlaLR](evidence/scroll-performance-after.json). Каждый записывает entry/SHA256, renderer, viewport, RAF, long tasks, long animation frames и метрики сцен. У промежуточного полного профиля нет устойчивого общего выигрыша по RAF: остаются долгие ожидания software GPU и тяжёлый getContext (2.78 s). Свежий целевой протокол подтверждает текущие ресурсы нижних сцен; его длительность не сравнивается с полным протоколом как общий выигрыш FPS. Фиксированный 30 Hz — верхняя граница частоты, а не обещание 30 FPS на SwiftShader. Аппаратные FPS не заявляются.
-- До последнего исправления полный browser-прогон Bb3XpR_I дал **18/20**: [исходный JSON](browser-scroll-before-visibility.json). Два перехода не успели дойти до endpoint за 15 s при software WebGL. После остановки скрытых draw и атомарного resize новая сборка проходит весь набор заново; тестовое ожидание endpoint увеличено до 60 s, точность .001, неподвижность поз и остальные проверки сохранены. Время самого clock проверяется unit-тестами. Старые 18/20 не засчитываются новому коду.
+- До последнего исправления полный browser-прогон Bb3XpR_I дал **18/20**: [исходный JSON](browser-scroll-before-visibility.json). Два перехода не успели дойти до endpoint за 15 s при software WebGL. После остановки скрытых draw и атомарного resize новая сборка прошла весь набор заново; тестовое ожидание endpoint увеличено до 60 s, точность .001, неподвижность поз и остальные проверки сохранены. Время самого clock проверяется unit-тестами. Старые 18/20 не засчитываются новому коду.
 - [Промежуточный профиль BKenZUcM](evidence/scroll-performance-intermediate.json) показал работающий fallback DPR .85 и снижение calls, но неодинаковую динамику задержек и оставшийся тяжёлый старт окружения. После него сохранены индексы геометрии и добавлен заранее рассчитанный PMREM. Он не считается проверкой финальной сборки.
+
+- **6 свежих кадров:** [метрики и хеши](screenshots/scroll-performance/metrics.json), 1280×800 DPR1 и 390×844 DPR2, статичная reduced-motion поза. Каждый кадр проверен после presentation, содержит реальные пиксели металла внутри host и один нижний canvas; горизонтального overflow нет. Все шесть визуально просмотрены, crown desktop переснят с ожиданием готового compositor-кадра. Эти снимки не являются проверкой аппаратного FPS.
+
+Дополнительно сохранён upstream пересчёт нижних ScrollTrigger при изменении размера body/сцен и готовности шрифтов. Регрессия с добавлением 137 px перед финалом включена в новый полный прогон.
 
 ## Метод и ограничения
 
@@ -43,7 +47,7 @@ npm run verify:model
 PORT=4174 ./start.sh
 node scripts/verify-detail-batching.mjs
 node scripts/profile-scroll.mjs --software --lower-only --output=docs/evidence/scroll-performance-after.json
-PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-scroll-performance.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
+PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-scroll-performance.json npm run test:browser -- --workers=1 --reporter=list,json
 node scripts/inspect-scroll-performance.mjs
 node scripts/summarize-scroll-performance.mjs
 ```

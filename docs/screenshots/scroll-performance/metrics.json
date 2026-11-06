@@ -4,14 +4,15 @@
   "shots": [
     {
       "path": "docs/screenshots/scroll-performance/1280-balance.png",
+      "goldPixelRatio": 0.1346385782747604,
       "imageSha256": "3ef0dabcccb6b596e858520e25b808cb55b5db40608f662febcac6a61ca00f29",
       "viewport": [
         1280,
         800
       ],
       "deviceScaleFactor": 1,
-      "entry": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652",
+      "entry": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
       "sceneKind": "balance",
       "sceneStatus": "ready",
       "status": "ready",
@@ -31,14 +32,15 @@
     },
     {
       "path": "docs/screenshots/scroll-performance/1280-crown.png",
-      "imageSha256": "8564772a1f934a9d9b53c6fffa0bb29cb60aa28527bb0c07ab1bb2938501bf21",
+      "goldPixelRatio": 0.04436962214739992,
+      "imageSha256": "3dbb5970206cbe90933f26558b2f578084926196c7a3683ab8feb3f5ec159b75",
       "viewport": [
         1280,
         800
       ],
       "deviceScaleFactor": 1,
-      "entry": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652",
+      "entry": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
       "sceneKind": "crown",
       "sceneStatus": "ready",
       "status": "ready",
@@ -58,14 +60,15 @@
     },
     {
       "path": "docs/screenshots/scroll-performance/1280-geartrain.png",
+      "goldPixelRatio": 0.09740659340659341,
       "imageSha256": "e42b61ad38367d9adc05813a1f4d1449c1e5dcb253d4e588ff538fe4e9448a18",
       "viewport": [
         1280,
         800
       ],
       "deviceScaleFactor": 1,
-      "entry": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652",
+      "entry": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
       "sceneKind": "geartrain",
       "sceneStatus": "ready",
       "status": "ready",
@@ -85,14 +88,15 @@
     },
     {
       "path": "docs/screenshots/scroll-performance/390-balance.png",
+      "goldPixelRatio": 0.11051969599657462,
       "imageSha256": "b217f7a6d6ed3d5c10a9841cfa065fce34eefb0c838c897be6a40c5feb68e417",
       "viewport": [
         390,
         844
       ],
       "deviceScaleFactor": 2,
-      "entry": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652",
+      "entry": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
       "sceneKind": "balance",
       "sceneStatus": "ready",
       "status": "ready",
@@ -112,14 +116,15 @@
     },
     {
       "path": "docs/screenshots/scroll-performance/390-crown.png",
-      "imageSha256": "81798e2e066a4ce4bdd72c613724b9b57d5d0aaa2d5a0c8a088bc3a529f576d4",
+      "goldPixelRatio": 0.05562325028700328,
+      "imageSha256": "e18339917bac16cd762cbbfd58004773b668594f3d253ef904508e9bfce566b5",
       "viewport": [
         390,
         844
       ],
       "deviceScaleFactor": 2,
-      "entry": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652",
+      "entry": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
       "sceneKind": "crown",
       "sceneStatus": "ready",
       "status": "ready",
@@ -128,25 +133,26 @@
       "progress": "0.49072",
       "renderedProgress": "0.49072",
       "poseProgress": "0.50000",
-      "frames": "2",
+      "frames": "3",
       "modelTriangles": "12420",
       "drawCalls": "12",
       "motionTime": "0.0000",
-      "dpr": "1.25",
+      "dpr": "0.85",
       "reducedMotion": "true",
       "sharedCanvasCount": 1,
       "overflow": false
     },
     {
       "path": "docs/screenshots/scroll-performance/390-geartrain.png",
+      "goldPixelRatio": 0.09534416160081054,
       "imageSha256": "3e4110452b1ba6bbc8aad35e104a90c7d3efa276e7a4d6db8cc1b3a37e1b9cc5",
       "viewport": [
         390,
         844
       ],
       "deviceScaleFactor": 2,
-      "entry": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652",
+      "entry": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
       "sceneKind": "geartrain",
       "sceneStatus": "ready",
       "status": "ready",
@@ -155,7 +161,7 @@
       "progress": "0.49209",
       "renderedProgress": "0.49209",
       "poseProgress": "0.50000",
-      "frames": "2",
+      "frames": "1",
       "modelTriangles": "15344",
       "drawCalls": "24",
       "motionTime": "0.0000",

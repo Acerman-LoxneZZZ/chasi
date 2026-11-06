@@ -82,14 +82,14 @@ Mapping одинаков в истории и ручном режиме. На п
 
 ## Проверки и сохранение
 
-Текущий unit-прогон: **79/79**, 10 файлов: [unit-scroll-performance.json](docs/evidence/unit-scroll-performance.json), entry **CGOHlaLR**. Новый полный browser-прогон (20 сценариев) ещё готовится; результаты предыдущего entry Dovk9NqQ не подтверждают новый код. Точная сборка, сравнение и текущий QA — [SCROLL_PERFORMANCE.md](docs/SCROLL_PERFORMANCE.md). История предыдущих проверок — [VERIFICATION.md](docs/VERIFICATION.md).
+Текущий unit-прогон: **79/79**, 10 файлов: [unit-scroll-performance.json](docs/evidence/unit-scroll-performance.json), entry **CGOHlaLR**. Полный browser-прогон этой же сборки: **20/20**, 1 worker, 16,7 минуты, без повторов и пропусков: [JSON](docs/browser-scroll-performance.json). Строгая [сводка](docs/evidence/scroll-performance-summary.json) сверила исходники, assets и снимки. Старые результаты не переносились. Точная сборка, сравнение и текущий QA — [SCROLL_PERFORMANCE.md](docs/SCROLL_PERFORMANCE.md). История предыдущих проверок — [VERIFICATION.md](docs/VERIFICATION.md).
 
 ```bash
 npm run typecheck
 npm test -- --reporter=json --outputFile=docs/evidence/unit-scroll-performance.json
 npm run verify:model
 npm run build
-PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-scroll-performance.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
+PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-scroll-performance.json npm run test:browser -- --workers=1 --reporter=list,json
 node scripts/verify-detail-batching.mjs
 node scripts/profile-scroll.mjs --software --lower-only --output=docs/evidence/scroll-performance-after.json
 node scripts/inspect-scroll-performance.mjs

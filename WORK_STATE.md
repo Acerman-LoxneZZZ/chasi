@@ -1,14 +1,14 @@
 # KARpOV — исправление задержек прокрутки, 6 ноября 2026
 
-Текущий запрос: при появлении шестерёнок и ниже по странице скролл дёргается. Исправления реализованы; заканчивается QA объединённого кода. Не начинать проект заново. Устройство пользователя не уточнено, физический телефон и аппаратный GPU/FPS не проверялись.
+Текущий запрос: при появлении шестерёнок и ниже по странице скролл дёргается. Исправления реализованы, QA объединённого кода завершён. Не начинать проект заново. Устройство пользователя не уточнено, физический телефон и аппаратный GPU/FPS не проверялись.
 
 ## Текущая точка
 
 - Preview: **http://127.0.0.1:4174/**, работает. Порт 4173 — другой проект, не трогать.
 - Production entry **assets/index-CGOHlaLR.js**, CSS **index-DEfI_tuW.css**. Точные хеши входных исходников, тестов, assets и модели: `docs/evidence/build-scroll-performance.json`.
-- Собственные commits: **a09e6b1**, **2aad262**. После fetch найдены upstream **8ba44de / ab278ec**: они сохраняют корректный финал после поздних изменений layout, Windows-скрипты и их старый QA. Эти изменения объединены без удаления оптимизации; merge-коммит сохраняется после текущих проверок.
-- Build/typecheck и **79/79 unit** (10 файлов) прошли на объединённом коде: `docs/evidence/unit-scroll-performance.json`. Свежий полный browser-набор — **20 сценариев**, запускать **1 worker**, после завершения профиля и снимков. Результаты других entry не переносить.
-- `scripts/profile-scroll.mjs --software --lower-only` и `scripts/inspect-scroll-performance.mjs` запущены последовательно для CGOHlaLR. Последний делает 6 кадров: 1280×800 DPR1 / 390×844 DPR2, reduced-motion статичная поза. Ожидает presentation через 3 RAF и проверяет реальные золотистые пиксели внутри 3D host; один draw-call счётчик не доказывает непустой снимок. Метрики содержат entry/SHA и PNG hash.
+- Собственные commits: **a09e6b1**, **2aad262**. После fetch найдены upstream **8ba44de / ab278ec**: они сохраняют корректный финал после поздних изменений layout, Windows-скрипты и их старый QA. Эти изменения объединены без удаления оптимизации в merge-коммите **6fd242c**.
+- Build/typecheck и **79/79 unit** (10 файлов) прошли на объединённом коде: `docs/evidence/unit-scroll-performance.json`. Свежий полный browser-набор: **20/20 одним запуском, 1 worker, 16,7 минуты, без retry/skip/flaky**, `docs/browser-scroll-performance.json`. Строгая `docs/evidence/scroll-performance-summary.json` сверила реальные entry/SHA, исходники, тесты, assets, модель, освещение и 6 PNG. Результаты других entry не переносились.
+- `scripts/profile-scroll.mjs --software --lower-only` и `scripts/inspect-scroll-performance.mjs` завершены последовательно для CGOHlaLR, без JS-ошибок. Сняты и визуально проверены 6 кадров: 1280×800 DPR1 / 390×844 DPR2, reduced-motion статичная поза. Ожидает presentation через 3 RAF и проверяет реальные золотистые пиксели внутри 3D host; один draw-call счётчик не доказывает непустой снимок. Метрики содержат entry/SHA и PNG hash.
 
 ## Реализованные исправления
 
@@ -33,13 +33,12 @@ React / TypeScript / Vite / императивный Three.js + GSAP ScrollTrigg
 - Upstream BDwMm0TQ имел 74/74, 19/19 и 56 кадров на другом устройстве (Windows / software Chrome); исторический контекст — `docs/WORK_STATE_FINALE_2026_11_02.md`, отчёт — `docs/VERIFICATION.md`. Это не проверка нового кода.
 - Bb3XpR_I дал 18/20, два endpoint не достигнуты за 15 s при software WebGL: `docs/browser-scroll-before-visibility.json`, build/profile перед visibility отдельно. Ожидание endpoint в новых тестах 60 s без изменения точности .001; duration clock проверяется unit-тестами. CbxnG-Tl после visibility имел частичный прерванный прогон; полным QA не считается.
 - Промежуточные профили BKenZUcM / Bb3XpR_I / CbxnG-Tl сохранены с собственными entry. Абсолютные software-тайминги разных протоколов не сравнивать как аппаратный FPS. Даже после оптимизации SwiftShader имеет длительные GPU-ожидания.
-- До текущего запроса были изменены `scripts/inspect-personalization.mjs`, `scripts/summarize-finale.mjs` и неотслеживаемые finale-отчёты/PNG. Они сохранены в `artifacts/premerge-finale-wip/` и Git stash `Preserve original finale WIP before merging origin main`. После merge вернуть рабочие изменения двух scripts из `scripts.patch`, не заменяя новейшие upstream PNG старыми. Stash не удалять.
+- До текущего запроса были изменены `scripts/inspect-personalization.mjs`, `scripts/summarize-finale.mjs` и неотслеживаемые finale-отчёты/PNG. Они сохранены в `artifacts/premerge-finale-wip/` и Git stash `Preserve original finale WIP before merging origin main`. После merge рабочие изменения двух scripts восстановлены из `scripts.patch`; они остаются незакоммиченными, как в начале задачи. Новейшие upstream PNG старыми не заменялись. Stash не удалять.
 
-## Дальше
+## Сохранение и запуск
 
-1. Закончить профиль/6 снимков CGOHlaLR; визуально проверить все кадры, включая crown desktop.
-2. Сохранить merge, вернуть два WIP scripts, запустить весь browser-набор последовательно на этой сборке. Новый performance-сценарий проверяет cap при синтетической перегрузке; experience проверяет отсутствие main draw при скрытом выборе отделки. Персонализация включает upstream late-layout регрессию.
-3. `node scripts/summarize-scroll-performance.mjs` сверяет реальные entry/SHA, исходники, 79 unit, 20 browser, освещение, модель и 6 PNG. Отчёт `docs/SCROLL_PERFORMANCE.md` обновить фактическими результатами.
-4. Обновить release ZIP (`artifacts/hod-vremeni.zip` / `KARpOV.zip`), безопасный checkpoint, закоммитить QA. Пользователь **ранее разрешил Git push готовой итерации в origin/main Acerman-LoxneZZZ/chasi**: выполнить без force. Облачный deploy не запрошен.
+QA завершён, исходники приложения **6fd242c** / entry **CGOHlaLR**. Новый performance-сценарий подтвердил cap при синтетической перегрузке; скрытый выбор отделки не вызывает main draw; upstream late-layout регрессия прошла. Сводка и все исходные отчёты сохранены. Осталось зафиксировать итоговые QA/PNG, обновить release ZIP и checkpoint и выполнить ранее разрешённый push готовой итерации в **origin/main Acerman-LoxneZZZ/chasi**, без force. Облачный deploy не запрошен.
+
+Запуск: `PORT=4174 ./start.sh`. Сервер оставлен на 4174. После исходников нужен `npm run build`; текущая сборка уже совпадает с проверенными хешами. Release ZIP: `artifacts/hod-vremeni.zip` / `KARpOV.zip`; checkpoint: `artifacts/checkpoints/latest.zip` / `previous.zip`. Исходный baseline этой задачи — `before-scroll-performance.zip`.
 
 Не включать в ZIP .git, .tools, node_modules, .codex, .aws, .env или настройки аккаунтов. Сохранять контрольные точки через `python3 scripts/save-checkpoint.py` после значимых этапов. Запуск: `PORT=4174 ./start.sh`; после исходников нужен build. Текущие проверки — headless Chrome / ANGLE SwiftShader и viewport/touch эмуляция, не физический телефон или аппаратный GPU/FPS.

@@ -1,0 +1,233 @@
+{
+  "createdAt": "2026-11-06T16:21:39.698Z",
+  "sourceCommit": "6fd242ce3f97accd673258bec0eff49962921dfe",
+  "entry": "assets/index-CGOHlaLR.js",
+  "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda",
+  "unit": {
+    "passed": 79,
+    "total": 79
+  },
+  "browser": {
+    "verifiedUniqueScenarios": 20,
+    "total": 20,
+    "fullRunPassed": 20,
+    "fullRunFailed": 0,
+    "manualReruns": 0,
+    "targetedPassed": 0,
+    "frameworkRetries": 0,
+    "workers": 1,
+    "durationMs": 1004316.238
+  },
+  "initialFailures": [],
+  "scenarios": [
+    {
+      "title": "the film opens with only a full-screen live watch and reveals controls by pointer or keyboard",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 33411,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "every flight has a clear screen, captions appear only in still holds and the 42-second playback can be interrupted",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 100562,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "a touch reveals film controls without selecting a part, while native swipe still advances the story",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 27716,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "KARpOV has five navigable product stops that hold the real camera and mechanism still",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 58022,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "manual controls preserve the displayed pose and resume and reload the same story position",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 78556,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "the collection continues through real sections and loaded artwork on desktop and mobile without overflow",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 62452,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "three finishes persist and change the actual 3D case while keeping the same viewing pose",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 84943,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "saving a finish downloads an honest KARpOV selection card without sending data externally",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 33082,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "reduced motion keeps a compact manual viewer and the complete commercial page",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 32760,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "a controlled model failure preserves the collection and retries with the chosen finish",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 43739,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "three different live mechanical models share one canvas, animate visibly and stop offscreen",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 41809,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "a lower WebGL failure keeps matching posters and the finish selector usable",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 33660,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "the immersive main scene recovers its real WebGL context and current story pose",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 54727,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "a saturated detail renderer preserves the scroll frame budget and paints the latest queued pose",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 29952,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "initials alter the actual back-cover pixels, persist and enter the local selection card",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 67340,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "the finale assembles all carriers, reveals the signature only after motion, and replays the original story",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 62109,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "reduced motion gives a compact completed finale and a static engraving view",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 32063,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "sound is silent by default, uses a real opt-in AudioContext, and pauses on simulated tab hiding",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 39366,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "the shared watch retries its asset and restores its WebGL context with the same initials",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 49370,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    },
+    {
+      "title": "unsupported audio leaves the live scene usable and shows a clear status",
+      "entry": "assets/index-CGOHlaLR.js",
+      "duration": 33533,
+      "status": "passed",
+      "errors": [],
+      "run": "full"
+    }
+  ],
+  "resources": [
+    {
+      "kind": "balance",
+      "triangles": 11128,
+      "callsBefore": 17,
+      "callsAfter": 12
+    },
+    {
+      "kind": "crown",
+      "triangles": 12420,
+      "callsBefore": 16,
+      "callsAfter": 12
+    },
+    {
+      "kind": "geartrain",
+      "triangles": 15344,
+      "callsBefore": 38,
+      "callsAfter": 24
+    }
+  ],
+  "lighting": {
+    "width": 384,
+    "height": 512,
+    "format": "RGBA16F / CubeUVReflectionMapping",
+    "pmremSize": 128,
+    "blur": 0.07,
+    "near": 0.1,
+    "far": 100,
+    "validation": {
+      "renderedMetalSphere": [
+        128,
+        128
+      ],
+      "maxPixelDeviation": 0,
+      "method": "Same live PMREM vs restored half-float DataTexture, per-channel GPU pixel comparison"
+    },
+    "source": "Three.js RoomEnvironment + PMREMGenerator; same parameters as the previous live detail renderer. Lossless half-float GPU readback.",
+    "bytes": 1572864,
+    "sha256": "94e7b2b50168da738852bf7a6541c85a6905b49b71062d30a8ea8db5d99bb93f"
+  },
+  "visualShots": [
+    "docs/screenshots/scroll-performance/1280-balance.png",
+    "docs/screenshots/scroll-performance/1280-crown.png",
+    "docs/screenshots/scroll-performance/1280-geartrain.png",
+    "docs/screenshots/scroll-performance/390-balance.png",
+    "docs/screenshots/scroll-performance/390-crown.png",
+    "docs/screenshots/scroll-performance/390-geartrain.png"
+  ],
+  "method": "Software WebGL diagnostics and viewport emulation; raw timings are not hardware-GPU FPS or physical-phone validation."
+}
