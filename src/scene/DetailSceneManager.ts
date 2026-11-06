@@ -1,14 +1,15 @@
 import {
-  ACESFilmicToneMapping, AmbientLight, Color, DirectionalLight, PerspectiveCamera,
-  PMREMGenerator, Scene, SRGBColorSpace, Vector3, WebGLRenderer, WebGLRenderTarget,
+  ACESFilmicToneMapping, AmbientLight, Color, DataTexture, DirectionalLight, PerspectiveCamera,
+  Scene, SRGBColorSpace, Vector3, WebGLRenderer,
 } from 'three'
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createDetailModels, type DetailModel, type DetailSceneKind, type ProceduralSceneKind } from './detailModels'
+import { createDetailModel, type DetailModel, type DetailSceneKind, type ProceduralSceneKind } from './detailModels'
 import { loadPersonalWatch, type PersonalWatchModel, type WatchDetailKind } from './PersonalWatchModel'
 import { evaluateFinale } from '../animation/finaleTimeline'
 import type { WatchFinish } from '../data/collection'
+import { GpuTimer } from './GpuTimer'
+import { loadDetailEnvironment } from './detailEnvironment'
 
 export type { DetailSceneKind } from './detailModels'
 
@@ -47,14 +48,19 @@ class DetailSceneManager {
   private resizeObserver: ResizeObserver
   private motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
   private active: DetailEntry | null = null
-  private models: Record<ProceduralSceneKind, DetailModel> | null = null
+  private models: Partial<Record<ProceduralSceneKind, DetailModel>> = {}
+  private nearby = new Set<DetailEntry>()
+  private compiled = new Set<DetailModel>()
+  private compiling = new Set<DetailModel>()
   private watchModel: PersonalWatchModel | null = null
   private watchLoading = false
   private watchFailed = false
   private watchAbort = new AbortController()
   private renderer: WebGLRenderer | null = null
+  private gpuTimer: GpuTimer | null = null
   private canvas: HTMLCanvasElement | null = null
-  private environment: WebGLRenderTarget | null = null
+  private environment: DataTexture | null = null
+  private environmentAbort = new AbortController()
   private scene = new Scene()
   private camera = new PerspectiveCamera(35, 1, .05, 100)
   private direction = new Vector3()
@@ -81,9 +87,15 @@ class DetailSceneManager {
       this.selectActive()
     }, { rootMargin: '-76px 0px 0px', threshold: [0, .1, .25, .5, .75, 1] })
     this.proximity = new IntersectionObserver(records => {
-      if (records.some(record => record.isIntersecting)) this.scheduleWarmup()
-      if (records.some(record => record.isIntersecting && isWatch(this.find(record.target)?.kind ?? 'balance'))) this.prepareWatch()
-    }, { rootMargin: '250px 0px', threshold: 0 })
+      for (const record of records) {
+        const entry = this.find(record.target)
+        if (entry) {
+          if (record.isIntersecting) this.nearby.add(entry)
+          else this.nearby.delete(entry)
+        }
+      }
+      this.scheduleWarmup()
+    }, { rootMargin: `${Math.max(600, window.innerHeight)}px 0px`, threshold: 0 })
     this.resizeObserver = new ResizeObserver(records => {
       for (const record of records) {
         const entry = this.find(record.target)
@@ -124,6 +136,7 @@ class DetailSceneManager {
       this.proximity.unobserve(host)
       this.resizeObserver.unobserve(host)
       this.entries.delete(entry)
+      this.nearby.delete(entry)
       if (this.active === entry) {
         this.detachActive()
         this.selectActive()
@@ -185,6 +198,7 @@ class DetailSceneManager {
       this.watchModel = model
       this.updatePersonalization()
       this.selectActive()
+      this.scheduleWarmup()
     }).catch(() => {
       if (this.disposed) return
       this.watchFailed = true
@@ -194,22 +208,59 @@ class DetailSceneManager {
   }
 
   private modelFor(entry: DetailEntry) {
-    return isWatch(entry.kind) ? this.watchModel : this.models?.[entry.kind]
+    return isWatch(entry.kind) ? this.watchModel : this.models[entry.kind]
   }
 
   private scheduleWarmup() {
-    if (this.renderer || this.failed || this.contextLost || this.disposed || this.warmup !== null || document.hidden) return
+    if (this.failed || this.contextLost || this.disposed || this.warmup !== null || document.hidden || !this.nearby.size) return
     const warm = () => {
       this.warmup = null
-      if (!this.disposed && !document.hidden) this.prepareRenderer()
+      if (this.disposed || document.hidden || this.contextLost || this.failed) return
+      // Separate context/environment, geometry and shader preparation into tasks.
+      // Never construct all three sculptures in the first visible scroll frame.
+      if (!this.renderer) { this.prepareRenderer(); this.scheduleWarmup(); return }
+      if (!this.environment) return
+      for (const entry of this.nearby) {
+        if (isWatch(entry.kind)) {
+          if (!this.watchModel) { this.prepareWatch(); continue }
+        } else if (!this.models[entry.kind]) {
+          this.models[entry.kind] = createDetailModel(entry.kind)
+          this.scheduleWarmup()
+          return
+        }
+        const model = this.modelFor(entry)
+        if (model && !this.compiled.has(model) && !this.compiling.has(model)) {
+          this.prepareModel(model)
+          this.scheduleWarmup()
+          return
+        }
+      }
     }
     if (typeof window.requestIdleCallback === 'function') {
       this.warmupIsIdle = true
-      this.warmup = window.requestIdleCallback(warm, { timeout: 500 })
+      this.warmup = window.requestIdleCallback(warm, { timeout: 250 })
     } else {
       this.warmupIsIdle = false
       this.warmup = window.setTimeout(warm, 0)
     }
+  }
+
+  private prepareModel(model: DetailModel) {
+    const renderer = this.renderer!
+    this.compiling.add(model)
+    // Keep the real lighting when compiling an unattached model. On supported
+    // GPUs this polls KHR_parallel_shader_compile instead of blocking first paint.
+    renderer.compileAsync(model.root, this.camera, this.scene).then(() => {
+      if (this.disposed || this.renderer !== renderer || this.contextLost) return
+      this.compiling.delete(model)
+      this.compiled.add(model)
+      this.selectActive()
+    }).catch(() => {
+      if (this.disposed || this.renderer !== renderer) return
+      this.failed = true
+      for (const entry of this.entries) this.status(entry, 'error')
+      this.releaseRenderer()
+    })
   }
 
   private prepareRenderer() {
@@ -224,17 +275,11 @@ class DetailSceneManager {
       this.canvas = canvas
       const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
       this.renderer = renderer
+      this.gpuTimer = new GpuTimer(renderer.getContext())
       renderer.outputColorSpace = SRGBColorSpace
       renderer.toneMapping = ACESFilmicToneMapping
       renderer.toneMappingExposure = .96
       renderer.setClearColor(new Color('#101b28'), 0)
-      const room = new RoomEnvironment()
-      const pmrem = new PMREMGenerator(renderer)
-      // 128px is sufficient for satin metal and costs much less than a second
-      // full-size product environment on mobile and software WebGL.
-      try { this.environment = pmrem.fromScene(room, .07, .1, 100, { size: 128 }) }
-      finally { room.dispose(); pmrem.dispose() }
-      this.scene.environment = this.environment.texture
       this.scene.environmentIntensity = .95
       this.scene.add(new AmbientLight('#cbd9e9', .4))
       const key = new DirectionalLight('#fff1d6', 2.1)
@@ -244,8 +289,19 @@ class DetailSceneManager {
       const rim = new DirectionalLight('#f8d69d', 2.2)
       rim.position.set(1, 4, -5)
       this.scene.add(key, fill, rim)
-      this.models ??= createDetailModels()
-      this.selectActive()
+      this.environmentAbort = new AbortController()
+      loadDetailEnvironment(this.environmentAbort.signal).then(texture => {
+        if (this.disposed || this.renderer !== renderer) { texture.dispose(); return }
+        this.environment = texture
+        this.scene.environment = texture
+        this.scheduleWarmup()
+        this.selectActive()
+      }).catch(() => {
+        if (this.disposed || this.renderer !== renderer) return
+        this.failed = true
+        for (const entry of this.entries) this.status(entry, 'error')
+        this.releaseRenderer()
+      })
     } catch {
       this.failed = true
       this.stopTicking()
@@ -268,15 +324,17 @@ class DetailSceneManager {
       this.lastTick = null
       this.lastPaint = -Infinity
     }
-    if (!this.renderer || !this.canvas || !this.models) { this.scheduleWarmup(); return }
+    if (!this.renderer || !this.canvas) { this.scheduleWarmup(); return }
     const model = this.modelFor(best)
     if (!model) {
       if (isWatch(best.kind)) {
         if (this.watchFailed) this.status(best, 'error')
         else this.prepareWatch()
       }
+      this.scheduleWarmup()
       return
     }
+    if (!this.compiled.has(model)) { this.scheduleWarmup(); return }
     if (this.canvas.parentElement !== best.surface) {
       best.surface.append(this.canvas)
       for (const model of Object.values(this.models)) this.scene.remove(model.root)
@@ -311,7 +369,8 @@ class DetailSceneManager {
 
   private invalidate() {
     this.dirty = true
-    if (!this.ticking && this.renderer && this.active && !document.hidden && !this.contextLost && !this.disposed) {
+    if (!this.ticking && this.renderer && this.active && this.canvas?.parentElement === this.active.surface
+      && !document.hidden && !this.contextLost && !this.disposed) {
       this.ticking = true
       gsap.ticker.add(this.tick)
     }
@@ -325,16 +384,17 @@ class DetailSceneManager {
 
   private tick = (time: number) => {
     const entry = this.active
-    if (!entry || !this.renderer || !this.models || !this.canvas || document.hidden || this.contextLost || this.disposed) { this.stopTicking(); return }
+    if (!entry || !this.renderer || !this.canvas || document.hidden || this.contextLost || this.disposed) { this.stopTicking(); return }
     const reduced = this.motionQuery.matches || !!entry.host.closest('.watch-finale--reduced')
     const continuous = !reduced && (entry.kind === 'balance' || entry.kind === 'geartrain')
-    const elapsed = this.lastTick === null ? 0 : Math.max(0, Math.min(.05, time - this.lastTick))
+    const tickGap = this.lastTick === null ? 0 : Math.max(0, time - this.lastTick)
+    const elapsed = Math.min(.05, tickGap)
     this.lastTick = time
     if (!reduced) entry.motionTime += elapsed
-    if (!this.dirty && (!continuous || time - this.lastPaint < this.frameInterval)) {
-      if (!continuous) this.stopTicking()
-      return
-    }
+    if (!this.dirty && !continuous) { this.stopTicking(); return }
+    // A pending scroll update must respect the same budget as autonomous motion.
+    // Leave it dirty so the next allowed frame paints the latest exact progress.
+    if (time - this.lastPaint < this.frameInterval - .001) return
     const model = this.modelFor(entry)
     if (!model) { this.stopTicking(); return }
     const pose = reduced ? entry.kind === 'assembly' ? 1 : .5 : entry.progress
@@ -363,8 +423,11 @@ class DetailSceneManager {
     this.camera.updateMatrixWorld()
     }
     const start = performance.now()
+    const gpuCost = this.gpuTimer?.sample() ?? 0
+    this.gpuTimer?.begin()
     this.renderer.render(this.scene, this.camera)
-    const cost = performance.now() - start
+    this.gpuTimer?.end()
+    const cost = Math.max(performance.now() - start, gpuCost)
     this.lastPaint = time
     this.dirty = false
     entry.lastVisualKey = visualKey
@@ -389,8 +452,10 @@ class DetailSceneManager {
     if (this.renderer.info.render.calls > 0) this.status(entry, 'ready')
     // Hardware quality stays capped, while an expensive software draw lowers
     // resolution instead of maintaining several independent WebGL contexts.
-    this.slowFrames = cost > 45 ? this.slowFrames + 1 : Math.max(0, this.slowFrames - 1)
-    if (this.slowFrames >= 3 && this.qualityRatio > .85) {
+    // WebGL submissions are asynchronous: short renderer.render() CPU time does
+    // not prove the GPU kept up. Include the actual shared ticker cadence.
+    this.slowFrames = cost > 22 || tickGap > .028 ? this.slowFrames + 1 : Math.max(0, this.slowFrames - 1)
+    if (this.slowFrames >= 4 && this.qualityRatio > .85) {
       this.qualityRatio = .85
       this.frameInterval = 1 / 30
       this.slowFrames = 0
@@ -401,7 +466,7 @@ class DetailSceneManager {
 
   private onVisibility = () => {
     if (document.hidden) this.stopTicking()
-    else { this.lastTick = null; this.selectActive() }
+    else { this.lastTick = null; this.selectActive(); this.scheduleWarmup() }
   }
 
   private onMotionPreference = () => {
@@ -429,6 +494,9 @@ class DetailSceneManager {
 
   private releaseRenderer() {
     this.stopTicking()
+    this.environmentAbort.abort()
+    this.gpuTimer?.dispose()
+    this.gpuTimer = null
     this.environment?.dispose()
     this.environment = null
     this.scene.environment = null
@@ -438,6 +506,8 @@ class DetailSceneManager {
     this.canvas?.removeEventListener('webglcontextrestored', this.onContextRestored)
     this.canvas?.remove()
     this.canvas = null
+    this.compiled.clear()
+    this.compiling.clear()
     for (const entry of this.entries) entry.lastVisualKey = ''
   }
 
@@ -456,11 +526,12 @@ class DetailSceneManager {
     this.motionQuery.removeEventListener('change', this.onMotionPreference)
     for (const entry of this.entries) entry.trigger?.kill()
     this.releaseRenderer()
-    if (this.models) for (const model of Object.values(this.models)) model.dispose()
-    this.models = null
+    for (const model of Object.values(this.models)) model.dispose()
+    this.models = {}
     this.watchModel?.dispose()
     this.watchModel = null
     this.entries.clear()
+    this.nearby.clear()
     this.scene.clear()
   }
 }

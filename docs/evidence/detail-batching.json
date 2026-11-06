@@ -1,0 +1,141 @@
+{
+  "baseline": "8c6768ddd2b9da83ae00b87154f38f81a259a221",
+  "method": "Original and batched Three.js geometry, expanded instancing; per-material indexed vertex counts, world bounds, position/normal moments, five reversible moving poses. Tolerance 1e-6.",
+  "checks": [
+    {
+      "kind": "balance",
+      "progress": 0,
+      "time": 0,
+      "triangles": 11128,
+      "callsBefore": 17,
+      "callsAfter": 12,
+      "maxDeviation": 5.45948624086634e-8
+    },
+    {
+      "kind": "balance",
+      "progress": 0.3,
+      "time": 1,
+      "triangles": 11128,
+      "callsBefore": 17,
+      "callsAfter": 12,
+      "maxDeviation": 5.473410080725216e-8
+    },
+    {
+      "kind": "balance",
+      "progress": 0.75,
+      "time": 5,
+      "triangles": 11128,
+      "callsBefore": 17,
+      "callsAfter": 12,
+      "maxDeviation": 5.5021199374394314e-8
+    },
+    {
+      "kind": "balance",
+      "progress": 1,
+      "time": 10,
+      "triangles": 11128,
+      "callsBefore": 17,
+      "callsAfter": 12,
+      "maxDeviation": 5.506539291211254e-8
+    },
+    {
+      "kind": "balance",
+      "progress": 0.3,
+      "time": 1,
+      "triangles": 11128,
+      "callsBefore": 17,
+      "callsAfter": 12,
+      "maxDeviation": 5.473410080725216e-8
+    },
+    {
+      "kind": "crown",
+      "progress": 0,
+      "time": 0,
+      "triangles": 12420,
+      "callsBefore": 16,
+      "callsAfter": 12,
+      "maxDeviation": 1.5199184466574422e-8
+    },
+    {
+      "kind": "crown",
+      "progress": 0.3,
+      "time": 1,
+      "triangles": 12420,
+      "callsBefore": 16,
+      "callsAfter": 12,
+      "maxDeviation": 1.5199184466574422e-8
+    },
+    {
+      "kind": "crown",
+      "progress": 0.75,
+      "time": 5,
+      "triangles": 12420,
+      "callsBefore": 16,
+      "callsAfter": 12,
+      "maxDeviation": 1.5199184466574422e-8
+    },
+    {
+      "kind": "crown",
+      "progress": 1,
+      "time": 10,
+      "triangles": 12420,
+      "callsBefore": 16,
+      "callsAfter": 12,
+      "maxDeviation": 1.5199184466574422e-8
+    },
+    {
+      "kind": "crown",
+      "progress": 0.3,
+      "time": 1,
+      "triangles": 12420,
+      "callsBefore": 16,
+      "callsAfter": 12,
+      "maxDeviation": 1.5199184466574422e-8
+    },
+    {
+      "kind": "geartrain",
+      "progress": 0,
+      "time": 0,
+      "triangles": 15344,
+      "callsBefore": 38,
+      "callsAfter": 24,
+      "maxDeviation": 4.0531158429502057e-8
+    },
+    {
+      "kind": "geartrain",
+      "progress": 0.3,
+      "time": 1,
+      "triangles": 15344,
+      "callsBefore": 38,
+      "callsAfter": 24,
+      "maxDeviation": 4.0531158429502057e-8
+    },
+    {
+      "kind": "geartrain",
+      "progress": 0.75,
+      "time": 5,
+      "triangles": 15344,
+      "callsBefore": 38,
+      "callsAfter": 24,
+      "maxDeviation": 4.0531158429502057e-8
+    },
+    {
+      "kind": "geartrain",
+      "progress": 1,
+      "time": 10,
+      "triangles": 15344,
+      "callsBefore": 38,
+      "callsAfter": 24,
+      "maxDeviation": 4.0531158429502057e-8
+    },
+    {
+      "kind": "geartrain",
+      "progress": 0.3,
+      "time": 1,
+      "triangles": 15344,
+      "callsBefore": 38,
+      "callsAfter": 24,
+      "maxDeviation": 4.0531158429502057e-8
+    }
+  ]
+}

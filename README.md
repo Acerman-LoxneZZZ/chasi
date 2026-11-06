@@ -49,6 +49,8 @@ Mapping одинаков в истории и ручном режиме. На п
 
 У пяти нижних слотов — трёх узлов механизма, крышки и финальной сборки — **один общий renderer и canvas**. Для крышки и финала лениво загружается один общий экземпляр исходного GLB. Всего на странице две WebGL-системы: основная и общая нижняя. Вне экрана и в скрытой вкладке нижний ticker останавливается; крышка и финал рисуются только при изменении ракурса, исполнения или надписи. Reduced motion оставляет статический 3D-ракурс, компактный основной viewer и уже собранный финал без длинной прокрутки. Совпадающие posters страхуют загрузку и сбой, но не заменяют готовые живые сцены. Подробнее — [DESIGN.md](docs/DESIGN.md).
 
+Подготовка ближайших сцен разбита на idle-задачи, шейдеры компилируются через compileAsync. Геометрия нижних моделей сохранена; batching сокращает calls баланса 17→12, головки 16→12, передачи 38→24. GPU-таймер читает только готовые результаты; адаптивный DPR учитывает реальную задержку кадра. Ограничение 30 Hz при перегрузке действует и во время scroll, последнее положение не теряется. Сохранение scroll в sessionStorage объединено до одного раза за 250 ms. Подробности и ограничения — [SCROLL_PERFORMANCE.md](docs/SCROLL_PERFORMANCE.md).
+
 ## Файлы
 
 - `src/app/App.tsx` — основная презентация, навигация и конфигурация.
@@ -69,7 +71,7 @@ Mapping одинаков в истории и ручном режиме. На п
 
 ## Проверки и сохранение
 
-Текущий unit-прогон: **74/74**, 9 файлов: [unit-finale.json](docs/evidence/unit-finale.json). Предыдущая сборка прошла **19/19** браузерных сценариев без повторов и пропусков: [JSON до правки кадрирования](docs/browser-finale-before-framing.json). После небольшого CSS-исправления финального ракурса идёт полный повтор для текущей сборки; финальная сводка ещё готовится. Точная production-сборка, свежие кадры и ограничения — в [VERIFICATION.md](docs/VERIFICATION.md). Отчёт предыдущей версии сохранён отдельно: [VERIFICATION_V7.md](docs/VERIFICATION_V7.md).
+Текущий unit-прогон: **79/79**, 10 файлов: [unit-scroll-performance.json](docs/evidence/unit-scroll-performance.json), entry **Bb3XpR_I**. Новый полный browser-прогон (20 сценариев) ещё готовится; результаты предыдущего entry Dovk9NqQ не подтверждают новый код. Точная сборка, сравнение и текущий QA — [SCROLL_PERFORMANCE.md](docs/SCROLL_PERFORMANCE.md). История предыдущих проверок — [VERIFICATION.md](docs/VERIFICATION.md).
 
 ```bash
 npm run typecheck
@@ -77,7 +79,6 @@ npm test -- --reporter=json --outputFile=docs/evidence/unit-finale.json
 npm run verify:model
 npm run build
 PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
-PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-immersive.mjs docs/screenshots/finale-story
 PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-personalization.mjs
 node scripts/summarize-finale.mjs
 ```

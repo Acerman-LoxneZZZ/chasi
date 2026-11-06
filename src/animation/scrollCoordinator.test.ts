@@ -125,9 +125,25 @@ beforeEach(() => {
   progress = new ProgressController()
   coordinator = new ScrollCoordinator(progress, false)
 })
-afterEach(() => { coordinator.dispose(); progress.dispose(); vi.restoreAllMocks(); vi.unstubAllGlobals() })
+afterEach(() => { coordinator.dispose(); progress.dispose(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
 describe('Lenis and ScrollTrigger scroll ownership', () => {
+  it('coalesces scroll persistence and flushes the latest position on pagehide', () => {
+    vi.useFakeTimers()
+    const storage = vi.spyOn(window.sessionStorage, 'setItem')
+    connect()
+    for (let y = 200; y <= 1000; y += 10) scroll(y)
+    expect(storage).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(250)
+    expect(storage).toHaveBeenCalledTimes(1)
+    expect(JSON.parse(storage.mock.calls[0][1])).toMatchObject({ y: 1000, progress: .22, active: true })
+    scroll(1720)
+    win.dispatchEvent(new Event('pagehide'))
+    expect(storage).toHaveBeenCalledTimes(2)
+    expect(JSON.parse(storage.mock.calls[1][1])).toMatchObject({ y: 1720, progress: .4, active: true })
+    vi.advanceTimersByTime(1000)
+    expect(storage).toHaveBeenCalledTimes(2)
+  })
   it('uses one GSAP ticker, converts seconds to Lenis milliseconds and keeps CSS pinning', () => {
     const section = connect()
     const lenis = integration.instances[0]

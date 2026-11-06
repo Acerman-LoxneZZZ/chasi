@@ -4,6 +4,7 @@ import {
   Material, Matrix4, Mesh, MeshStandardMaterial, Object3D, Path, Quaternion, Shape,
   SphereGeometry, TorusGeometry, TubeGeometry, Vector2, Vector3,
 } from 'three'
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
 
 export type ProceduralSceneKind = 'balance' | 'crown' | 'geartrain'
 export type DetailSceneKind = ProceduralSceneKind | 'engraving' | 'assembly'
@@ -99,6 +100,40 @@ function disposeModel(root: Group, ownedMaterials: Material[]) {
   geometries.forEach(geometry => geometry.dispose())
   resources.forEach(material => material.dispose())
   root.clear()
+}
+
+/** Batch fixed pieces only inside their own animated carrier. Instanced teeth
+ * stay instanced, and the wheel/spring/bridge transforms remain independent. */
+function batchStaticMeshes(root: Group) {
+  const retired = new Set<BufferGeometry>()
+  root.traverse(parent => {
+    const byMaterial = new Map<Material, Mesh[]>()
+    for (const child of parent.children) {
+      if (!(child instanceof Mesh) || child instanceof InstancedMesh || Array.isArray(child.material)) continue
+      const batch = byMaterial.get(child.material) ?? []
+      batch.push(child)
+      byMaterial.set(child.material, batch)
+    }
+    for (const [material, meshes] of byMaterial) {
+      if (meshes.length < 2) continue
+      const pieces = meshes.map(mesh => {
+        mesh.updateMatrix()
+        const geometry = mesh.geometry.clone()
+        // Keep indexed vertex reuse. Expanding rings/cylinders into triangle
+        // soup saves calls but needlessly multiplies vertex shader work.
+        if (!geometry.index) geometry.setIndex(Array.from({ length: geometry.attributes.position.count }, (_, index) => index))
+        return geometry.applyMatrix4(mesh.matrix)
+      })
+      const geometry = mergeGeometries(pieces)
+      pieces.forEach(piece => piece.dispose())
+      if (!geometry) continue
+      for (const mesh of meshes) { parent.remove(mesh); retired.add(mesh.geometry) }
+      parent.add(new Mesh(geometry, material))
+    }
+  })
+  const retained = new Set<BufferGeometry>()
+  root.traverse(object => { if (object instanceof Mesh) retained.add(object.geometry) })
+  retired.forEach(geometry => { if (!retained.has(geometry)) geometry.dispose() })
 }
 
 function createBalance(): DetailModel {
@@ -277,8 +312,13 @@ function createGeartrain(): DetailModel {
 }
 
 /** Original, code-native mechanical studies; no network assets or GLB clones. */
+export function createDetailModel(kind: ProceduralSceneKind): DetailModel {
+  const model = kind === 'balance' ? createBalance() : kind === 'crown' ? createCrown() : createGeartrain()
+  batchStaticMeshes(model.root)
+  model.update(.35, 0, true)
+  return model
+}
+
 export function createDetailModels(): Record<ProceduralSceneKind, DetailModel> {
-  const models = { balance: createBalance(), crown: createCrown(), geartrain: createGeartrain() }
-  for (const model of Object.values(models)) model.update(.35, 0, true)
-  return models
+  return { balance: createDetailModel('balance'), crown: createDetailModel('crown'), geartrain: createDetailModel('geartrain') }
 }

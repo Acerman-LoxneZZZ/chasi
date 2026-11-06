@@ -34,6 +34,7 @@ export class ScrollCoordinator implements ProgressOwner {
   private bounds: StoryBounds = { start: 0, travel: 1 }
   private restored: SavedScroll | null = null
   private stored = ''
+  private storeTimer: ReturnType<typeof setTimeout> | null = null
   private previousScrollBehavior: { value: string; priority: string } | null = null
 
   constructor(private progress: ProgressController, private reducedMotion: boolean) {
@@ -195,6 +196,13 @@ export class ScrollCoordinator implements ProgressOwner {
     else window.scrollTo({ top: y, behavior: 'instant' })
   }
   private storeScroll() {
+    // sessionStorage is synchronous. Keep restoration current without a disk/IPC
+    // write on every Lenis/native scroll frame (including the editorial page).
+    if (this.storeTimer === null) this.storeTimer = setTimeout(this.flushScroll, 250)
+  }
+  private flushScroll = () => {
+    if (this.storeTimer !== null) clearTimeout(this.storeTimer)
+    this.storeTimer = null
     const y = window.scrollY
     const value = JSON.stringify({ y, progress: progressFromScroll(y, this.bounds), active: y >= this.bounds.start && y <= this.bounds.start + this.bounds.travel })
     if (value === this.stored) return
@@ -212,6 +220,7 @@ export class ScrollCoordinator implements ProgressOwner {
     this.syncProgress()
   }
   private onPageHide = () => {
+    this.flushScroll()
     const y = window.scrollY
     try {
       window.history.replaceState({ ...window.history.state, watchStory: {
@@ -335,6 +344,7 @@ export class ScrollCoordinator implements ProgressOwner {
   }
   private onVisibility = () => {
     if (document.hidden) {
+      this.flushScroll()
       this.progress.pause()
       this.stopSmoothScroll()
     } else {
@@ -343,6 +353,7 @@ export class ScrollCoordinator implements ProgressOwner {
     }
   }
   dispose() {
+    this.flushScroll()
     this.pause()
     this.stopSmoothScroll()
     this.trigger?.kill()

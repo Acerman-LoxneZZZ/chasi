@@ -1,12 +1,33 @@
-# KARpOV — финальная сборка, гравировка и звук
+# KARpOV — исправление задержек скролла, 6 ноября 2026
+
+Текущий запрос: «когда появляются шестерёнки скролл лагает и потом тоже». Проверены обе зоны: основной механизм и нижние живые сцены. Проект не начинался заново. Пользователь не уточнил устройство/браузер; вопрос задан, работа продолжается самостоятельно.
+
+## Актуальная итерация производительности
+
+- Preview остаётся **http://127.0.0.1:4174/**. Новый entry **assets/index-Bb3XpR_I.js**, CSS прежний **index-DEfI_tuW.css**. Хеши assets и входных файлов — `docs/evidence/build-scroll-performance.json`. Старые 74/74 и 19/19 ниже относятся только к Dovk9NqQ.
+- Новый build/typecheck и verify:model проходят, **79/79 unit** (10 файлов) — `docs/evidence/unit-scroll-performance.json`. Browser QA текущего entry ещё в работе; итог не переносить из старого отчёта.
+- Подтверждён дефект: dirty=true от ScrollTrigger обходил frameInterval в нижнем renderer. Теперь интервал соблюдается и при скролле, pending progress остаётся до следующего разрешённого кадра. Непрерывное движение и demand draw сохранены.
+- GPU-команды асинхронны, прежний таймер renderer.render() видел только CPU. Новый GpuTimer читает только готовые EXT_disjoint_timer_query_webgl2 результаты, ограничивает очередь, учитывает context lost/disjoint/dispose; при отсутствии расширения работают CPU и фактическая задержка запрошенного кадра. Основной viewer снижает DPR раньше, нижний — по стоимости/каденсу с fallback .85 / 30 Hz.
+- Нижняя подготовка разнесена на idle-задачи: renderer/environment, одна ближайшая геометрия, compileAsync с настоящим освещением. Proximity — примерно один viewport. Один общий нижний renderer/canvas и один нижний GLB сохранены; async завершения проверяют поколение renderer и dispose.
+- Расчёт нижнего PMREM убран из runtime: `public/lighting/detail-room.bin` — точный RGBA16F readback прежнего RoomEnvironment с теми же параметрами (.07 / 128). Загружается лениво локально; никаких новых renderer или картинок вместо 3D. `scripts/bake-detail-environment.mjs` воспроизводит файл и сравнивает металлическую сферу при live/baked освещении: **maxPixelDeviation=0**, `docs/evidence/detail-lighting.json`. Сохранено индексированное переиспользование вершин в batching.
+- Статические части объединены только внутри прежних анимируемых carrier, зубья остаются InstancedMesh. Calls: balance **17→12**, crown **16→12**, geartrain **38→24**. Треугольники неизменны **11128 / 12420 / 15344**. `scripts/verify-detail-batching.mjs` сравнил исходник 8c6768d и новый код по материалам, числу индексированных вершин, world bounds, моментам позиций/нормалей в пяти прямых/обратных позах: погрешность <1e-6, `docs/evidence/detail-batching.json`.
+- Синхронный sessionStorage на каждом scroll заменён сохранением последнего положения раз в 250 ms и немедленным flush на pagehide/hidden/dispose. Reload/restoration сохранены.
+- Диагностика реальным wheel: `scripts/profile-scroll.mjs --software --output=...`; before — `docs/evidence/scroll-performance-before.json` (Dovk9NqQ), after — готовится на Bb3XpR_I. Headless Chrome / ANGLE SwiftShader, 1280×800 DPR1, НЕ аппаратный GPU/FPS и НЕ физический телефон. Абсолютные тайминги этого software-прогона не выдавать за пользовательские FPS.
+- Промежуточный BKenZUcM-профиль сохранён отдельно в `docs/evidence/scroll-performance-intermediate.json`: он выявил оставшийся тяжёлый старт PMREM и не показал равномерного улучшения всех фаз. После него сохранены индексы geometry и добавлен lossless baked environment; промежуточный отчёт не подтверждает финальный entry.
+- Новый browser-сценарий `tests/performance.spec.ts` моделирует дорогие нижние draw, снимает инъекцию после fallback и проверяет бюджет при непрерывном скролле и последнюю позу; в existing experience снижены допустимые draw-call бюджеты. Всего теперь **20** browser-сценариев.
+- Новый отчёт — `docs/SCROLL_PERFORMANCE.md`. Старые незавершённые visual QA/правки документации от 2 ноября сохранены; файлы `scripts/inspect-personalization.mjs`, `scripts/summarize-finale.mjs`, `docs/browser-finale-full.json`, `docs/screenshots/finale/` уже были изменены до текущего запроса. Не приписывать их новой итерации и не сбрасывать.
+
+Дальше: закончить after-профиль, выполнить весь текущий browser-набор 20/20 на Bb3XpR_I, проверить нижние кадры desktop/mobile, записать итог, обновить безопасные ZIP/checkpoint, локально закоммитить и выполнить ранее разрешённый push origin/main без force. Облачный deploy не запрошен.
+
+## Предыдущая итерация — контекст и исторические результаты
 
 Пользователь принял все три предложенные функции запросом «добавляй звучит интересно». Они реализованы. Сейчас проверяется последняя правка композиции на коротких desktop-экранах; довести QA, сохранение и разрешённый push. Не начинать заново.
 
-## Текущая точка
+## Точка до исправления производительности
 
 Исходники приложения: **68d40e6** (реализация 1279a22, audio lifecycle 27d5745). Production entry: **dist/assets/index-Dovk9NqQ.js**, CSS **index-DEfI_tuW.css**. Хеши всех assets и дерева входных исходников: docs/evidence/build-finale.json. Основной preview: **http://127.0.0.1:4174/**. Порт 4173 — чужой проект, не трогать.
 
-**QA в работе:** build и 74/74 unit прошли; полный 19-сценарный browser-прогон Dovk9NqQ идёт (exec session 74445), затем нужны 36 основных + 20 новых кадров и строгая сводка. Физический телефон/GPU/FPS/колонки не проверялись. Не переносить старые результаты на новый entry.
+**QA в работе:** build и 74/74 unit прошли; полный browser-прогон Dovk9NqQ завершён: 19/19, 2 workers, 0 retries / skip / flaky, 13.9 минуты. Теперь нужны 20 свежих кадров новых сцен на четырёх viewport и строгая сводка. Основная история проверяется полным browser-прогоном; её старые PNG не объявлять свежими. Физический телефон/GPU/FPS/колонки не проверялись. Не переносить старые результаты на новый entry.
 
 Ранний полный прогон DmBgl6qn имел 19/19, но визуальная проверка выявила наложение подписи на нижний край часов при 1280×800. Исправление только CSS: у финальной сцены bottom 80px при desktop высотой до 900px, 130px до 650px. Он отражён в 68d40e6. Старые отчёты: docs/browser-finale-before-framing.json и docs/evidence/build-finale-before-framing.json, старые PNG — artifacts/qa-finale-preliminary/. Они не подтверждают новый CSS. Старый targeted CWMf5rZE также не является финальным полным прогоном.
 
@@ -33,8 +54,8 @@ Lenis lerp .075; навигация 2.4–8.5s, просмотр всей осн
 
 - npm run build / npm run verify:model — проходят; unit-файл последней сборки docs/evidence/unit-finale.json: 74/74, 9 файлов.
 - Новый полный browser: docs/browser-finale-full.json; каждый сценарий аннотирует реальный entry. 13 прежних + 6 новых: настоящие пиксели гравировки/память/карточка, assembly/reverse/replay, reduced, реальный opt-in AudioContext с моделируемым visibility, lower GLB retry/context restore, отказ AudioContext.
-- Свежие кадры нужно снять в docs/screenshots/finale-story/ (36) и docs/screenshots/finale/ (20): 1440×1000, 1280×800, 390×844, 360×800. scripts/inspect-personalization.mjs дожидается скрытия header и двух RAF перед кадром.
-- Строгая сводка scripts/summarize-finale.mjs проверяет 19 единичных passed без retry/skip/flaky, реальные entry, 74 unit, хеши dist/всех входных исходников, GLB и метрики 56 кадров. Выход docs/evidence/browser-finale-summary.json.
+- Свежие кадры нужно снять в docs/screenshots/finale/ (20): 1440×1000, 1280×800, 390×844, 360×800. scripts/inspect-personalization.mjs дожидается скрытия header и двух RAF перед кадром.
+- Строгая сводка scripts/summarize-finale.mjs проверяет 19 единичных passed без retry/skip/flaky, реальные entry, 74 unit, хеши dist/всех входных исходников, GLB и метрики 20 кадров новых сцен. Основную историю заново проверяет полный набор browser-сценариев; дополнительный повтор 36 её PNG для изменения CSS только в финале не требуется. Выход docs/evidence/browser-finale-summary.json.
 - Impeccable detect финальных App/components/CSS: docs/evidence/ui-finale.json (`[]`). DESIGN/ASSET_SOURCES/README обновлены. docs/VERIFICATION.md честно отмечает повторный QA в работе — заменить на итог после успешной сводки.
 - Метод: headless Chrome / ANGLE SwiftShader; viewport и CDP touch эмуляция. AudioContext настоящий, скрытие вкладки в интеграционном тесте моделируется. Это не физический телефон, аппаратный GPU/FPS или акустическая проверка колонок. Отдельных новых zoom 200% / no-JS прогонов нет.
 
@@ -45,11 +66,10 @@ cd '/home/nolimetrus/Рабочий стол/Karpov_Watch'
 PORT=4174 ./start.sh
 ```
 
-После выключения исходники/Git/ZIP сохраняются, сервер запускается заново. После изменения исходников нужен npm run build перед preview. Не использовать старый путь /3DD. Dev 5173 запущен только для рендеров (session 74043); перед сдачей можно остановить свой dev, preview 4174 оставить.
+После выключения исходники/Git/ZIP сохраняются, сервер запускается заново. После изменения исходников нужен npm run build перед preview. Не использовать старый путь /3DD. Временный dev 5173 для генерации рендеров остановлен; production preview 4174 оставить.
 
 ```bash
 PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
-node scripts/inspect-immersive.mjs docs/screenshots/finale-story
 node scripts/inspect-personalization.mjs
 node scripts/summarize-finale.mjs
 python3 scripts/package-release.py

@@ -374,7 +374,7 @@ test('three different live mechanical models share one canvas, animate visibly a
     expect(stats.triangles).toBeGreaterThan(5000)
     expect(stats.triangles).toBeLessThan(40000)
     expect(stats.calls).toBeGreaterThan(0)
-    expect(stats.calls).toBeLessThan(60)
+    expect(stats.calls).toBeLessThan(kind === 'geartrain' ? 31 : 16)
     if (kind !== 'crown') await expect.poll(async () => Number(await host.getAttribute('data-frames'))).toBeGreaterThan(stats.frames)
     await noOverflow(page)
   }

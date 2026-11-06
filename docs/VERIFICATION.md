@@ -1,13 +1,13 @@
 # KARpOV — гравировка, финальная сборка и звук
 
-2 ноября 2026. Текущая production-сборка **http://127.0.0.1:4174/**, entry **`assets/index-Dovk9NqQ.js`**, исходники приложения зафиксированы в **`68d40e6`**. Точные хеши JS/CSS и GLB — [build-finale.json](evidence/build-finale.json). Результаты предыдущего entry BdpAQHkG сохранены в [VERIFICATION_V7.md](VERIFICATION_V7.md) и не выдаются за проверку нового кода.
+**6 ноября: этот отчёт описывает предыдущую сборку Dovk9NqQ.** После исправления задержек скролла актуальная сборка — **Bb3XpR_I**; её собственные проверки и замеры находятся в [SCROLL_PERFORMANCE.md](SCROLL_PERFORMANCE.md). Приведённые ниже 74/74 и 19/19 не переносятся на новый код.
+
+2 ноября 2026. Проверена production-сборка **http://127.0.0.1:4174/**, entry **`assets/index-Dovk9NqQ.js`**, исходники приложения зафиксированы в **`68d40e6`**. Точные хеши JS/CSS и GLB — [build-finale.json](evidence/build-finale.json). Результаты предыдущего entry BdpAQHkG сохранены в [VERIFICATION_V7.md](VERIFICATION_V7.md) и не выдаются за проверку нового кода.
 
 ## Результат
 
-**Проверка последней CSS-правки ещё идёт.** Unit 74/74 уже проходят для Dovk9NqQ; новый полный browser-прогон и свежие кадры будут записаны после завершения. Перечисленный ниже пройденный браузерный охват относится к предыдущему DmBgl6qn с тем же поведением и CSS до исправления наложения подписи.
-
 - **74/74 unit**, 9 файлов: [исходный JSON](evidence/unit-finale.json). К прежним проверкам поз, 47 групп, rest-TRS, камеры, hold-плато и общего scroll-clock добавлены абсолютная обратимая финальная сборка, появление подписи после движения, нормализация инициалов и жизненный цикл opt-in аудио, включая позднее завершение resume после отключения.
-- **Предыдущая DmBgl6qn: 19/19 браузерных сценариев**, 2 workers, без retries, skip и flaky: [полный JSON до правки кадрирования](browser-finale-before-framing.json). Каждый сценарий записал фактически загруженный entry. Для Dovk9NqQ полный прогон выполняется заново; ранний targeted CWMf5rZE также не является финальным результатом.
+- **19/19 браузерных сценариев Dovk9NqQ в одном полном запуске**, 2 workers, 13.9 минуты, без retries, skip и flaky: [полный JSON](browser-finale-full.json). Каждый сценарий записал фактически загруженный entry. Ранние DmBgl6qn/CWMf5rZE сохранены отдельно и не заменяют итоговый прогон.
 - Сохранены проверки чистого полноэкранного первого кадра, меню и клавиатуры, четырёх пролётов без текста, неподвижных остановок без повторного draw, play/pause/wheel/Escape, CDP touch, manual/resume/reload, трёх PBR-исполнений, карточки выбора, reduced motion, 503/retry, трёх процедурных моделей, общего canvas и остановки вне экрана, fallback и восстановления основного WebGL-контекста.
 - Новые сценарии проверяют изменение реальных пикселей крышки при вводе, localStorage и очистку, инициалы в основной сцене и карточке; обратную сборку и повтор истории; неизменный финальный ракурс без нового GPU draw; compact reduced-motion финал; настоящий AudioContext только после кнопки, suspend/resume при моделируемом скрытии вкладки, mute; повтор загрузки нижнего GLB после 503 и восстановление его WebGL-контекста; доступность сцены и сообщение при отказе аудио.
 - Свежие кадры Dovk9NqQ и строгая сводка ещё готовятся. На предыдущих кадрах 1280×800 было найдено наложение подписи на низ корпуса; CSS-отступ исправлен в 68d40e6. Старые кадры не используются как подтверждение исправления.
@@ -40,7 +40,6 @@ npm test -- --reporter=json --outputFile=docs/evidence/unit-finale.json
 npm run verify:model
 PORT=4174 ./start.sh
 PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
-PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-immersive.mjs docs/screenshots/finale-story
 PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-personalization.mjs
 node scripts/summarize-finale.mjs
 python3 scripts/package-release.py

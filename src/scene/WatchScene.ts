@@ -15,6 +15,7 @@ import type { WatchPart } from '../types'
 import { CameraRig } from './CameraRig'
 import { highlightMaterial, makeGlass } from './materials'
 import { Engraving } from './Engraving'
+import { GpuTimer } from './GpuTimer'
 
 type Hooks = {
   select: (partId: string | null) => void
@@ -37,6 +38,7 @@ interface BoundPart {
 
 export class WatchScene {
   private renderer: WebGLRenderer
+  private gpuTimer: GpuTimer
   private scene = new Scene()
   private camera = new PerspectiveCamera(30, 1, 0.1, 100)
   private controls: OrbitControls
@@ -53,7 +55,9 @@ export class WatchScene {
   private unsubscribe: () => void
   private abort = new AbortController()
   private frame = 0
+  private frameRequestedAt = 0
   private disposed = false
+  private drawable = false
   private contextLost = false
   private labels = true
   private selected: string | null = null
@@ -100,6 +104,7 @@ export class WatchScene {
   ) {
     validateParts(parts)
     this.renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
+    this.gpuTimer = new GpuTimer(this.renderer.getContext())
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75))
     this.renderer.outputColorSpace = SRGBColorSpace
     this.renderer.toneMapping = ACESFilmicToneMapping
@@ -240,7 +245,11 @@ export class WatchScene {
       this.inscription.setText(this.engravingText)
       this.setFinish(this.finish)
       this.updatePose()
-      this.renderer.compile(this.scene, this.camera)
+      cancelAnimationFrame(this.frame)
+      this.frame = 0
+      await this.renderer.compileAsync(this.scene, this.camera)
+      if (this.disposed || this.contextLost) return
+      this.drawable = true
       // Loading is complete only after the populated scene has been painted.
       // The constructor may already have scheduled an empty sizing frame.
       cancelAnimationFrame(this.frame)
@@ -382,7 +391,8 @@ export class WatchScene {
   }
 
   private invalidate = () => {
-    if (!this.frame && !this.disposed && !this.contextLost && !document.hidden) {
+    if (!this.frame && this.drawable && !this.disposed && !this.contextLost && !document.hidden) {
+      this.frameRequestedAt = performance.now()
       this.frame = requestAnimationFrame(this.render)
     }
   }
@@ -391,6 +401,10 @@ export class WatchScene {
     this.frame = 0
     if (this.disposed || this.contextLost) return
     const start = performance.now()
+    // Also see delayed presentation on browsers without GPU timer queries. Only
+    // measure an already requested frame, so a reader's pause is never a sample.
+    const presentationDelay = this.frameRequestedAt ? Math.max(0, start - this.frameRequestedAt - 17) : 0
+    this.frameRequestedAt = 0
     if (this.pendingPixelRatio !== null) {
       this.renderer.setPixelRatio(this.pendingPixelRatio)
       this.pendingPixelRatio = null
@@ -399,9 +413,12 @@ export class WatchScene {
     if (p !== this.poseProgress) this.applyPose(p)
     const moving = this.rig.tick(start)
     const drawStarted = performance.now()
+    const gpuCost = this.gpuTimer.sample() ?? 0
+    this.gpuTimer.begin()
     this.renderer.render(this.scene, this.camera)
+    this.gpuTimer.end()
     this.decorationDirty = false
-    const renderCost = performance.now() - drawStarted
+    const renderCost = Math.max(performance.now() - drawStarted, gpuCost, presentationDelay)
     this.displayedProgress = p
     this.displayedCameraPosition.copy(this.camera.position)
     this.displayedCameraQuaternion.copy(this.camera.quaternion)
@@ -423,13 +440,15 @@ export class WatchScene {
     this.measuredFrames++
     const ratio = this.renderer.getPixelRatio()
     const floor = Math.min(window.devicePixelRatio, this.width < 700 ? .9 : .85)
-    if (renderCost > 90 && ratio > floor) {
+    if (renderCost > 45 && ratio > floor) {
       this.pendingPixelRatio = floor
       this.invalidate()
     }
     if (this.measuredFrames === 4) {
       const average = this.frameDuration / 4
-      const nextRatio = average > 60 ? floor : average > 32 ? Math.max(floor, 1.25) : ratio
+      // Leave time for Lenis, HTML and compositing inside a 60 Hz frame. The
+      // former 32/60 ms thresholds only reacted after scroll was already choppy.
+      const nextRatio = average > 28 ? floor : average > 18 ? Math.max(floor, ratio * .85) : ratio
       this.frameDuration = 0
       this.measuredFrames = 0
       if (nextRatio < ratio) {
@@ -582,6 +601,7 @@ export class WatchScene {
     this.allMaterials.forEach(material => material.dispose())
     this.finishMaterials.clear()
     this.environment.dispose()
+    this.gpuTimer.dispose()
     this.renderer.dispose()
     this.labelRoot.replaceChildren()
   }
