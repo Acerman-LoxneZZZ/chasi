@@ -1,7 +1,8 @@
 {
-  "purpose": "Scroll performance fix; runtime inputs and verification source snapshot",
-  "baseCommit": "a09e6b10a2686cf68d0d9d521577b60f108adf26",
-  "entry": "assets/index-CbxnG-Tl.js",
+  "purpose": "Merged scroll performance fix; runtime inputs and verification source snapshot",
+  "baseCommit": "2aad2625f23789f8d0f9f0e52b9dafaab538b15a",
+  "mergedUpstream": "ab278ec",
+  "entry": "assets/index-CGOHlaLR.js",
   "assets": [
     {
       "path": "assets/cormorant-garamond-cyrillic-400-normal-CVFrM67f.woff",
@@ -20,8 +21,8 @@
       "sha256": "b926f33f9d3d5cb64e639b8fe9ad5380560a63f3e7a29d212f2b80a2d22ec051"
     },
     {
-      "path": "assets/index-CbxnG-Tl.js",
-      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652"
+      "path": "assets/index-CGOHlaLR.js",
+      "sha256": "da8d25ce20c2c8df9b6bddbcd642b0e4de8c5db695901a7b3dbb986800a0ffda"
     },
     {
       "path": "assets/index-DEfI_tuW.css",
@@ -283,7 +284,7 @@
     },
     {
       "path": "src/scene/DetailSceneManager.ts",
-      "sha256": "de824f177080e1979e731615e2c94f8a1f265bb698109854ba0f89d1e2757286"
+      "sha256": "03a171d45e74142852b0191cc97e1f8cbd9e5b789ceda47065890592e6463848"
     },
     {
       "path": "src/scene/Engraving.ts",
@@ -347,7 +348,7 @@
     },
     {
       "path": "tests/personalization.spec.ts",
-      "sha256": "251ffc3dee91a66d92e1dc3cb1ff74538ddf54befee3e824f6e995df559fc8eb"
+      "sha256": "109cad0dba42761e0a709ca6c878e5767b3df69725fe9452983c6ed7c274a7ad"
     },
     {
       "path": "tsconfig.json",

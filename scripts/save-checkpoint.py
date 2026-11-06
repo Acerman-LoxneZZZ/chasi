@@ -85,6 +85,10 @@ def git_head():
 
 
 def sync_directory():
+    # Windows cannot open a directory with os.open. ZIP file contents are
+    # already fsynced above; keep the atomic same-directory os.replace.
+    if os.name == 'nt':
+        return
     descriptor = os.open(DESTINATION, os.O_RDONLY | getattr(os, 'O_DIRECTORY', 0))
     try:
         os.fsync(descriptor)

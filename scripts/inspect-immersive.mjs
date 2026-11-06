@@ -5,7 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 const out = process.argv[2] || 'docs/screenshots/immersive'
 mkdirSync(out, { recursive: true })
 const baseURL = process.env.PW_BASE_URL || 'http://127.0.0.1:4174/'
-const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
+const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || '/usr/bin/google-chrome', headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, locale: 'ru-RU' })
 const errors = [], warnings = [], externalRequests = [], shots = []
 page.on('pageerror', e => errors.push(e.message))

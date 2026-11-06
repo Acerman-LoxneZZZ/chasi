@@ -72,6 +72,7 @@ assert.equal(screenshots.shots.length, 6); assert.deepEqual(screenshots.errors, 
 for (const shot of screenshots.shots) {
   assert.equal(shot.entry, build.entry); assert.equal(shot.sha256, after.build.sha256)
   assert.equal(sha(shot.path), shot.imageSha256)
+  assert.ok(shot.goldPixelRatio > .002, `${shot.path}: no rendered metal pixels`)
   assert.equal(shot.sceneStatus, 'ready'); assert.equal(shot.sharedCanvasCount, 1); assert.equal(shot.overflow, false)
 }
 const summary = { createdAt: new Date().toISOString(), sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
