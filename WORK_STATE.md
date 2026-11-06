@@ -37,7 +37,7 @@ React / TypeScript / Vite / императивный Three.js + GSAP ScrollTrigg
 
 ## Сохранение и запуск
 
-QA завершён, исходники приложения **6fd242c** / entry **CGOHlaLR**. Новый performance-сценарий подтвердил cap при синтетической перегрузке; скрытый выбор отделки не вызывает main draw; upstream late-layout регрессия прошла. Сводка и все исходные отчёты сохранены. Осталось зафиксировать итоговые QA/PNG, обновить release ZIP и checkpoint и выполнить ранее разрешённый push готовой итерации в **origin/main Acerman-LoxneZZZ/chasi**, без force. Облачный deploy не запрошен.
+QA завершён, исходники приложения **6fd242c** / entry **CGOHlaLR**. Новый performance-сценарий подтвердил cap при синтетической перегрузке; скрытый выбор отделки не вызывает main draw; upstream late-layout регрессия прошла. Сводка и все исходные отчёты сохранены. Итоговые QA/PNG зафиксированы в **9cec51d** и успешно отправлены в **origin/main Acerman-LoxneZZZ/chasi** вместе с кодом и merge, без force. Служебное обновление этого состояния сохраняется следующим коммитом. Release ZIP и checkpoint обновляются после него. Облачный deploy не запрошен.
 
 Запуск: `PORT=4174 ./start.sh`. Сервер оставлен на 4174. После исходников нужен `npm run build`; текущая сборка уже совпадает с проверенными хешами. Release ZIP: `artifacts/hod-vremeni.zip` / `KARpOV.zip`; checkpoint: `artifacts/checkpoints/latest.zip` / `previous.zip`. Исходный baseline этой задачи — `before-scroll-performance.zip`.
 
