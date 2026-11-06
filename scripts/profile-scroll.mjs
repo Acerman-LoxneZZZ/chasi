@@ -8,6 +8,7 @@ import { dirname } from 'node:path'
 const output = process.argv.find(arg => arg.startsWith('--output='))?.slice(9) || 'docs/evidence/scroll-performance.json'
 const software = process.argv.includes('--software')
 const mobile = process.argv.includes('--mobile')
+const lowerOnly = process.argv.includes('--lower-only')
 const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || '/usr/bin/google-chrome', headless: true,
   args: software ? ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] : [] })
 const page = await browser.newPage({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 800 },
@@ -42,12 +43,12 @@ try {
     const gl = canvas.getContext('webgl2'), ext = gl.getExtension('WEBGL_debug_renderer_info')
     return { renderer: gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER), userAgent: navigator.userAgent, viewport: [innerWidth, innerHeight], dpr: devicePixelRatio }
   })
-  await phase('main-mechanism', async () => {
+  if (!lowerOnly) await phase('main-mechanism', async () => {
     await page.evaluate(() => { const s = document.querySelector('.watch-story'); scrollTo(0, +s.dataset.storyStart + .5 * +s.dataset.storyTravel) })
     for (let i = 0; i < 20; i++) { await page.mouse.wheel(0, 90); await page.waitForTimeout(70) }
     await page.waitForTimeout(300)
   })
-  for (const kind of ['balance', 'crown', 'geartrain', 'engraving', 'assembly']) {
+  for (const kind of lowerOnly ? ['balance', 'crown', 'geartrain'] : ['balance', 'crown', 'geartrain', 'engraving', 'assembly']) {
     await phase(`${kind}-enter-scroll`, async () => {
       await page.locator(`.detail-scene[data-scene-kind="${kind}"]`).evaluate(host => scrollTo(0, host.getBoundingClientRect().top + scrollY - innerHeight - 400))
       for (let i = 0; i < 24; i++) { await page.mouse.wheel(0, 65); await page.waitForTimeout(70) }
@@ -67,7 +68,7 @@ try {
     return { ...phase, frames: frames.length, frameP50: percentile(frames, .5), frameP95: percentile(frames, .95), maxFrame: Math.max(0, ...frames),
       longTasks: tasks.length, longestTask: Math.max(0, ...tasks.map(task => task.duration)), blocking: tasks.reduce((sum, task) => sum + Math.max(0, task.duration - 50), 0) }
   })
-  const report = { createdAt: new Date().toISOString(), build: { entry, sha256: createHash('sha256').update(readFileSync(`dist/${entry}`)).digest('hex') },
+  const report = { createdAt: new Date().toISOString(), protocol: lowerOnly ? 'three-procedural-scenes' : 'main-and-all-five-detail-slots', build: { entry, sha256: createHash('sha256').update(readFileSync(`dist/${entry}`)).digest('hex') },
     method: 'Headless Chrome, real wheel input; viewport emulation. Local diagnostics only; not physical-phone or hardware-GPU validation.', environment, errors, phases: summary, ...data }
   mkdirSync(dirname(output), { recursive: true }); writeFileSync(output, JSON.stringify(report, null, 2) + '\n')
   console.log(JSON.stringify({ output, build: report.build, environment, errors, phases: summary, scenes: data.scenes.map(({ sceneKind, drawCalls, modelTriangles, dpr, frames }) => ({ sceneKind, drawCalls, modelTriangles, dpr, frames })) }, null, 2))

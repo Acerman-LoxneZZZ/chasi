@@ -52,6 +52,8 @@ export class WatchScene {
   private finish: WatchFinish = 'brass'
   private finishMaterials = new Map<MeshStandardMaterial, { color: Color; roughness: number }>()
   private resizeObserver: ResizeObserver
+  private visibilityObserver: IntersectionObserver
+  private visible = true
   private unsubscribe: () => void
   private abort = new AbortController()
   private frame = 0
@@ -141,6 +143,12 @@ export class WatchScene {
     this.unsubscribe = progress.subscribe(this.updatePose)
     this.resizeObserver = new ResizeObserver(this.resize)
     this.resizeObserver.observe(canvas.parentElement!)
+    this.visibilityObserver = new IntersectionObserver(([entry]) => {
+      this.visible = entry.isIntersecting
+      if (this.visible) this.invalidate()
+      else { cancelAnimationFrame(this.frame); this.frame = 0; this.frameRequestedAt = 0 }
+    })
+    this.visibilityObserver.observe(canvas)
     canvas.addEventListener('pointerdown', this.onPointerDown)
     canvas.addEventListener('pointermove', this.onPointerMove)
     canvas.addEventListener('pointerup', this.onPointerUp)
@@ -273,6 +281,7 @@ export class WatchScene {
       }
     }
     this.canvas.dataset.finish = finish
+    this.decorationDirty = true
     this.invalidate()
   }
 
@@ -281,8 +290,7 @@ export class WatchScene {
     this.inscription?.setText(value)
     this.canvas.dataset.engraving = value
     this.decorationDirty = true
-    const rect = this.canvas.getBoundingClientRect()
-    if (rect.bottom > 0 && rect.top < innerHeight) this.invalidate()
+    this.invalidate()
   }
 
   setMode(mode: ViewMode, reducedMotion: boolean) {
@@ -380,8 +388,7 @@ export class WatchScene {
     this.height = Math.max(1, parent.clientHeight)
     const minimum = Math.min(window.devicePixelRatio, this.width < 700 ? .9 : .85)
     if (this.pendingPixelRatio !== null) this.pendingPixelRatio = Math.max(this.pendingPixelRatio, minimum)
-    if (this.renderer.getPixelRatio() < minimum) this.renderer.setPixelRatio(minimum)
-    this.renderer.setSize(this.width, this.height, false)
+    this.renderer.setDrawingBufferSize(this.width, this.height, Math.max(this.renderer.getPixelRatio(), minimum))
     this.leaders.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`)
     const p = this.progress.getSnapshot().progress
     this.applyPose(p)
@@ -391,7 +398,7 @@ export class WatchScene {
   }
 
   private invalidate = () => {
-    if (!this.frame && this.drawable && !this.disposed && !this.contextLost && !document.hidden) {
+    if (!this.frame && this.drawable && this.visible && !this.disposed && !this.contextLost && !document.hidden) {
       this.frameRequestedAt = performance.now()
       this.frame = requestAnimationFrame(this.render)
     }
@@ -400,13 +407,16 @@ export class WatchScene {
   private render = () => {
     this.frame = 0
     if (this.disposed || this.contextLost) return
+    // One initial populated paint still completes loading when a reader has
+    // already moved down the page. Later hidden changes wait for visibility.
+    if (!this.visible && this.renderedFrames > 0) return
     const start = performance.now()
     // Also see delayed presentation on browsers without GPU timer queries. Only
     // measure an already requested frame, so a reader's pause is never a sample.
     const presentationDelay = this.frameRequestedAt ? Math.max(0, start - this.frameRequestedAt - 17) : 0
     this.frameRequestedAt = 0
     if (this.pendingPixelRatio !== null) {
-      this.renderer.setPixelRatio(this.pendingPixelRatio)
+      this.renderer.setDrawingBufferSize(this.width, this.height, this.pendingPixelRatio)
       this.pendingPixelRatio = null
     }
     const p = this.progress.getSnapshot().progress
@@ -587,6 +597,7 @@ export class WatchScene {
     cancelAnimationFrame(this.frame)
     this.unsubscribe()
     this.resizeObserver.disconnect()
+    this.visibilityObserver.disconnect()
     this.canvas.removeEventListener('pointerdown', this.onPointerDown)
     this.canvas.removeEventListener('pointermove', this.onPointerMove)
     this.canvas.removeEventListener('pointerup', this.onPointerUp)

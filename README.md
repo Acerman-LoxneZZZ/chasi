@@ -57,6 +57,7 @@ Mapping одинаков в истории и ручном режиме. На п
 - `src/components/CollectionPage.tsx` — коммерческие разделы и сохранение карточки.
 - `src/components/PersonalizationSection.tsx`, `src/components/FinaleSection.tsx` — примерка и финальная сцена.
 - `src/components/DetailScene.tsx`, `src/scene/DetailSceneManager.ts` — слоты живых моделей и общий нижний renderer.
+- `src/scene/GpuTimer.ts`, `src/scene/detailEnvironment.ts` — неблокирующие GPU-замеры и загрузка локального освещения без runtime PMREM нижних сцен.
 - `src/scene/PersonalWatchModel.ts`, `src/scene/Engraving.ts` — общий нижний GLB и надпись на крышке.
 - `src/scene/detailModels.ts` — процедурные баланс, головка и передача.
 - `src/animation/storyTimeline.ts`, `src/animation/scrollCoordinator.ts` — плато и общий scroll-clock.
@@ -71,16 +72,18 @@ Mapping одинаков в истории и ручном режиме. На п
 
 ## Проверки и сохранение
 
-Текущий unit-прогон: **79/79**, 10 файлов: [unit-scroll-performance.json](docs/evidence/unit-scroll-performance.json), entry **Bb3XpR_I**. Новый полный browser-прогон (20 сценариев) ещё готовится; результаты предыдущего entry Dovk9NqQ не подтверждают новый код. Точная сборка, сравнение и текущий QA — [SCROLL_PERFORMANCE.md](docs/SCROLL_PERFORMANCE.md). История предыдущих проверок — [VERIFICATION.md](docs/VERIFICATION.md).
+Текущий unit-прогон: **79/79**, 10 файлов: [unit-scroll-performance.json](docs/evidence/unit-scroll-performance.json), entry **CbxnG-Tl**. Новый полный browser-прогон (20 сценариев) ещё готовится; результаты предыдущего entry Dovk9NqQ не подтверждают новый код. Точная сборка, сравнение и текущий QA — [SCROLL_PERFORMANCE.md](docs/SCROLL_PERFORMANCE.md). История предыдущих проверок — [VERIFICATION.md](docs/VERIFICATION.md).
 
 ```bash
 npm run typecheck
-npm test -- --reporter=json --outputFile=docs/evidence/unit-finale.json
+npm test -- --reporter=json --outputFile=docs/evidence/unit-scroll-performance.json
 npm run verify:model
 npm run build
-PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-finale-full.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
-PW_BASE_URL=http://127.0.0.1:4174 node scripts/inspect-personalization.mjs
-node scripts/summarize-finale.mjs
+PW_BASE_URL=http://127.0.0.1:4174 PLAYWRIGHT_JSON_OUTPUT_NAME=docs/browser-scroll-performance.json npm run test:browser -- --fully-parallel --workers=2 --reporter=list,json
+node scripts/verify-detail-batching.mjs
+node scripts/profile-scroll.mjs --software --lower-only --output=docs/evidence/scroll-performance-after.json
+node scripts/inspect-scroll-performance.mjs
+node scripts/summarize-scroll-performance.mjs
 ```
 
 Playwright использует `/usr/bin/google-chrome`; другой путь задаётся через `CHROME_BIN`. SwiftShader и viewport-эмуляция не являются замером аппаратного GPU или проверкой физического телефона.

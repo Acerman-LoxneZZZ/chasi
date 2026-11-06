@@ -359,8 +359,9 @@ class DetailSceneManager {
     if (!this.active || !this.renderer) return
     const entry = this.active
     const cap = entry.width < 600 ? 1.25 : 1.5
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, cap, this.qualityRatio))
-    this.renderer.setSize(entry.width, entry.height, false)
+    // One allocation: setPixelRatio() also resizes, so following it with
+    // setSize() used to clear/reallocate the drawing buffer a second time.
+    this.renderer.setDrawingBufferSize(entry.width, entry.height, Math.min(window.devicePixelRatio, cap, this.qualityRatio))
     this.camera.aspect = entry.width / entry.height
     this.camera.updateProjectionMatrix()
     entry.lastVisualKey = ''

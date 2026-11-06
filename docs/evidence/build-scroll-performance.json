@@ -1,7 +1,7 @@
 {
-  "purpose": "Scroll performance fix; exact built input snapshot",
-  "baseCommit": "8c6768ddd2b9da83ae00b87154f38f81a259a221",
-  "entry": "assets/index-Bb3XpR_I.js",
+  "purpose": "Scroll performance fix; runtime inputs and verification source snapshot",
+  "baseCommit": "a09e6b10a2686cf68d0d9d521577b60f108adf26",
+  "entry": "assets/index-CbxnG-Tl.js",
   "assets": [
     {
       "path": "assets/cormorant-garamond-cyrillic-400-normal-CVFrM67f.woff",
@@ -20,8 +20,8 @@
       "sha256": "b926f33f9d3d5cb64e639b8fe9ad5380560a63f3e7a29d212f2b80a2d22ec051"
     },
     {
-      "path": "assets/index-Bb3XpR_I.js",
-      "sha256": "1d2e16783dafc9ec20f7c744f5e9116d337ff80c599a5c67f6d6704645dd6f26"
+      "path": "assets/index-CbxnG-Tl.js",
+      "sha256": "83f6620cd458fcbb4c21ad3cf3b3cb16faa8a06187e8e3e09c0297b3c892b652"
     },
     {
       "path": "assets/index-DEfI_tuW.css",
@@ -68,6 +68,10 @@
     {
       "path": "package.json",
       "sha256": "32014232d61f9c938a52cf08f3b9f031f96729f05133e925c13db4b1fae6bec0"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "f6c5cedbfef097f566d76f2cef53ec242be201b94f24bcbd0df9c3bd05c2b167"
     },
     {
       "path": "public/favicon.svg",
@@ -279,7 +283,7 @@
     },
     {
       "path": "src/scene/DetailSceneManager.ts",
-      "sha256": "ff0b62e5b1ac559699a838e185161a12a0a7f41f83cb5cbd7ea18b28dccf5337"
+      "sha256": "de824f177080e1979e731615e2c94f8a1f265bb698109854ba0f89d1e2757286"
     },
     {
       "path": "src/scene/Engraving.ts",
@@ -299,7 +303,7 @@
     },
     {
       "path": "src/scene/WatchScene.ts",
-      "sha256": "e6191824342a55de90d77473e815c9a96fd6c31c59f642a676a7c5f4c08d5df8"
+      "sha256": "7fa2fa47492c7b89105435c81ce18f48123adfb0e16d6251d92e95dd0701a8f5"
     },
     {
       "path": "src/scene/detailEnvironment.ts",
@@ -332,6 +336,18 @@
     {
       "path": "src/types.ts",
       "sha256": "d2bb68b3edd883f71052a5b7aa2cfeaf95dff310d57f4c4dde24c8fe792504c1"
+    },
+    {
+      "path": "tests/experience.spec.ts",
+      "sha256": "4369b3405ed2e190529f3ae74b80e8cbb33d5e6223cf2952cbd65495ae7f0ac2"
+    },
+    {
+      "path": "tests/performance.spec.ts",
+      "sha256": "865243e8acb9016e16eb16f4b45158e22f67de776526ffe6240d2e39dc41c71c"
+    },
+    {
+      "path": "tests/personalization.spec.ts",
+      "sha256": "251ffc3dee91a66d92e1dc3cb1ff74538ddf54befee3e824f6e995df559fc8eb"
     },
     {
       "path": "tsconfig.json",
